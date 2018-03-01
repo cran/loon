@@ -12,7 +12,7 @@
 
 <meta name="author" content="R.W. Oldford" />
 
-<meta name="date" content="2017-07-26" />
+<meta name="date" content="2018-03-01" />
 
 <title>Smoothers and Bone Mineral Density</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Smoothers and Bone Mineral Density</h1>
 <h4 class="author"><em>R.W. Oldford</em></h4>
-<h4 class="date"><em>2017-07-26</em></h4>
+<h4 class="date"><em>2018-03-01</em></h4>
 
 
 
@@ -95,16 +95,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>The scatterplot</h2>
 <p>To begin, execute the following code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The plot</span>
-x &lt;-<span class="st"> </span>bone$age
-y &lt;-<span class="st"> </span>bone$spnbmd
+x &lt;-<span class="st"> </span>bone<span class="op">$</span>age
+y &lt;-<span class="st"> </span>bone<span class="op">$</span>spnbmd
 <span class="co">#  A scatterplot</span>
 p &lt;-<span class="st"> </span><span class="kw">l_plot</span>(x, y,
             <span class="dt">color=</span><span class="st">&quot;darkgrey&quot;</span>,
             <span class="dt">xlabel=</span><span class="st">&quot;age&quot;</span>, <span class="dt">ylabel=</span><span class="st">&quot;spnbmd&quot;</span>,
             <span class="dt">showGuides =</span> <span class="ot">TRUE</span>, <span class="dt">showScales =</span> <span class="ot">TRUE</span>,
-            <span class="dt">itemLabel =</span> <span class="kw">paste0</span>(<span class="st">&quot;IDnum = &quot;</span>, bone$idnum, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, 
-                               bone$gender, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, 
-                               <span class="st">&quot;Age: &quot;</span>, bone$age),
+            <span class="dt">itemLabel =</span> <span class="kw">paste0</span>(<span class="st">&quot;IDnum = &quot;</span>, bone<span class="op">$</span>idnum, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, 
+                               bone<span class="op">$</span>gender, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, 
+                               <span class="st">&quot;Age: &quot;</span>, bone<span class="op">$</span>age),
             <span class="dt">showItemLabels =</span> <span class="ot">TRUE</span>,
             <span class="dt">linkingGroup=</span><span class="st">&quot;Bone density&quot;</span>,
             <span class="dt">title =</span> <span class="st">&quot;Spinal bone mineral density (spnbmd)&quot;</span>)</code></pre></div>
@@ -134,7 +134,7 @@ p[<span class="st">&quot;swapAxes&quot;</span>] &lt;-<span class="st"> </span><s
 <div id="histogram" class="section level2">
 <h2>Histogram</h2>
 <p>A histogram can be constructed in the same way for <em>numeric</em> values. Even so, one can be used to construct a simple barplot for the factor <code>gender</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="kw">l_hist</span>(<span class="kw">as.numeric</span>(bone$gender), <span class="co"># note as.numeric(...)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="kw">l_hist</span>(<span class="kw">as.numeric</span>(bone<span class="op">$</span>gender), <span class="co"># note as.numeric(...)</span>
             <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">showBinHandle =</span> <span class="ot">FALSE</span>,
             <span class="dt">showStackedColors =</span> <span class="ot">TRUE</span>,
             <span class="dt">xlabel =</span> <span class="st">&quot;gender&quot;</span>,
@@ -153,7 +153,7 @@ p[<span class="st">&quot;swapAxes&quot;</span>] &lt;-<span class="st"> </span><s
 <div id="panning-and-brushing" class="section level2">
 <h2>Panning and brushing</h2>
 <p>A second scatterplot could display other variates. For example, plotting the age versus the patient ID number gives:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw">l_plot</span>(bone$idnum, bone$age,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw">l_plot</span>(bone<span class="op">$</span>idnum, bone<span class="op">$</span>age,
              <span class="dt">xlabel=</span><span class="st">&quot;idnum&quot;</span>, <span class="dt">ylabel=</span><span class="st">&quot;age&quot;</span>,
              <span class="dt">linkingGroup=</span><span class="st">&quot;Bone density&quot;</span>,
              <span class="dt">title =</span> <span class="st">&quot;ID numbers and age&quot;</span>)</code></pre></div>
@@ -174,30 +174,30 @@ fitsmooth &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(x,
 xOrder &lt;-<span class="st"> </span><span class="kw">order</span>(x)
 smooth &lt;-<span class="st"> </span><span class="kw">l_layer_line</span>(p,
                        <span class="dt">x=</span>x[xOrder],
-                       <span class="dt">y=</span><span class="kw">predict</span>(fitsmooth,<span class="dt">x=</span>x[xOrder])$y,
+                       <span class="dt">y=</span><span class="kw">predict</span>(fitsmooth,<span class="dt">x=</span>x[xOrder])<span class="op">$</span>y,
                        <span class="dt">label=</span><span class="st">&quot;smooth fit&quot;</span>, <span class="dt">linewidth=</span><span class="dv">4</span>,
                        <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
 <p>The smooth shows that the change in spinal bone mineral density rises up to about 12 years of age and then declines thereafter ultimately hitting zero.</p>
 <p>Of course this is the aggregate behaviour, over both sexes. It might be interesting to see how this changes for males and for females. We could do this by adding a smooth for each sex but there may be other subgroups of the data that we would like to investigate. To that end we introduce a <strong>dynamic update</strong> to the smooth.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Define the updata function
-updateSmooth &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>) {
+updateSmooth &lt;-<span class="st"> </span><span class="cf">function</span>(myPlot, minpts, df, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>) {
   ## Get the values for x and y from the plot
   ##
   ## For x
   xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'xTemp'</span>]
-  if (<span class="kw">length</span>(xnew) ==<span class="st"> </span><span class="dv">0</span>) {xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'x'</span>]}
+  <span class="cf">if</span> (<span class="kw">length</span>(xnew) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'x'</span>]}
   
   ## For y
   ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'yTemp'</span>]
-  if (<span class="kw">length</span>(ynew) ==<span class="st"> </span><span class="dv">0</span>) {ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'y'</span>]}
+  <span class="cf">if</span> (<span class="kw">length</span>(ynew) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'y'</span>]}
   
   ## Now **only** use the active selected points to construct the smooth
-  sel &lt;-<span class="st"> </span>myPlot[<span class="st">'selected'</span>] &amp;<span class="st"> </span>myPlot[<span class="st">'active'</span>]
+  sel &lt;-<span class="st"> </span>myPlot[<span class="st">'selected'</span>] <span class="op">&amp;</span><span class="st"> </span>myPlot[<span class="st">'active'</span>]
   xnew &lt;-<span class="st"> </span>xnew[sel]
   ynew &lt;-<span class="st"> </span>ynew[sel]
   Nsel &lt;-<span class="st"> </span><span class="kw">sum</span>(sel)
   
-  if (Nsel &gt;<span class="st"> </span><span class="dv">3</span> &amp;<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(xnew)) &gt;<span class="st"> </span><span class="dv">0</span>) {
+  <span class="cf">if</span> (Nsel <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(xnew)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
     ## Find the range of the selected x values
     xrng &lt;-<span class="st"> </span><span class="kw">extendrange</span>(xnew)
     xvals.temp &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from=</span><span class="kw">min</span>(xrng),
@@ -205,14 +205,14 @@ updateSmooth &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span cl
                       <span class="dt">length.out=</span><span class="dv">100</span>)
     
     ## Redo our smooth **only** if we have enough points
-    if ((Nsel &gt;<span class="st"> </span>minpts) &amp;<span class="st"> </span>(minpts &gt;<span class="st"> </span>(df +<span class="st"> </span><span class="dv">1</span>))){
+    <span class="cf">if</span> ((Nsel <span class="op">&gt;</span><span class="st"> </span>minpts) <span class="op">&amp;</span><span class="st"> </span>(minpts <span class="op">&gt;</span><span class="st"> </span>(df <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))){
       fit.temp &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(xnew, ynew, <span class="dt">df=</span>df)
-      ypred.temp &lt;-<span class="st"> </span><span class="kw">predict</span>(fit.temp,<span class="dt">x=</span>xvals.temp)$y
+      ypred.temp &lt;-<span class="st"> </span><span class="kw">predict</span>(fit.temp,<span class="dt">x=</span>xvals.temp)<span class="op">$</span>y
       ## update the smooth
-      if (smooth %in%<span class="st"> </span><span class="kw">l_layer_ids</span>(myPlot)) {
+      <span class="cf">if</span> (smooth <span class="op">%in%</span><span class="st"> </span><span class="kw">l_layer_ids</span>(myPlot)) {
         ## reconfigure the smooth with new data
         <span class="kw">l_configure</span>(smooth, <span class="dt">x=</span>xvals.temp, <span class="dt">y=</span>ypred.temp)
-      } else {
+      } <span class="cf">else</span> {
         ## If the smooth has been deleted, then we recreate it 
         ## (N.B. in the global environment)
         smooth &lt;&lt;-<span class="st">  </span><span class="kw">l_layer_line</span>(myPlot,
@@ -231,7 +231,7 @@ updateSmooth &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span cl
 <p>Note also that the smooth is based on the <strong>temporary</strong> <code>x</code> and <code>y</code> values. Points in a <strong>scatterplot may be moved</strong> by selecting them with the control button depressed (as well as shift for multiple selection). Alternatively, <strong>selected points may be pushed together, distributed vertically or horizontally, arranged on a grid, or jittered</strong> by selecting the corresponding <code>move</code> button from the <code>Modify</code> panel of the inspector. **All points can be returned to their original position by</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span>
 <span class="kw">l_bind_state</span>(p, <span class="kw">c</span>(<span class="st">&quot;selected&quot;</span>),
-             function() {<span class="kw">updateSmooth</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}
+             <span class="cf">function</span>() {<span class="kw">updateSmooth</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}
 )</code></pre></div>
 <p>Now go to the histogram and select first the female bar, then the make bar, and watch how the smoothing spline adapts to the sex. Clearly, females have greater changes in spinal bone mineral density at a younger age than do males. No doubt this is a consequence of the different ages at which girls and boys sexually mature.</p>
 <p>Brushing any set of points, from any of the linked plots will now cause the smooth function to automatically recalculate and redisplay. In this way one might pursue, for example how the smooth changes over subsets of <code>idnum</code> values.</p>
@@ -243,9 +243,9 @@ updateSmooth &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span cl
 <p>Linear smoothers can be thought of as the connected predicted values of locally fitted linear models having weights which are maximal at the point <span class="math inline">\(x\)</span> where the prediction is being made and which drop off to zero for <span class="math inline">\(x\)</span> values far away from it.</p>
 <p>To illustrate this we add a straight line to the scatterplot that is fitted to the data via weighted least squares using Gaussian weights. For any collection of <span class="math inline">\(x\)</span> values, the prediction will be made at their median.</p>
 <p>The Gaussian weight function will be centred at the median:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">GaussWt &lt;-<span class="st"> </span>function(x) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">GaussWt &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
   <span class="co"># Get an estimated standard deviation</span>
-  h &lt;-<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(x))/<span class="dv">4</span>
+  h &lt;-<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(x))<span class="op">/</span><span class="dv">4</span>
   <span class="co"># Centre at median</span>
   xloc &lt;-<span class="st"> </span><span class="kw">median</span>(x)
   <span class="co"># Gaussian density</span>
@@ -256,7 +256,7 @@ updateSmooth &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span cl
 <span class="co"># Prediction will be at the median of x, fit by</span>
 ### weights that decrease with x's
 <span class="co"># distance from the median.</span>
-fitwls &lt;-<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x, <span class="dt">weights=</span><span class="kw">GaussWt</span>(x))
+fitwls &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">weights=</span><span class="kw">GaussWt</span>(x))
 linewls &lt;-<span class="st"> </span><span class="kw">l_layer_line</span>(p, 
                         <span class="dt">x=</span>x,
                         <span class="dt">y=</span><span class="kw">predict</span>(fitwls,
@@ -267,35 +267,35 @@ linewls &lt;-<span class="st"> </span><span class="kw">l_layer_line</span>(p,
 <p>Clicking on the <code>Layers</code> tab in the inspector shows the scatterplot, the axis, the smooth fit, and the Gaussian weight straight line. Select the last of these and render it invisible by clicking on that button, or, by programmatically by executing the following.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">l_layer_hide</span>(p, smooth)</code></pre></div>
 <p>Now make the fitted line update to fit only the selected points.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">updateLocalLine &lt;-<span class="st"> </span>function(myPlot, minpts, df, <span class="dt">volor=</span><span class="st">&quot;blue&quot;</span>) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">updateLocalLine &lt;-<span class="st"> </span><span class="cf">function</span>(myPlot, minpts, df, <span class="dt">volor=</span><span class="st">&quot;blue&quot;</span>) {
   ## Get the values for x and y from the plot
   ## For x
   xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'xTemp'</span>]
-  if (<span class="kw">length</span>(xnew) ==<span class="st"> </span><span class="dv">0</span>) {xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'x'</span>]}
+  <span class="cf">if</span> (<span class="kw">length</span>(xnew) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {xnew &lt;-<span class="st"> </span>myPlot[<span class="st">'x'</span>]}
   
   ## For y
   ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'yTemp'</span>]
-  if (<span class="kw">length</span>(ynew) ==<span class="st"> </span><span class="dv">0</span>) {ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'y'</span>]}
+  <span class="cf">if</span> (<span class="kw">length</span>(ynew) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {ynew &lt;-<span class="st"> </span>myPlot[<span class="st">'y'</span>]}
 
   ## Now **only** use the active selected points to construct the smooth
-  sel &lt;-<span class="st"> </span>myPlot[<span class="st">'selected'</span>] &amp;<span class="st"> </span>myPlot[<span class="st">'active'</span>]
+  sel &lt;-<span class="st"> </span>myPlot[<span class="st">'selected'</span>] <span class="op">&amp;</span><span class="st"> </span>myPlot[<span class="st">'active'</span>]
   xnew &lt;-<span class="st"> </span>xnew[sel]
   ynew &lt;-<span class="st"> </span>ynew[sel]
   Nsel &lt;-<span class="st"> </span><span class="kw">sum</span>(sel)
-  if (Nsel &gt;<span class="st"> </span><span class="dv">3</span> &amp;<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(xnew)) &gt;<span class="st"> </span><span class="dv">0</span>) {
+  <span class="cf">if</span> (Nsel <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(xnew)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
     xrng &lt;-<span class="st"> </span><span class="kw">extendrange</span>(xnew)
     xvals.temp &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from=</span><span class="kw">min</span>(xrng),
                       <span class="dt">to=</span><span class="kw">max</span>(xrng), 
                       <span class="dt">length.out=</span><span class="dv">100</span>)
     ## Redo line if more than two points.
-    if (Nsel&gt;<span class="st"> </span><span class="dv">2</span>) {
-      fit.wls &lt;-<span class="st">  </span><span class="kw">lm</span>(ynew ~<span class="st"> </span>xnew, <span class="dt">weights=</span><span class="kw">GaussWt</span>(xnew))
+    <span class="cf">if</span> (Nsel<span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>) {
+      fit.wls &lt;-<span class="st">  </span><span class="kw">lm</span>(ynew <span class="op">~</span><span class="st"> </span>xnew, <span class="dt">weights=</span><span class="kw">GaussWt</span>(xnew))
       ywls.temp &lt;-<span class="st"> </span><span class="kw">predict</span>(fit.wls,
                            <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">xnew=</span>xvals.temp))
       ## update the fit
-      if (linewls %in%<span class="st"> </span><span class="kw">l_layer_ids</span>(myPlot)) {
+      <span class="cf">if</span> (linewls <span class="op">%in%</span><span class="st"> </span><span class="kw">l_layer_ids</span>(myPlot)) {
         <span class="kw">l_configure</span>(linewls, <span class="dt">x=</span>xvals.temp, <span class="dt">y=</span>ywls.temp)
-      } else {
+      } <span class="cf">else</span> {
         ## If it's been deleted, we recreate it (in the global environment).
         linewls &lt;&lt;-<span class="st"> </span><span class="kw">l_layer_line</span>(myPlot,
                                  <span class="dt">x=</span>xvals.temp,
@@ -316,7 +316,7 @@ linewls &lt;-<span class="st"> </span><span class="kw">l_layer_line</span>(p,
 <p>And now bind this update function to change in <code>p</code> of either the <code>select</code> or the <code>active</code> states.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span>
 <span class="kw">l_bind_state</span>(p, <span class="kw">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;selected&quot;</span>),
-             function() {<span class="kw">updateLocalLine</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}
+             <span class="cf">function</span>() {<span class="kw">updateLocalLine</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}
 )</code></pre></div>
 <p>Selecting the male or female sex in the histograms will show the weighted least squares line for that sex. Brushing a tall thin vertical brush on <code>p2</code> will show how the fitted line changes (or not) as the similar <code>idnum</code>s change. But most interestingly, and the object of this lesson, is to brush <code>p2</code> with a short very wide brush so that the <code>age</code> can be kept roughly constant. As <code>age</code> increases or decreases, the line segment changes its fit: both in height and in slope. The smooth seen earlier is essentially the connected midpoints of these line segments.</p>
 </div>

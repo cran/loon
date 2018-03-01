@@ -20,7 +20,7 @@ l_pairs <- function(data, parent=NULL, ...) {
 
     args <- list(...)
     
-    if(!is.data.frame(data)) {
+    if(!identical(class(data), "data.frame")) { # use of identical to deal with tibbles
         data <- as.data.frame(data)
     }
 

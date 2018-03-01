@@ -341,19 +341,16 @@ largest3 <- names(sort(apply(minorityPercent[,groups ],
 
 ## ----selectMinorities, message=FALSE-------------------------------------
 # Back to the raw data and just rename variables
-library(dplyr)
-minority_star <- minority %>%
-  select(SE.Asian=Southeast.Asian,
-         Chinese = Chinese,
-         Japanese = Japanese,
-         S.Asian = South.Asian,
-         Other = Visible.minority.not.included.elsewhere,
-         Black = Black,
-         Multiple = Multiple.visible.minority,
-         Filipino = Filipino,
-         Arab = Arab,
-         Korean = Korean,
-         Latino = Latin.American)
+minority_star <- minority[, c(
+    "Southeast.Asian", "Chinese", "Japanese", "South.Asian", 
+    "Visible.minority.not.included.elsewhere",
+     "Black", "Multiple.visible.minority", "Filipino",
+    "Arab", "Korean", "Latin.American")]
+
+names(minority_star) <- c(
+    "SE.Asian", "Chinese", "Japanese", "S.Asian", "Other",
+    "Black", "Multiple", "Filipino", "Arab", "Korean", "Latino"
+)
 
 ## ----selectMinoritiesTable, echo=FALSE-----------------------------------
 # A look at this data
