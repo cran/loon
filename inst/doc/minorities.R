@@ -33,7 +33,7 @@ with(minority,
 par(parOptions)
 
 
-## ---- echo=FALSE, message=FALSE, fig.align = "center", fig.width=7, fig.height=5----
+## ---- echo=FALSE, message=FALSE, warning = FALSE, error = FALSE, fig.align = "center", fig.width=7, fig.height=5----
 library(maps)
 parOptions <- par(mfrow=c(1,2))
 
@@ -73,7 +73,7 @@ par(parOptions)
 #  in each city.
 #
 
-minorityPercent <- cbind(100*minority[,c(1:10,12:14)]/minority[,"Total.population"])
+minorityPercent <- data.frame(100*minority[,c(1:10,12:14)]/minority[,"Total.population"])
 
 #  Take the opportunity to shorten the Statistics Canada 
 #  names of the minorities as well:
@@ -86,14 +86,14 @@ names(minorityPercent) <- c("% Arabic",  "% Black", "% Chinese",
 
 ## ----percentVisible, eval=FALSE------------------------------------------
 #  # The proportion of the city population that is a "visible minority"
-#  l_hist(minorityPercent[,"% Minority"],
-#         title = paste("% Minority in 33 Canadian cities"),
-#         xlabel="percent of population",
-#         linkingGroup="minority",
-#         yshows="frequency",
-#         showBinHandle=FALSE,
-#         showGuides=TRUE,
-#         showScales=TRUE
+#  l_hist(minorityPercent$"% Minority",
+#         title = "% Minority in 33 Canadian cities",
+#         xlabel = "percent of population",
+#         linkingGroup = "minority",
+#         yshows = "frequency",
+#         showBinHandle = FALSE,
+#         showGuides = TRUE,
+#         showScales = TRUE
 #  )
 
 ## ----link, eval=FALSE----------------------------------------------------
@@ -125,16 +125,16 @@ largest3 <- names(sort(apply(minorityPercent[,groups ],
 ## ----locations, eval=FALSE-----------------------------------------------
 #  
 #  p_map <- with(minority,
-#                l_plot(long,lat,
-#                       xlabel="longitude", ylabel="latitude",
-#                       linkingGroup="minority",
-#                       itemLabel=rownames(minority),
-#                       showLabels=TRUE)
+#                l_plot(long, lat,
+#                       xlabel = "longitude", ylabel = "latitude",
+#                       linkingGroup = "minority",
+#                       itemLabel = rownames(minority),
+#                       showLabels = TRUE)
 #       )
 #  
 #  # Add the map of Canada
 #  library(maps)
-#  landcol <- "grey95"
+#  landcol <- "cornsilk"
 #  canada <- l_layer(p_map,
 #                    map("world", "Canada",
 #                        plot=FALSE, fill=TRUE),
@@ -408,7 +408,7 @@ knitr::kable(head(minority_star))
 #  l_zoom(p_stars, .9)
 #  #
 
-## ----westEastCols, eval=FALSE--------------------------------------------
+## ----westEastCols, message=FALSE, warning = FALSE, error = FALSE, eval=FALSE----
 #  library(scales)
 #  west_east_cols <- (col_numeric(c("firebrick",
 #                                   "orange", "sienna",
@@ -443,7 +443,7 @@ knitr::kable(head(minority_star))
 ## ----moveGrid, eval=FALSE------------------------------------------------
 #  l_move_grid(p_stars, which='all')
 
-## ----PairViz, message=FALSE----------------------------------------------
+## ----PairViz, message=FALSE, error = FALSE, warning=FALSE----------------
 # Axis ordering methods can be found
 # in the pairwise coordinate visualization package
 # called PairViz
@@ -542,7 +542,7 @@ names(minority_star_percent)[o_far]
 #                                   label="Farthest")
 #  p_map['glyph'] <- so_near
 
-## ----Eulerians-----------------------------------------------------------
-o_greedy <- eulerian(VarDistance)
-o_balanced <- weighted_hpaths(VarDistance, matrix=FALSE)
+## ----Eulerians, eval = FALSE---------------------------------------------
+#  o_greedy <- eulerian(VarDistance)
+#  o_balanced <- weighted_hpaths(VarDistance, matrix=FALSE)
 

@@ -1,5 +1,5 @@
 
-if (loon:::.withTclImg && requireNamespace("RnavGraphImageData", quietly = TRUE)) {
+if (requireNamespace("RnavGraphImageData", quietly = TRUE)) {
     local({
         # Plot glyphsizes for different glyphs
         sizes <- c(0:10) # seq(15,25,by=5)
@@ -102,7 +102,11 @@ if (loon:::.withTclImg && requireNamespace("RnavGraphImageData", quietly = TRUE)
         
         l_configure(p, glyph=g_row, color='black', which=i_rowlabels)
         
-    })  
+        
+        cat("Scatterplot shows the effect of size on different glyph types.")
+        
+    }
+    ) 
 } else {
     cat("need the tkimg tcl extension and RnavGraphImageData R package installed to run this demo.\n")
 }
