@@ -13,18 +13,28 @@ path_concat <- function(path1, path2, sep="/") {paste(path1, path2, sep = sep)}
 ## ----library loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE----
 library(loon)
 
-## ----first loon plot, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE----
+## ----first loon plot, eval = TRUE, echo = FALSE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE----
 l_plot(x = quakes$long, 
        y = quakes$lat, 
        xlabel = "longitude", 
        ylabel = "latitude",
        title = "Tonga trench earthquakes")
 
+## [1] ".l0.plot"
+## attr(,"class")
+## [1] "l_plot" "loon"
+
 ## ----loonQuakeOriginal, out.width= "60%", fig.align="center", echo=FALSE----
 knitr::include_graphics(path_concat(imageDirectory, "quakesOriginal.png"))
 
 ## ----looninspectorQuakeOriginal, out.width= "30%", fig.align="center", echo=FALSE----
 knitr::include_graphics(path_concat(imageDirectory, "inspectorQuakesOriginal.png"))
+
+## ----panning, out.width= "40%", fig.align="center", echo=FALSE-----------
+knitr::include_graphics(path_concat(imageDirectory, "panning.png"))
+
+## ----zooming, out.width= "40%", fig.align="center", echo=FALSE-----------
+knitr::include_graphics(path_concat(imageDirectory, "zooming.png"))
 
 ## ----point selection, out.width= "40%", fig.align="center", echo=FALSE----
 knitr::include_graphics(path_concat(imageDirectory, "selecting.png"))
@@ -49,15 +59,15 @@ palette()
 #  l_setColorList_loon()                              # default loon palette
 #  l_setColorList(l_colRemoveAlpha(rainbow(5)))       # any set of colours without alpha
 
-## ----assign loon plot, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
-#  # loon graphics (note that the result is assigned to p)
-#  p <- l_plot(x = quakes$long, y = quakes$lat,
-#              xlabel = "longitude", ylabel = "latitude",
-#              title = "Tonga trench earthquakes")
+## ----assign loon plot, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
+# loon graphics (note that the result is assigned to p)
+p <- l_plot(x = quakes$long, y = quakes$lat, 
+            xlabel = "longitude", ylabel = "latitude",
+            title = "Tonga trench earthquakes")
 
-## ----create handle for loon plot, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
-# accessing the plot from its string representation
-p <- l_create_handle(".l0.plot")
+## ----create handle for loon plot, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
+#  # accessing the plot from its string representation
+#  p <- l_create_handle(".l0.plot")
 
 ## ----printed representation loon plot, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
 p 
@@ -254,7 +264,7 @@ head(quakes[group1,])
 ## ----getGroups, eval = TRUE, echo = TRUE, tidy = FALSE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE----
 getGroups <- function(loonplot){
     # make sure it is an "l_plot"
-    if (!"l_plot" %in% class(loonplot)) stop("loonplot must be an l_plot")
+    if (!is(loonplot, "l_plot")) stop("loonplot must be an l_plot")
     
     # use color to identify groups
     unique_cols <- unique(loonplot['color'])
@@ -338,9 +348,9 @@ h <- l_hist(quakes$depth,
 #  h["linkingGroup"] <- "quakes"
 #  p["linkingGroup"] <- "quakes"
 
-## ----fix colors again, eval = FALSE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "60%", warning=FALSE, message=FALSE, tidy = FALSE----
-#  l_configure(h, linkingGroup = "quakes", sync = "push")
-#  l_configure(p, linkingGroup = "quakes", sync = "pull")
+## ----fix colors again, eval = TRUE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "60%", warning=FALSE, message=FALSE, tidy = FALSE----
+l_configure(h, linkingGroup = "quakes", sync = "push")
+l_configure(p, linkingGroup = "quakes", sync = "pull")
 
 ## ----histogram blues, fig.align="center", fig.width = 7, fig.height = 5, out.width = "60%", warning=FALSE, message=FALSE, tidy = FALSE----
 blues5 <- blues9[c(2,4,6,8,9)] # select 5 from light blue to dark
@@ -371,9 +381,83 @@ p_mag_stations <- l_plot(x = quakes$mag,
                          xlabel = "Magnitude", 
                          ylabel = "Number of stations reporting")
 
+## ---- eval = FALSE-------------------------------------------------------
+#  new_order <- sample(1:nrow(quakes), nrow(quakes), replace = FALSE)
+#  some_quakes <-  sample(1:nrow(quakes), 100, replace = FALSE)
+#  quakes_linkingKey <- p["linkingKey"]
+#  p_new <- with(quakes[new_order,],
+#                l_plot(long, lat, title = "quakes reordered",
+#                       linkingGroup = "quakes",
+#                       linkingKey = quakes_linkingKey[new_order] ))
+#  p_subset <- with(quakes[some_quakes,],
+#                l_plot(long, lat, title = "quakes reordered",
+#                       linkingGroup = "quakes",
+#                       linkingKey = quakes_linkingKey[some_quakes]))
+
+## ----plot_3D,  fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
+# First, scale the data
+scaled_quakes <- l_scale3D(quakes)
+
+p_mag_stations <- l_plot3D(x = scaled_quakes$long,  
+                           y = scaled_quakes$lat, 
+                           z = scaled_quakes$depth, 
+                           showGuides = TRUE,
+                           linkingGroup = "quakes", 
+                           title = "Three dimensional plot of quakes")
+
+## ---- eval=FALSE---------------------------------------------------------
+#  help(package = "loon")
+
+## ---- eval=FALSE---------------------------------------------------------
+#  l_help()
+
+## ---- eval=FALSE---------------------------------------------------------
+#  vignette("minorities", package = "loon")
+
+## ---- eval=FALSE---------------------------------------------------------
+#  vignette("teaching-example-smoothing", package = "loon")
+
+## ---- eval=FALSE---------------------------------------------------------
+#  vignette("Rmarkdown", package = "loon")
+
 ## ----loon demos, eval = FALSE--------------------------------------------
-#  demo(package = "loon")    # list all demos
-#  demo("l_regression", package = "loon")
+#  demo(package = "loon")  # list all demos
+
+## ----loon demo examples, eval = FALSE------------------------------------
+#  ### teaching demos
+#  demo("l_regression",
+#       package = "loon")  # lots using the Old Faithful geyser
+#  demo("l_regression_influential",
+#       package = "loon")  # move and recolor points to change the regression fit
+#  
+#  ### gapminder
+#  demo("l_us_and_them",
+#       package = "loon")  #  basic demo
+#  demo("l_us_and_them_slider",
+#       package = "loon")  # year selected on a slider
+#  demo("l_us_and_them_choropleth",
+#       package = "loon")  # world map and linked with a scatterplot
+#  
+#  ### the spatial package sp
+#  demo("l_polygons_sp",
+#       package = "loon")  # layer polygons with class sp
+#  
+#  ### layering and custom layouts
+#  demo("l_layers")  # demonstrate layer types
+#  demo("l_layout")  # custom layout widgets
+#  demo("l_widgets") # inspector and plot in one window
+#  
+#  ### novel brushing and linking
+#  demo("l_knn")     # brushing by k nearest points in some subspace
+#  demo("l_us_and_them_choropleth")  # many to one linking
+#  
+#  ### high dimensional data and dimensionality reduction
+#  demo("l_ng_images_frey_LLE") # navigation graphs, image data, LLE
+#  demo("l_ng_dimred")          # comparing dimension reduction methods
+
+## ---- eval=FALSE---------------------------------------------------------
+#  install.packages("zenplots")
+#  vignette("intro", package = "zenplots")
 
 ## ----grid grob, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
 gp <- loonGrob(p)

@@ -44,12 +44,13 @@ Useful links:
 
 Authors:
 \itemize{
-  \item R. Wayne Oldford \email{rwoldford@uwaterloo.ca}
+  \item R. Wayne Oldford \email{rwoldford@uwaterloo.ca} [thesis advisor]
 }
 
 Other contributors:
 \itemize{
   \item Zehao Xu \email{z267xu@uwaterloo.ca} [contributor]
+  \item Martin Gauch \email{martin.gauch@student.kit.edu} [contributor]
 }
 
 }
