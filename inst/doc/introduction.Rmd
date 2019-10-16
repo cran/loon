@@ -26,7 +26,7 @@ path_concat <- function(path1, path2, sep="/") {paste(path1, path2, sep = sep)}
 ```
 
 
-```{r library loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE}
+```{r library_loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE}
 library(loon)
 ```
 
@@ -39,10 +39,11 @@ Suggestions for interactions will also be given and questions that draw attentio
 
 After completing the tutorial, there are numerous other examples of using loon which can be explored.  These include
 
-- the `R` `help(package = "loon")` pages for `loon`,
+- many of the common arguments to `l_plot()` are described in the help topic `?l_plot_arguments`
+- the `R` `help(package = "loon")` pages for `loon`, or alternatively online via as `l_web()`
 - other vignettes,
 - demos on particular topics given by `demo(package = "loon")`.  These are especially useful because the source code for creating them appears in the console, and 
-- the loon website appearing from `l_help()`.
+- the loon website appearing from `l_help()` or `R` manual only as `l_web()`.
 
 Here, we will walk through some of the **basic** functionality.
 
@@ -53,7 +54,7 @@ Here, we will walk through some of the **basic** functionality.
 
 Begin with a simple scatterplot of the `quakes` data from `R`
 
-```{r first loon plot, eval = TRUE, echo = FALSE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE}
+```{r first loon plot, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE}
 l_plot(x = quakes$long, 
        y = quakes$lat, 
        xlabel = "longitude", 
@@ -97,11 +98,12 @@ The colour red indicates selection, arrows and double images suggest movement, a
 
 ---
 
-###Panning
+### Panning
 
 To pan the plot, select the plot interior with the right (or secondary) mouse button and move the mouse (with the button still down).  The direction of panning can be constrained by holding down the named modifier keys while panning. 
 
 \vspace{-0.05\textheight}
+
 ```{r panning, out.width= "40%", fig.align="center", echo=FALSE}
 knitr::include_graphics(path_concat(imageDirectory, "panning.png"))
 ```
@@ -125,6 +127,7 @@ How does the larger scatterplot change?
 Another way to dynamically focus on different parts of the plot is by zooming, using **scrolling**:
 
 \vspace{-0.05\textheight}
+
 ```{r zooming, out.width= "40%", fig.align="center", echo=FALSE}
 knitr::include_graphics(path_concat(imageDirectory, "zooming.png"))
 ```
@@ -218,7 +221,8 @@ Try (in order) the following interactions between the inspector and the plot:
 
 --- 
 
-##More on direct manipulation 
+## More on direct manipulation  
+
 ### on brushing
 
 You should have a scatterplot of open circles with three clusters of points in red, blue, and orange.
@@ -297,7 +301,7 @@ For example:
 
 --- 
 
-###adding colours to the inspector
+### adding colours to the inspector
 
 ```{r looninspector plus 10 cols, out.width= "30%", fig.align="center", echo=FALSE}
 knitr::include_graphics(path_concat(imageDirectory, "inspectorQuakesPlus10Cols.png"))
@@ -361,6 +365,7 @@ close it to force a refresh its colour palette.
 --- 
 
 ## Programmatic manipulation 
+
 ### accessing the plot
 
 The plot itself is a (tcl) data structure and can be assigned to an `R` variable.
@@ -676,7 +681,7 @@ p["size"] <- 4
 --- 
 
 
-##Adding layers
+## Adding layers
 
 `loon` plots are actually a little richer still.  The scatterplot is only one possible layer in a plot.  It could have many more, each layer having different geometric objects.
 
@@ -690,7 +695,9 @@ First get the relevant map:
 
 ```{r gettingAMap}
 library(maps)
-NZFijiMap <- map("world2", regions=c("New Zealand", "Fiji"), plot=FALSE)
+NZFijiMap <- map("world2", 
+                 regions=c("New Zealand", "Fiji"),
+                 plot=FALSE)
 ```
 
 
@@ -822,6 +829,7 @@ Note that the inspector has changed.  There is a different inspector for each ty
 Now that we have both a scatterplot and a histogram, we can explore one of the most important features of an interactive data visualization system like loon.
 
 ## `linkingGroup`
+
 The principal feature of loon plots which effect the linking of displays is the setting of a common `linkingGroup`.
 
 -  On the histogram inspector, where it says linking group, select the text "none" and replace it with "quakes"
@@ -906,6 +914,7 @@ Note that selection effectively shows the relations in one plot  **conditional**
 
 
 ## `linkingKey`
+
 Observations in a `loon` plot are uniquely identified (for the purpose of linking) by their `linkingKey`. Pardon the pun but this is the key to linking in `loon`.
 
 For the most part, the default linking is all that you ever need do.  
@@ -936,7 +945,7 @@ Rather than the default values, the `linkingKey` can be any vector of unique str
 
 ---
 
-#Three dimensional plots - `l_plot3D`
+# Three dimensional plots - `l_plot3D`
 
 Given that the `quakes` data has three spatial dimensions (`long`, `lat`, and `depth`), it would be natural to view this in a three dimensional scatterplot.
 
@@ -952,24 +961,25 @@ p_mag_stations <- l_plot3D(x = scaled_quakes$long,
                            title = "Three dimensional plot of quakes")
 ```
 
-Select the plot, type `r` to turn on the `rotation mode`.   Press the down arrow on the keyboard untill the darkest points (deepest quakes) are at the bottom of the display.   Press `r` again to turn off the rotation mode.
+Select the plot, type `r` to turn on the `rotation mode`.   Press the down arrow on the keyboard until the darkest points (deepest quakes) are at the bottom of the display.   Press `r` again to turn off the rotation mode.
 
 Selecting the plot, the key `r` toggles the rotation mode; arrow keys rotate the plot vertically and horizontally.  In `rotation mode` the plot may also be rotated free hand using the mouse. 
 When `rotation mode` is toggled off (with the key `r`), the plot can again be brushed et cetera as with any `l_plot`.  See `help("l_plot3D")` for more details.
 
 
-**NOTE** Many methods exist for visualizing higher dimensional data in `loon`.  For e.g. see `help("l_navgraph")`, `help("l_pairs")`, or `help("l_serialaxes")`.  See also the online manual `l_help()`.
+**NOTE** Many methods exist for visualizing higher dimensional data in `loon`.  For e.g. see `help("l_navgraph")`, `help("l_pairs")`, or `help("l_serialaxes")`.  See also the online manual `l_web()`.
 
 
 ---
 
-#Extras
+# Extras
 
 Miscellaneous other topics on and sources of working and programming with `loon`.
 
 ---
 
 ## More examples
+
 Being able to get and set the plot contents means that it is possible to capture different
 plot states as `grobs`. 
 There are a variety of ways to see how you might put `loon` to use.
@@ -981,11 +991,14 @@ help(package = "loon")
 and more complex examples and more general discussion via `loon`'s online help
 ```{r, eval=FALSE}
 l_help()
+# or more simply via the online manual
+l_web()
 ```
 
 ---
 
 ### Other vignettes
+
 Other vignettes have been developed to cover a range of topics.  These currently include:
 
 - An example exploratory analysis: "Visible minorities in Canadian cities" available via
@@ -1057,6 +1070,7 @@ The code that appears in the console after the demo can be examined and reused t
 ## Extensions to loon via other packages
 
 ###  `zenplots` 
+
 This package is available on CRAN. 
 ```{r, eval=FALSE}
 install.packages("zenplots")

@@ -72,15 +72,15 @@ library(loon)
 #    ## Get the values for x and y from the plot
 #    ##
 #    ## For x
-#    xnew <- myPlot['xTemp']
-#    if (length(xnew) == 0) {xnew <- myPlot['x']}
+#    xnew <- myPlot["xTemp"]
+#    if (length(xnew) == 0) {xnew <- myPlot["x"]}
 #  
 #    ## For y
-#    ynew <- myPlot['yTemp']
-#    if (length(ynew) == 0) {ynew <- myPlot['y']}
+#    ynew <- myPlot["yTemp"]
+#    if (length(ynew) == 0) {ynew <- myPlot["y"]}
 #  
 #    ## Now **only** use the active selected points to construct the smooth
-#    sel <- myPlot['selected'] & myPlot['active']
+#    sel <- myPlot["selected"] & myPlot["active"]
 #    xnew <- xnew[sel]
 #    ynew <- ynew[sel]
 #    Nsel <- sum(sel)
@@ -113,7 +113,7 @@ library(loon)
 #      }
 #    }
 #    ## Update the tcl language's event handler
-#    tcl('update', 'idletasks')
+#    tcl("update", "idletasks")
 #  }
 
 ## ----bindSmooth, eval=FALSE----------------------------------------------
@@ -153,15 +153,15 @@ library(loon)
 #  updateLocalLine <- function(myPlot, minpts, df, volor="blue") {
 #    ## Get the values for x and y from the plot
 #    ## For x
-#    xnew <- myPlot['xTemp']
-#    if (length(xnew) == 0) {xnew <- myPlot['x']}
+#    xnew <- myPlot["xTemp"]
+#    if (length(xnew) == 0) {xnew <- myPlot["x"]}
 #  
 #    ## For y
-#    ynew <- myPlot['yTemp']
-#    if (length(ynew) == 0) {ynew <- myPlot['y']}
+#    ynew <- myPlot["yTemp"]
+#    if (length(ynew) == 0) {ynew <- myPlot["y"]}
 #  
 #    ## Now **only** use the active selected points to construct the smooth
-#    sel <- myPlot['selected'] & myPlot['active']
+#    sel <- myPlot["selected"] & myPlot["active"]
 #    xnew <- xnew[sel]
 #    ynew <- ynew[sel]
 #    Nsel <- sum(sel)
@@ -194,7 +194,7 @@ library(loon)
 #  
 #    }
 #    ## Update the tcl language's event handler
-#    tcl('update', 'idletasks')
+#    tcl("update", "idletasks")
 #  }
 
 ## ----bindLine, eval=FALSE------------------------------------------------

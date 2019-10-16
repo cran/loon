@@ -300,7 +300,7 @@ largest3 <- names(sort(apply(minorityPercent[,groups ],
 #  l_layer_raise(p_map, boundary.lakes.group)
 
 ## ----interiorLakes, eval=FALSE-------------------------------------------
-#  
+#  z
 #  
 #  interior.lakes <- map("lakes",
 #                        plot=FALSE,
@@ -359,7 +359,7 @@ knitr::kable(head(minority_star))
 ## ----pairsPlot, eval=FALSE-----------------------------------------------
 #  # Loon's scatterplot matrix
 #  #
-#  l_pairs(minority_star, linkingGroup="minority")
+#  l_pairs(minority_star, linkingGroup = "minority")
 
 ## ----serialAxesOverlaid, eval=FALSE--------------------------------------
 #  # Now construct the serial axes display so that
@@ -396,15 +396,15 @@ knitr::kable(head(minority_star))
 #                                  axesLayout = "radial",
 #                                  data=minority_star,
 #                                  sequence = names(minority_star),
-#                                  scaling = 'variable',
+#                                  scaling = "variable",
 #                                  showArea=TRUE)
-#  p_stars['glyph'] <- gstars
+#  p_stars["glyph"] <- gstars
 
 ## ----moveToGrid, eval=FALSE----------------------------------------------
 #  #
-#  l_move_grid(p_stars, which='all')
+#  l_move_grid(p_stars, which="all")
 #  # swapAxes neccessary to arrange west-east in the grid (columns)
-#  p_stars['swapAxes'] <- TRUE
+#  p_stars["swapAxes"] <- TRUE
 #  l_zoom(p_stars, .9)
 #  #
 
@@ -419,17 +419,17 @@ knitr::kable(head(minority_star))
 #  
 #  # Just need to color the glyphs on one of the plots
 #  # since they are all linked.
-#  s['color'] <- west_east_cols
+#  s["color"] <- west_east_cols
 
 ## ----starMap, eval=FALSE-------------------------------------------------
 #  # Add some glyphs to the map,
 #  # scale values within variates
 #  so <- l_glyph_add_serialaxes(p_map, data=minority_star,
 #                               sequence = names(minority_star),
-#                               scaling = 'variable',
+#                               scaling = "variable",
 #                               showArea=TRUE,
 #                               label="stars")
-#  p_map['glyph'] <- so
+#  p_map["glyph"] <- so
 
 ## ----observationScale, eval=FALSE----------------------------------------
 #  s["scaling"] <- "observation"
@@ -441,7 +441,7 @@ knitr::kable(head(minority_star))
 #  
 
 ## ----moveGrid, eval=FALSE------------------------------------------------
-#  l_move_grid(p_stars, which='all')
+#  l_move_grid(p_stars, which="all")
 
 ## ----PairViz, message=FALSE, error = FALSE, warning=FALSE----------------
 # Axis ordering methods can be found
@@ -512,35 +512,35 @@ names(minority_star_percent)[o_far]
 #  gstars_near <-l_glyph_add_serialaxes(p_stars,
 #                                  data=minority_star,
 #                                  sequence = names(minority_star)[o_near],
-#                                  scaling = 'observation',
+#                                  scaling = "observation",
 #                                  label = "Nearest",
 #                                  showArea=TRUE)
-#  p_stars['glyph'] <- gstars_near
+#  p_stars["glyph"] <- gstars_near
 #  
 #  gstars_far <-l_glyph_add_serialaxes(p_stars,
 #                                  data=minority_star,
 #                                  sequence = names(minority_star)[o_far],
-#                                  scaling = 'observation',
+#                                  scaling = "observation",
 #                                  label = "Farthest",
 #                                  showArea=TRUE)
-#  p_stars['glyph'] <- gstars_far
+#  p_stars["glyph"] <- gstars_far
 #  
 
 ## ----PairVizstarMap, eval=FALSE------------------------------------------
 #  # Add  glyphs to the map
 #  so_near <- l_glyph_add_serialaxes(p_map, data=minority_star,
 #                                    sequence = names(minority_star)[o_near],
-#                                    scaling = 'observation',
+#                                    scaling = "observation",
 #                                    showArea=TRUE,
 #                                    label="Nearest")
-#  p_map['glyph'] <- so_near
+#  p_map["glyph"] <- so_near
 #  
 #  so_far <- l_glyph_add_serialaxes(p_map, data=minority_star,
 #                                   sequence = names(minority_star)[o_far],
-#                                   scaling = 'observation',
+#                                   scaling = "observation",
 #                                   showArea=TRUE,
 #                                   label="Farthest")
-#  p_map['glyph'] <- so_near
+#  p_map["glyph"] <- so_near
 
 ## ----Eulerians, eval = FALSE---------------------------------------------
 #  o_greedy <- eulerian(VarDistance)

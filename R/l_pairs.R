@@ -8,7 +8,7 @@
 #' @param linkingGroup string giving the linkingGroup for all plots.  If missing,
 #' a default \code{linkingGroup} will be determined from deparsing the \code{data}.
 #' @param linkingKey a vector of strings to provide a linking identity for each row of the
-#' \code{data} data.frame.  If missing, a default \code{linkingKey} will be \code{row.names(data)}.
+#' \code{data} data.frame.  If missing, a default \code{linkingKey} will be \code{0:(nrows(data)-1)}.
 #' @param showItemLabels TRUE, logical indicating whether its itemLabel pops up over a point when
 #' the mouse hovers over it.
 #' @param itemLabel a vector of strings to be used as pop up information when the mouse hovers
@@ -59,15 +59,13 @@ l_pairs <- function(data, linkingGroup, linkingKey, showItemLabels = TRUE, itemL
                     showSerialAxes = FALSE, serialAxesArgs = list(), parent=NULL, ...) {
 
     args <- list(...)
-    if(!identical(class(data), "data.frame")) { # use of identical to deal with tibbles
-        data <- as.data.frame(data)
-    }
 
     if (missing(linkingGroup)) {
-        linkingGroup <- deparse(substitute(data))
+        linkingGroup <- paste0("l_pairs_", deparse(substitute(data)))
     }
-    if (missing(linkingKey)) {
-        linkingKey <- row.names(data)
+    # Use default as in tcl/tk
+      if (missing(linkingKey)) {
+        linkingKey <- NULL
     }
     if (missing(itemLabel)) {
         itemLabel <- row.names(data)
@@ -156,14 +154,14 @@ l_pairs <- function(data, linkingGroup, linkingKey, showItemLabels = TRUE, itemL
             # The first half are top hists, the second half are right hists
             for(i in 1:(2*nvar)){
                 if (i <= nvar) {
-                    histArgs[['x']] <- as.numeric(data[, i])
+                    histArgs[['x']] <- as.numeric(data[[varnames[i]]])
                     histArgs[['xlabel']] <- varnames[i]
                     # top level histograms
                     histArgs[['swapAxes']] <- FALSE
                     ix <- i
                     iy <- 1
                 } else {
-                    histArgs[['x']] <- as.numeric(data[, i - nvar])
+                    histArgs[['x']] <- as.numeric(data[[varnames[i - nvar]]])
                     histArgs[['xlabel']] <- varnames[i - nvar]
                     # right level histograms
                     histArgs[['swapAxes']] <- TRUE
@@ -215,7 +213,7 @@ l_pairs <- function(data, linkingGroup, linkingKey, showItemLabels = TRUE, itemL
         } else {
             if(histHeightProp != 1) warning("histHeightProp must be 1 when histograms are placed on diagonal")
             for(i in 1:nvar){
-                histArgs[['x']] <- as.numeric(data[, i])
+                histArgs[['x']] <- as.numeric(data[[varnames[i]]])
                 histArgs[['xlabel']] <- varnames[i]
                 histArgs[['swapAxes']] <- FALSE
                 histograms[[i]] <- do.call(l_hist, histArgs)
@@ -272,11 +270,15 @@ l_pairs <- function(data, linkingGroup, linkingKey, showItemLabels = TRUE, itemL
 
     ## create first plot
     for (i in 1:dim(pair)[2]) {
-        ix <- pair[2,i]; iy <- pair[1,i]
-        args[['x']] <- data[,ix]
-        args[['y']] <- data[,iy]
+        ix <- pair[2,i]
+        iy <- pair[1,i]
+
         args[['xlabel']] <- varnames[ix]
         args[['ylabel']] <- varnames[iy]
+
+        args[['x']] <- data[[varnames[ix]]]
+        args[['y']] <- data[[varnames[iy]]]
+
         scatterplots[[i]] <- do.call(l_plot, args)
         # reset names (if showHistograms)
         if (showHistograms & histLocation == "edge") {
@@ -550,3 +552,90 @@ xy_layout <- function(names){
     colnames(lay_out) <- c("x", "y")
     lay_out
 }
+
+
+
+#' @rdname l_getPlots
+#'
+#' @export
+l_getPlots.l_pairs <- function(target){
+    # throw errors if elements of compound are a not loon widget
+    lapply(target,
+           function(tar){l_throwErrorIfNotLoonWidget(tar) }
+    )
+    target
+}
+
+
+
+
+#' @rdname l_getLocations
+#'
+#' @export
+l_getLocations.l_pairs <- function(target) {
+
+    nPlots <- length(target)
+    nScatterplots <- nHistograms <- nSerialAxes <- 0
+    scatterplots <- histograms <- serialAxes <- list()
+    plotNames <- names(target)
+    for(i in 1:nPlots) {
+        if("l_plot" %in% class(target[[i]])) {
+            nScatterplots <- nScatterplots + 1
+            scatterplots[[nScatterplots]] <- target[[i]]
+            names(scatterplots)[nScatterplots] <- plotNames[i]
+        }
+        if("l_hist" %in% class(target[[i]])) {
+            nHistograms <- nHistograms + 1
+            histograms[[nHistograms]] <- target[[i]]
+            names(histograms)[nHistograms] <- plotNames[i]
+        }
+        if("l_serialaxes" %in% class(target[[i]])) {
+            nSerialAxes <- nSerialAxes + 1
+            serialAxes[[nSerialAxes]] <- target[[i]]
+            names(serialAxes)[nSerialAxes] <- plotNames[i]
+        }
+    }
+
+    nvar <- (-1 + sqrt(1 + 8 * nScatterplots)) / 2 + 1
+    showSerialAxes <- (nSerialAxes > 0)
+    showHistograms <- (nHistograms > 0)
+
+    if(showHistograms) {
+        histLocation <- if(nHistograms == (nvar - 1) * 2) "edge" else "diag"
+        if(histLocation == "edge") {
+            cells <- nvar + 1
+        } else {
+            cells <- nvar
+        }
+    } else {
+        cells <- nvar
+    }
+
+    layout_matrix <- matrix(rep(NA, (cells)^2), nrow = cells)
+    scatter_hist <- c(scatterplots, histograms)
+
+    for(i in 1:length(scatter_hist)) {
+        nameOfScatter_hist <- names(scatter_hist[i])
+        pos <- xy_layout(nameOfScatter_hist)
+        layout_matrix[pos$y, pos$x] <- i
+    }
+
+    if(showSerialAxes) {
+        serialAxesSpan <- floor(nvar/2)
+        # square space
+        for(i in 1:serialAxesSpan) {
+            for(j in 1:serialAxesSpan) {
+                layout_matrix[cells - serialAxesSpan + i, j] <- nScatterplots + nHistograms + 1
+            }
+        }
+    }
+
+    list(
+        nrow = cells,
+        ncol = cells,
+        layout_matrix = layout_matrix,
+        heights = rep(1, cells),
+        widths = rep(1, cells)
+    )
+}
+

@@ -39,6 +39,45 @@ gp
 ## ----knitr png real, echo = FALSE, out.width = "60%", fig.align = "center", fig.width = 6, fig.height = 5----
 knitr::include_graphics(path_concat(imageDirectory, "loonplot1.png"))
 
+## ----l_saveStatesRDS, eval = TRUE, message = FALSE, warning = FALSE, error = FALSE----
+# Having determined the colours you could save them (and other states)
+# in a file of your choice, here some tempfile:
+myFileName <- tempfile("myPlot", fileext = ".rds")
+
+#
+# We could save all of the "usual" states 
+# (excludes certain "basic" states, see help(l_saveStatesRDS))
+l_saveStatesRDS(p, file = myFileName)
+
+# 
+# Or simply save selected named states as an RDS
+l_saveStatesRDS(p,
+                states = c("color", "active", "selected"),
+                file = myFileName)
+
+## ----readRDS, eval = TRUE, message = FALSE, warning = FALSE, error = FALSE----
+# We have a new plot (or two)
+p_new <- l_plot(iris, showGuides = TRUE)
+h_new <- l_hist(iris$Sepal.Width, 
+                showBinHandle = FALSE, 
+                yshows = "density", 
+                showStackedColors = TRUE)
+
+# And read the saved data back in using R's readRDS() function
+p_saved_info <- readRDS(myFileName)
+# which is an object of class 
+class(p_saved_info)
+# The values on p_saved_info can now be all set using l_copyStates()
+l_copyStates(source = p_saved_info, target = p_new)
+# or selectively and even from different classes of loon plots
+h_new["color"] <- p_saved_info$color
+
+## ----plot the saved states, eval = TRUE, message = FALSE, warning = FALSE, error = FALSE, fig.align = "center", fig.width = 6, fig.height = 5, out.width = "50%"----
+plot(p_new)
+
+## ----plot the saved histogram, eval = TRUE, message = FALSE, warning = FALSE, error = FALSE, fig.align = "center", fig.width = 6, fig.height = 5, out.width = "50%"----
+plot(h_new)
+
 ## ----multiple loon plots, eval = TRUE, out.width = "60%", fig.align = "center", fig.width = 6, fig.height = 5----
 saveTitle <- p["title"]
 

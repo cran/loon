@@ -19,7 +19,7 @@ l_glyph_add_serialaxes(widget, data, sequence, linewidth = 1,
 \item{linewidth}{linewidth of outline}
 
 \item{scaling}{one of 'variable', 'data', 'observation' or 'none' to specify
-how the data is scaled. See Details for more information}
+how the data is scaled. See Details and Examples for more information.}
 
 \item{axesLayout}{either \code{"radial"} or \code{"parallel"}}
 
@@ -46,3 +46,16 @@ p <- with(olive, l_plot(oleic, stearic, color=Area))
 gs <- l_glyph_add_serialaxes(p, data=olive[,-c(1,2)], showArea=FALSE)
 p['glyph'] <- gs
 }
+\seealso{
+Other glyph functions: \code{\link{l_glyph_add.default}},
+  \code{\link{l_glyph_add_image}},
+  \code{\link{l_glyph_add_pointrange}},
+  \code{\link{l_glyph_add_polygon}},
+  \code{\link{l_glyph_add_text}},
+  \code{\link{l_glyph_add}}, \code{\link{l_glyph_delete}},
+  \code{\link{l_glyph_getLabel}},
+  \code{\link{l_glyph_getType}}, \code{\link{l_glyph_ids}},
+  \code{\link{l_glyph_relabel}},
+  \code{\link{l_primitiveGlyphs}}
+}
+\concept{glyph functions}

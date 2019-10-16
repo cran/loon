@@ -10,19 +10,19 @@ imageDirectory <- "./images/intro"
 dataDirectory <- "data"
 path_concat <- function(path1, path2, sep="/") {paste(path1, path2, sep = sep)}
 
-## ----library loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE----
+## ----library_loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE----
 library(loon)
 
-## ----first loon plot, eval = TRUE, echo = FALSE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE----
-l_plot(x = quakes$long, 
-       y = quakes$lat, 
-       xlabel = "longitude", 
-       ylabel = "latitude",
-       title = "Tonga trench earthquakes")
-
-## [1] ".l0.plot"
-## attr(,"class")
-## [1] "l_plot" "loon"
+## ----first loon plot, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE----
+#  l_plot(x = quakes$long,
+#         y = quakes$lat,
+#         xlabel = "longitude",
+#         ylabel = "latitude",
+#         title = "Tonga trench earthquakes")
+#  
+#  ## [1] ".l0.plot"
+#  ## attr(,"class")
+#  ## [1] "l_plot" "loon"
 
 ## ----loonQuakeOriginal, out.width= "60%", fig.align="center", echo=FALSE----
 knitr::include_graphics(path_concat(imageDirectory, "quakesOriginal.png"))
@@ -308,7 +308,9 @@ group1 <- myGroups[[1]]     # each group is an element of the list myGroups
 
 ## ----gettingAMap---------------------------------------------------------
 library(maps)
-NZFijiMap <- map("world2", regions=c("New Zealand", "Fiji"), plot=FALSE)
+NZFijiMap <- map("world2", 
+                 regions=c("New Zealand", "Fiji"),
+                 plot=FALSE)
 
 ## ----addingAMap,  eval = TRUE, echo = TRUE, fig.align="center", fig.width = 5, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy = FALSE----
 l_layer(p, NZFijiMap, 
@@ -410,6 +412,8 @@ p_mag_stations <- l_plot3D(x = scaled_quakes$long,
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  l_help()
+#  # or more simply via the online manual
+#  l_web()
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  vignette("minorities", package = "loon")

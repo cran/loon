@@ -9,8 +9,8 @@
 \arguments{
 \item{widget}{widget path as a string or as an object handle}
 
-\item{type}{loon-native non-primitive glyph type, one of \code{'text'}, 
-\code{'serialaxes'}, \code{'image'}, \code{'[polygon'}, or 
+\item{type}{loon-native non-primitive glyph type, one of \code{'text'},
+\code{'serialaxes'}, \code{'image'}, \code{'[polygon'}, or
 \code{'pointrange'}}
 
 \item{label}{label of a glyph (currently shown only in the glyph inspector)}
@@ -21,3 +21,16 @@
 Generic function to write new glyph types using loon's primitive
   glyphs
 }
+\seealso{
+Other glyph functions: \code{\link{l_glyph_add_image}},
+  \code{\link{l_glyph_add_pointrange}},
+  \code{\link{l_glyph_add_polygon}},
+  \code{\link{l_glyph_add_serialaxes}},
+  \code{\link{l_glyph_add_text}},
+  \code{\link{l_glyph_add}}, \code{\link{l_glyph_delete}},
+  \code{\link{l_glyph_getLabel}},
+  \code{\link{l_glyph_getType}}, \code{\link{l_glyph_ids}},
+  \code{\link{l_glyph_relabel}},
+  \code{\link{l_primitiveGlyphs}}
+}
+\concept{glyph functions}
