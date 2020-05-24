@@ -16,18 +16,22 @@ then the layer argument is not used}
 0 if success otherwise the function throws an error
 }
 \description{
-All but the \code{'model'} and the \code{'root'} layer can be 
+All but the \code{'model'} and the \code{'root'} layer can be
   dynamically deleted. If a group layer gets deleted with
   \code{l_layer_delete} then all its children layers get moved into their
   grandparent group layer.
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l1 <- l_layer_rectangle(p, x = 0:1, y = 0:1, color='red')
 l_layer_delete(l1)
 
 l2 <- l_layer_rectangle(p, x = 0:1, y = 0:1, color='yellow')
 l_layer_delete(p,l2)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

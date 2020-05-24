@@ -4,12 +4,30 @@
 \alias{l_plot.default}
 \title{The default \code{l_plot} for plotting data}
 \usage{
-\method{l_plot}{default}(x, y = NULL, color = "grey60",
-  glyph = "ccircle", size = 4, active = TRUE, selected = FALSE,
-  xlabel, ylabel, title, showLabels = TRUE, showScales = FALSE,
-  showGuides = TRUE, guidelines = "white",
-  guidesBackground = "grey92", foreground = "black",
-  background = "white", parent = NULL, ...)
+\method{l_plot}{default}(
+  x,
+  y = NULL,
+  by = NULL,
+  layout = c("grid", "wrap", "separate"),
+  connectedScales = c("cross", "row", "column", "both", "x", "y", "none"),
+  color = "grey60",
+  glyph = "ccircle",
+  size = 4,
+  active = TRUE,
+  selected = FALSE,
+  xlabel,
+  ylabel,
+  title,
+  showLabels = TRUE,
+  showScales = FALSE,
+  showGuides = TRUE,
+  guidelines = "white",
+  guidesBackground = "grey92",
+  foreground = "black",
+  background = "white",
+  parent = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{the \code{x} and \code{y} arguments provide the x and y
@@ -20,8 +38,39 @@ If supplied separately, they must be of the same length.}
 
 \item{y}{argument description is as for the \code{x} argument above.}
 
+\item{by}{loon plot can be separated by some variables into multiple panels.
+This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.}
+
+\item{layout}{layout facets as \code{'grid'}, \code{'wrap'} or \code{'separate'}}
+
+\item{connectedScales}{Determines how the scales of the facets are to be connected depending
+on which \code{layout} is used.  For each value of \code{layout}, the scales are connected
+as follows:
+\itemize{
+\item{\code{layout = "wrap":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"x"}, then  only the "x"  scales are connected}
+   \item{\code{"y"}, then only the "y" scales are connected}
+   \item{\code{"both"},  both "x" and "y" scales are connected}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected.}
+   For any other value, only the "y" scale is connected.
+   }
+   }
+\item{\code{layout = "grid":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"cross"}, then only the scales in the same row and the same column are connected}
+   \item{\code{"row"}, then both "x" and "y" scales of facets in the same row are connected}
+   \item{\code{"column"}, then both "x" and "y" scales of facets in the same column are connected}
+   \item{\code{"x"}, then all of the "x"  scales are connected (regardless of column)}
+   \item{\code{"y"}, then all of the "y" scales are connected (regardless of row)}
+   \item{\code{"both"},  both "x" and "y" scales are connected in all facets}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected in any facets.}
+   }
+   }
+ }}
+
 \item{color}{colours of points (default "grey60"); colours are repeated
-until matching the number points,}
+until matching the number points.}
 
 \item{glyph}{shape of point; must be one of the primitive glyphs
 "circle", "ccircle", "ocircle", "square", "csquare", "osquare", "triangle", "ctriangle",
@@ -34,14 +83,14 @@ serial axes glyphs may be added, but only after the plot has been created.}
 \item{size}{size of the symbol (roughly in terms of area)}
 
 \item{active}{a logical determining whether points appear or not
-(default is TRUE for all points). If a logical vector is given of length
-equal to the number of points, then it identifies which points appear (TRUE)
-and which do not (FALSE).}
+(default is \code{TRUE} for all points). If a logical vector is given of length
+equal to the number of points, then it identifies which points appear (\code{TRUE})
+and which do not (\code{FALSE}).}
 
 \item{selected}{a logical determining whether points appear selected at first
-(default is FALSE for all points). If a logical vector is given of length
-equal to the number of points, then it identifies which points are (TRUE)
-and which are not (FALSE).}
+(default is \code{FALSE} for all points). If a logical vector is given of length
+equal to the number of points, then it identifies which points are (\code{TRUE})
+and which are not (\code{FALSE}).}
 
 \item{xlabel}{Label for the horizontal (x) axis. If missing,
 one will be inferred from \code{x} if possible.}
@@ -74,7 +123,7 @@ specified (i.e. not \code{NULL}) then the plot widget needs to be placed using
 some geometry manager like \code{\link{tkpack}} or \code{\link{tkplace}} in
 order to be displayed. See the examples below.}
 
-\item{...}{named arguments to modify plot states.}
+\item{...}{named arguments to modify plot states or layouts, see details.}
 }
 \description{
 Creates an interactive 2d scatterplot. Also, if no loon
@@ -82,14 +131,23 @@ Creates an interactive 2d scatterplot. Also, if no loon
   inspector.
 }
 \details{
-The scatterplot displays a number of direct interactions with the
+\itemize{
+  \item {The scatterplot displays a number of direct interactions with the
   mouse and keyboard, these include: zooming towards the mouse cursor using
   the mouse wheel, panning by right-click dragging and various selection
   methods using the left mouse button such as sweeping, brushing and
   individual point selection. See the documentation for \code{\link{l_plot}}
   for more details about the interaction gestures.
+  }
+  \item {Some arguments to modify layouts can be passed through,
+  e.g. "separate", "byrow", etc. Check \code{\link{l_facet}}
+  to see how these arguments work.
+  }
+}
 }
 \examples{
+if(interactive()){
+
 
 # default use as scatterplot
 
@@ -117,6 +175,8 @@ p2["glyph"][p1['selected']] <- "cdiamond"
 
 gridExtra::grid.arrange(loonGrob(p1), loonGrob(p2), nrow = 1)
 
+# Layout facets
+p <- with(mtcars, l_plot(wt, mpg, by = cyl, layout = "wrap"))
 
 # Use with other tk widgets
 tt <- tktoplevel()
@@ -134,16 +194,21 @@ tkgrid.columnconfigure(tt, 1, weight=1)
 tkgrid.rowconfigure(tt, 0, weight=1)
 
 }
+}
 \seealso{
 \code{\link{l_plot_arguments}}
 
-Other two-dimensional plotting functions: \code{\link{l_plot.decomposed.ts}},
-  \code{\link{l_plot.density}}, \code{\link{l_plot.stl}},
-  \code{\link{l_plot}}
+Other two-dimensional plotting functions: 
+\code{\link{l_plot.decomposed.ts}()},
+\code{\link{l_plot.density}()},
+\code{\link{l_plot.stl}()},
+\code{\link{l_plot}()}
 
-Other loon interactive states: \code{\link{l_info_states}},
-  \code{\link{l_plot}}, \code{\link{l_state_names}},
-  \code{\link{names.loon}}
+Other loon interactive states: 
+\code{\link{l_info_states}()},
+\code{\link{l_plot}()},
+\code{\link{l_state_names}()},
+\code{\link{names.loon}()}
 }
 \concept{loon interactive states}
 \concept{two-dimensional plotting functions}

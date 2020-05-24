@@ -4,8 +4,15 @@
 \alias{l_glyph_add_pointrange}
 \title{Add a Pointrange Glyph}
 \usage{
-l_glyph_add_pointrange(widget, ymin, ymax, linewidth = 1,
-  showArea = TRUE, label = "", ...)
+l_glyph_add_pointrange(
+  widget,
+  ymin,
+  ymax,
+  linewidth = 1,
+  showArea = TRUE,
+  label = "",
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path as a string or as an object handle}
@@ -27,22 +34,28 @@ Pointrange glyphs show a filled circle at the x-y location and
   also a y-range.
 }
 \examples{
+if(interactive()){
+
 p <- l_plot(x = 1:3, color = c('red', 'blue', 'green'), showScales=TRUE)
 g <- l_glyph_add_pointrange(p, ymin=(1:3)-(1:3)/5, ymax=(1:3)+(1:3)/5)
 p['glyph'] <- g
 }
+}
 \seealso{
 \code{\link{l_glyph_add}}
 
-Other glyph functions: \code{\link{l_glyph_add.default}},
-  \code{\link{l_glyph_add_image}},
-  \code{\link{l_glyph_add_polygon}},
-  \code{\link{l_glyph_add_serialaxes}},
-  \code{\link{l_glyph_add_text}},
-  \code{\link{l_glyph_add}}, \code{\link{l_glyph_delete}},
-  \code{\link{l_glyph_getLabel}},
-  \code{\link{l_glyph_getType}}, \code{\link{l_glyph_ids}},
-  \code{\link{l_glyph_relabel}},
-  \code{\link{l_primitiveGlyphs}}
+Other glyph functions: 
+\code{\link{l_glyph_add.default}()},
+\code{\link{l_glyph_add_image}()},
+\code{\link{l_glyph_add_polygon}()},
+\code{\link{l_glyph_add_serialaxes}()},
+\code{\link{l_glyph_add_text}()},
+\code{\link{l_glyph_add}()},
+\code{\link{l_glyph_delete}()},
+\code{\link{l_glyph_getLabel}()},
+\code{\link{l_glyph_getType}()},
+\code{\link{l_glyph_ids}()},
+\code{\link{l_glyph_relabel}()},
+\code{\link{l_primitiveGlyphs}()}
 }
 \concept{glyph functions}

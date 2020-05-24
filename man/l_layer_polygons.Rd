@@ -2,11 +2,22 @@
 % Please edit documentation in R/l_layer.R
 \name{l_layer_polygons}
 \alias{l_layer_polygons}
-\title{Layer a polygons}
+\title{Layer polygons}
 \usage{
-l_layer_polygons(widget, x, y, color = "gray80", linecolor = "black",
-  linewidth = 1, label = "polygons", parent = "root", index = 0,
-  ...)
+l_layer_polygons(
+  widget,
+  x,
+  y,
+  color = "gray80",
+  linecolor = "black",
+  linewidth = 1,
+  label = "polygons",
+  parent = "root",
+  index = 0,
+  group = NULL,
+  active = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -28,7 +39,12 @@ fill is transparant}
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{group}{separate x vector or y vector into a list by group.}
+
+\item{active}{a logical determining whether objects appear or not
+(default is \code{TRUE} for all).}
+
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -43,6 +59,7 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
 
 p <- l_plot()
 
@@ -56,6 +73,17 @@ l <- l_layer_polygons(
 l_scaleto_world(p)
 
 l_info_states(l, "color")
+
+
+# Set groups
+p <- l_plot()
+l_layer_polygons(p,
+                 x = c(1, 2, 1.5, 3, 4, 6, 5, 2, 1, 3, 5, 3),
+                 y = c(1, 1, 2, 1, 1.5, 1, 4, 2, 3, 5, 6, 4),
+                 group = c(rep(1,3), rep(2,5), rep(3, 4)))
+l_scaleto_world(p)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

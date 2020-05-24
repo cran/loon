@@ -20,11 +20,11 @@
 #' @seealso \code{\link{loonGrob}}, \code{\link{plot.loon}}
 #'
 #' @examples
-#'
+#' \dontrun{
 #' library(grid)
 #' widget <- with(iris, l_plot(Sepal.Length, Sepal.Width))
 #' grid.loon(widget)
-#'
+#' }
 #' @export
 grid.loon <- function (target, name = NULL, gp = gpar(), draw = TRUE, vp = NULL) {
 
@@ -54,13 +54,14 @@ grid.loon <- function (target, name = NULL, gp = gpar(), draw = TRUE, vp = NULL)
 #' @seealso \code{\link{loonGrob}}, \code{\link{grid.loon}}, \code{\link{l_export}}
 #'
 #' @examples
-#'
-#' loonPlot <- with(iris, l_plot(Sepal.Length, Sepal.Width))
-#' loonPlot['color'] <- iris$Species
-#' loonPlot['selected'] <- iris$Species == "versicolor"
-#' l_scaleto_selected(loonPlot)
-#' loonPlot['showGuides'] <- TRUE
-#' plot(loonPlot)
+#' if(interactive()) {
+#'   loonPlot <- with(iris, l_plot(Sepal.Length, Sepal.Width))
+#'   loonPlot['color'] <- iris$Species
+#'   loonPlot['selected'] <- iris$Species == "versicolor"
+#'   l_scaleto_selected(loonPlot)
+#'   loonPlot['showGuides'] <- TRUE
+#'   plot(loonPlot)
+#' }
 #'
 #' @export
 plot.loon <- function (x, y = NULL, ...) {
@@ -94,6 +95,7 @@ plot.loon <- function (x, y = NULL, ...) {
 #'
 #' @examples
 #'
+#' \dontrun{
 #' widget <- with(iris, l_plot(Sepal.Length, Sepal.Width))
 #'
 #' lgrob <- loonGrob(widget)
@@ -102,7 +104,6 @@ plot.loon <- function (x, y = NULL, ...) {
 #' grid.ls(lgrob, viewports=TRUE, fullNames=TRUE)
 #' grid.newpage(); grid.draw(lgrob)
 #'
-#' \dontrun{
 #' p <- demo("l_layers", ask = FALSE)$value
 #'
 #' lgrob <- loonGrob(p)
@@ -141,6 +142,7 @@ loonGrob.l_plot3D <- function(target,  name = NULL, gp = NULL, vp = NULL) {
   layers_grob <- loonGrob(rl, name = "l_plot_layers")
 
   axes_coords <- target["axesCoords"]
+  radius <- scaleFator2radius(target["axisScaleFactor"])
 
   adjust_brightness <- function(z_coord, r, g, b) {
     change <- as.integer(100 + 80 * z_coord)
@@ -158,16 +160,16 @@ loonGrob.l_plot3D <- function(target,  name = NULL, gp = NULL, vp = NULL) {
   z_color <- adjust_brightness(axes_coords[[3]][3], 0, 255, 0)
 
   gTree(children = gList(cartesian2dGrob(target, layers_grob, name = "l_plot3D"),
-                         linesGrob(x = c(0.5, 0.5 + 0.08*axes_coords[[1]][1]),
-                                   y =  c(0.5, 0.5 + 0.08*axes_coords[[2]][1]),
+                         linesGrob(x = c(0.5, 0.5 + radius*axes_coords[[1]][1]),
+                                   y =  c(0.5, 0.5 + radius*axes_coords[[2]][1]),
                                    gp = gpar(col = x_color, lwd=1),
                                    name = "3d x axis"),
-                         linesGrob(x = c(0.5,0.5 + 0.08*axes_coords[[1]][2]),
-                                   y =  c(0.5,0.5 + 0.08*axes_coords[[2]][2]),
+                         linesGrob(x = c(0.5,0.5 + radius*axes_coords[[1]][2]),
+                                   y =  c(0.5,0.5 + radius*axes_coords[[2]][2]),
                                    gp = gpar(col = y_color, lwd=1),
                                    name = "3d y axis"),
-                         linesGrob(x = c(0.5,0.5 + 0.08*axes_coords[[1]][3]),
-                                   y =  c(0.5,0.5 + 0.08*axes_coords[[2]][3]),
+                         linesGrob(x = c(0.5,0.5 + radius*axes_coords[[1]][3]),
+                                   y =  c(0.5,0.5 + radius*axes_coords[[2]][3]),
                                    gp = gpar(col = z_color, lwd=1),
                                    name = "3d z axis")),
         name = name, gp = gp, vp = vp)
@@ -510,7 +512,9 @@ loonGrob.l_layer_line <- function(target, name = NULL, gp = NULL, vp = NULL) {
   if(length(states$x)!=0  & length(states$y)!=0) {
     linesGrob(
       x = states$x, y = states$y,
-      gp = if(is.null(gp)) gpar(col = states$color, lwd = states$linewidth) else gp,
+      gp = if(is.null(gp)) gpar(col = states$color,
+                                lwd = states$linewidth,
+                                lty = dash2lty(states$dash)) else gp,
       name = if(is.null(name)) {
         label <- l_layer_getLabel(widget, target)
         paste0("l_layer_line: ", label, " ", names(label))
@@ -529,7 +533,6 @@ loonGrob.l_layer_line <- function(target, name = NULL, gp = NULL, vp = NULL) {
     )
   }
 }
-
 
 #' @export
 loonGrob.l_layer_rectangle <- function(target, name = NULL, gp = NULL, vp = NULL) {
@@ -1348,4 +1351,17 @@ condGrob <- function (test = TRUE,
 
 background_alpha <- function(x) {
   ifelse(x == "#999999999999", 0, 1)
+}
+
+dash2lty <- function(x) {
+  if(length(x) == 0)
+    1
+  else {
+    x <- as.numeric(x)
+    x[1]
+  }
+}
+
+scaleFator2radius <- function(x) {
+  x/12.5
 }

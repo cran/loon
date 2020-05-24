@@ -1,6 +1,7 @@
 #' @rdname loonGrob
 #'
 #' @examples
+#' if(interactive()) {
 #'
 #' ## l_plot scatterplot examples
 #'
@@ -19,6 +20,7 @@
 #' g <- loonGrob(p)
 #' grid.newpage(); grid.draw(g)
 #'
+#'}
 #' @export
 loonGrob.l_layer_scatterplot <- function(target, name = NULL, gp = NULL, vp = NULL) {
 
@@ -159,6 +161,8 @@ loonGlyphGrob.primitive_glyph <- function(widget, x, glyph_info) {
 #' @noRd
 #'
 #' @examples
+#' if(interactive()) {
+#'
 #' p <- with(olive, l_plot(palmitic ~ stearic, color = Region))
 #' img_paths <- list.files(file.path(find.package(package = 'loon'), "images"), full.names = TRUE)
 #' imgs <- setNames(l_image_import_files(img_paths),
@@ -174,7 +178,7 @@ loonGlyphGrob.primitive_glyph <- function(widget, x, glyph_info) {
 #'
 #' library(grid)
 #' grid.newpage(); grid.draw(gr)
-#'
+#'}
 #' \dontrun{
 #' p['glyph'] <- g
 #' gr <- loonGrob(p)
@@ -439,8 +443,8 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
                     test = showAxes,
                     grobFun = polylineGrob,
                     name = "axes",
-                    x = xpos + unit(c(rep(0, dimension), scaleX * cos(angle)), "mm"),
-                    y = ypos + unit(c(rep(0, dimension), scaleY * sin(angle)), "mm"),
+                    x = xpos + unit(c(rep(0, dimension), radialxais), "mm"),
+                    y = ypos + unit(c(rep(0, dimension), radialyais), "mm"),
                     id = rep(1:dimension, 2),
                     gp = gpar(col = axesColor)
                 )

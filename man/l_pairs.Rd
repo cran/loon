@@ -4,10 +4,21 @@
 \alias{l_pairs}
 \title{An interactive scatterplot matrix}
 \usage{
-l_pairs(data, linkingGroup, linkingKey, showItemLabels = TRUE, itemLabel,
-  showHistograms = FALSE, histLocation = c("edge", "diag"),
-  histHeightProp = 1, histArgs = list(), showSerialAxes = FALSE,
-  serialAxesArgs = list(), parent = NULL, ...)
+l_pairs(
+  data,
+  linkingGroup,
+  linkingKey,
+  showItemLabels = TRUE,
+  itemLabel,
+  showHistograms = FALSE,
+  histLocation = c("edge", "diag"),
+  histHeightProp = 1,
+  histArgs = list(),
+  showSerialAxes = FALSE,
+  serialAxesArgs = list(),
+  parent = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a data.frame with numerical data to create the scatterplot matrix}
@@ -57,6 +68,8 @@ Function creates a scatterplot matrix using loon's scatterplot
   widgets
 }
 \examples{
+if(interactive()){
+
 p <- l_pairs(iris[,-5], color=iris$Species, linkingGroup = "iris")
 
 p <- l_pairs(iris[,-5], color=iris$Species, linkingGroup = "iris",
@@ -70,7 +83,9 @@ names(p)
 for (plot in l_getPlots(p)) {
       if (is(plot, "l_plot")) {
           plot["glyph"] <- "ocircle"}
-          }
+}
+
+}
 }
 \seealso{
 \code{\link{l_plot}} and \code{\link{l_getPlots}}

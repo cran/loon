@@ -4,12 +4,33 @@
 \alias{l_plot3D.default}
 \title{The default \code{l_plot} method to create 3d interactive scatterplot}
 \usage{
-\method{l_plot3D}{default}(x, y = NULL, z = NULL,
-  axisScaleFactor = 1, color = "grey60", glyph = "ccircle",
-  size = 4, active = TRUE, selected = FALSE, xlabel, ylabel, zlabel,
-  title, showLabels = TRUE, showScales = FALSE, showGuides = TRUE,
-  guidelines = "white", guidesBackground = "grey92",
-  foreground = "black", background = "white", parent = NULL, ...)
+\method{l_plot3D}{default}(
+  x,
+  y = NULL,
+  z = NULL,
+  axisScaleFactor = 1,
+  by = NULL,
+  layout = c("grid", "wrap", "separate"),
+  connectedScales = c("cross", "row", "column", "both", "x", "y", "none"),
+  color = "grey60",
+  glyph = "ccircle",
+  size = 4,
+  active = TRUE,
+  selected = FALSE,
+  xlabel,
+  ylabel,
+  zlabel,
+  title,
+  showLabels = TRUE,
+  showScales = FALSE,
+  showGuides = TRUE,
+  guidelines = "white",
+  guidesBackground = "grey92",
+  foreground = "black",
+  background = "white",
+  parent = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{the x, y and z arguments provide the x, y and z coordinates for the plot.
@@ -29,7 +50,38 @@ Default is 1.
     All numerical values are acceptable (0 removes the axes, < 0 inverts the direction of
     all axes.)}
 
-\item{color}{colours of points; colours are repeated until matching the number points,}
+\item{by}{loon plot can be separated by some variables into multiple panels.
+This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.}
+
+\item{layout}{layout facets as \code{'grid'}, \code{'wrap'} or \code{'separate'}}
+
+\item{connectedScales}{Determines how the scales of the facets are to be connected depending
+on which \code{layout} is used.  For each value of \code{layout}, the scales are connected
+as follows:
+\itemize{
+\item{\code{layout = "wrap":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"x"}, then  only the "x"  scales are connected}
+   \item{\code{"y"}, then only the "y" scales are connected}
+   \item{\code{"both"},  both "x" and "y" scales are connected}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected.}
+   For any other value, only the "y" scale is connected.
+   }
+   }
+\item{\code{layout = "grid":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"cross"}, then only the scales in the same row and the same column are connected}
+   \item{\code{"row"}, then both "x" and "y" scales of facets in the same row are connected}
+   \item{\code{"column"}, then both "x" and "y" scales of facets in the same column are connected}
+   \item{\code{"x"}, then all of the "x"  scales are connected (regardless of column)}
+   \item{\code{"y"}, then all of the "y" scales are connected (regardless of row)}
+   \item{\code{"both"},  both "x" and "y" scales are connected in all facets}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected in any facets.}
+   }
+   }
+ }}
+
+\item{color}{colours of points; colours are repeated until matching the number points.}
 
 \item{glyph}{shape of point; must be one of the primitive glyphs
              "circle", "ccircle", "ocircle", "square", "csquare", "osquare", "triangle", "ctriangle",
@@ -44,14 +96,14 @@ Default is 1.
 \item{size}{size of the symbol (roughly in terms of area)}
 
 \item{active}{a logical determining whether points appear or not
-(default is TRUE for all points). If a logical vector is given of length
-equal to the number of points, then it identifies which points appear (TRUE)
-and which do not (FALSE).}
+(default is \code{TRUE} for all points). If a logical vector is given of length
+equal to the number of points, then it identifies which points appear (\code{TRUE})
+and which do not (\code{FALSE}).}
 
 \item{selected}{a logical determining whether points appear selected at first
-(default is FALSE for all points). If a logical vector is given of length
-equal to the number of points, then it identifies which points are (TRUE)
-and which are not (FALSE).}
+(default is \code{FALSE} for all points). If a logical vector is given of length
+equal to the number of points, then it identifies which points are (\code{TRUE})
+and which are not (\code{FALSE}).}
 
 \item{xlabel}{Label for the horizontal (x) axis. If missing,
 one will be inferred from \code{x} if possible.}
@@ -102,6 +154,7 @@ The scatterplot displays a number of direct interactions with the
   for more details about the interaction gestures.
 }
 \examples{
+if(interactive()){
 
 # default use as scatterplot
 
@@ -118,8 +171,10 @@ l_configure(p1, linkingGroup = "quakes", sync = "push")
 l_configure(p2, linkingGroup = "quakes", sync = "push")
 
 }
+}
 \seealso{
-Other three-dimensional plotting functions: \code{\link{l_plot3D}},
-  \code{\link{l_scale3D}}
+Other three-dimensional plotting functions: 
+\code{\link{l_plot3D}()},
+\code{\link{l_scale3D}()}
 }
 \concept{three-dimensional plotting functions}

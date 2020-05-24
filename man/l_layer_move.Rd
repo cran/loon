@@ -22,12 +22,14 @@ parent layer of the layer}
 0 if success otherwise the function throws an error
 }
 \description{
-The postition of a layer in the layer tree determines the 
-  rendering order. That is, the non-group layers are rendered in order of a 
+The postition of a layer in the layer tree determines the
+  rendering order. That is, the non-group layers are rendered in order of a
   Depth-first traversal of the layer tree. The toplevel group layer is called
   \code{'root'}.
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 
 l <- l_layer_rectangle(p, x=0:1, y=0:1, color="steelblue")
@@ -39,6 +41,8 @@ l_layer_printTree(p)
 
 l_layer_move(p, 'model', parent=g)
 l_layer_printTree(p)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_layer_printTree}},

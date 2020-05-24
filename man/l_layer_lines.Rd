@@ -2,10 +2,21 @@
 % Please edit documentation in R/l_layer.R
 \name{l_layer_lines}
 \alias{l_layer_lines}
-\title{Layer a lines}
+\title{Layer lines}
 \usage{
-l_layer_lines(widget, x, y, color = "black", linewidth = 1,
-  label = "lines", parent = "root", index = 0, ...)
+l_layer_lines(
+  widget,
+  x,
+  y,
+  color = "black",
+  linewidth = 1,
+  label = "lines",
+  parent = "root",
+  index = 0,
+  group = NULL,
+  active = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -24,7 +35,12 @@ l_layer_lines(widget, x, y, color = "black", linewidth = 1,
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{group}{separate x vector or y vector into a list by group.}
+
+\item{active}{a logical determining whether objects appear or not
+(default is \code{TRUE} for all).}
+
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -39,6 +55,8 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 s <- Filter(function(df)nrow(df) > 1, split(UsAndThem, UsAndThem$Country))
 sUaT <- Map(function(country){country[order(country$Year),]} , s)
 xcoords <- Map(function(x)x$Year, sUaT)
@@ -48,6 +66,18 @@ region <- sapply(sUaT, function(x)as.character(x$Geographic.Region[1]))
 p <- l_plot(showItemLabels=TRUE)
 l <- l_layer_lines(p, xcoords, ycoords, itemLabel=names(sUaT), color=region)
 l_scaleto_layer(l)
+
+# Set groups
+p <- l_plot(showItemLabels=TRUE)
+l <- l_layer_lines(p,
+                   x = c((0:4)/10, rep(.5, 5), (10:6)/10, rep(.5, 5)),
+                   y = c(rep(.5, 5), (10:6/10), rep(.5, 5), (0:4)/10),
+                   group = rep(1:5, 4),
+                   linewidth = 4,
+                   col = l_getColorList()[1:5])
+l_scaleto_layer(l)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

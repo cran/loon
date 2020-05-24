@@ -20,22 +20,28 @@ then the labels get extracted with \code{\link{as.character}}.}
 Each text glyph can be a multiline string.
 }
 \examples{
+if(interactive()){
+
 p <- l_plot(iris, color = iris$Species)
 g <- l_glyph_add_text(p, iris$Species, "test_label")
 p['glyph'] <- g
 }
+}
 \seealso{
 \code{\link{l_glyph_add}}
 
-Other glyph functions: \code{\link{l_glyph_add.default}},
-  \code{\link{l_glyph_add_image}},
-  \code{\link{l_glyph_add_pointrange}},
-  \code{\link{l_glyph_add_polygon}},
-  \code{\link{l_glyph_add_serialaxes}},
-  \code{\link{l_glyph_add}}, \code{\link{l_glyph_delete}},
-  \code{\link{l_glyph_getLabel}},
-  \code{\link{l_glyph_getType}}, \code{\link{l_glyph_ids}},
-  \code{\link{l_glyph_relabel}},
-  \code{\link{l_primitiveGlyphs}}
+Other glyph functions: 
+\code{\link{l_glyph_add.default}()},
+\code{\link{l_glyph_add_image}()},
+\code{\link{l_glyph_add_pointrange}()},
+\code{\link{l_glyph_add_polygon}()},
+\code{\link{l_glyph_add_serialaxes}()},
+\code{\link{l_glyph_add}()},
+\code{\link{l_glyph_delete}()},
+\code{\link{l_glyph_getLabel}()},
+\code{\link{l_glyph_getType}()},
+\code{\link{l_glyph_ids}()},
+\code{\link{l_glyph_relabel}()},
+\code{\link{l_primitiveGlyphs}()}
 }
 \concept{glyph functions}

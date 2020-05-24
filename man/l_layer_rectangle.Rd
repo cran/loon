@@ -4,9 +4,18 @@
 \alias{l_layer_rectangle}
 \title{Layer a rectangle}
 \usage{
-l_layer_rectangle(widget, x, y, color = "gray80", linecolor = "black",
-  linewidth = 1, label = "rectangle", parent = "root", index = 0,
-  ...)
+l_layer_rectangle(
+  widget,
+  x,
+  y,
+  color = "gray80",
+  linecolor = "black",
+  linewidth = 1,
+  label = "rectangle",
+  parent = "root",
+  index = 0,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -27,7 +36,7 @@ l_layer_rectangle(widget, x, y, color = "gray80", linecolor = "black",
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -42,9 +51,13 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l <- l_layer_rectangle(p, x=c(2,3), y=c(1,10), color='steelblue')
 l_scaleto_layer(l)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

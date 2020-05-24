@@ -11,8 +11,8 @@ l_navgraph(data, separator = ":", graph = NULL, ...)
 
 \item{separator}{string the separates variable names in 2d graph nodes}
 
-\item{graph}{optional, graph or loongraph object with navigation graph. If 
-the graph argument is not used then a 3d and 4d transition graph and a 
+\item{graph}{optional, graph or loongraph object with navigation graph. If
+the graph argument is not used then a 3d and 4d transition graph and a
 complete transition graph is added.}
 
 \item{...}{arguments passed on to modify the scatterplot plot states}
@@ -23,13 +23,17 @@ named list with \code{graph} handle, \code{plot} handle,
   handle.
 }
 \description{
-Creates a navigation graph, a graphswitch, a navigator and a 
+Creates a navigation graph, a graphswitch, a navigator and a
   geodesic2d context added, and a scatterplot.
 }
 \details{
 For more information run: \code{l_help("learn_R_display_graph.html#l_navgraph")}
 }
 \examples{
+if(interactive()){
+
 ng <- l_navgraph(oliveAcids, color=olive$Area)
 ng2 <- l_navgraph(oliveAcids, separator='-', color=olive$Area)
+
+}
 }

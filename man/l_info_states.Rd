@@ -26,6 +26,8 @@ Loon's built-in object documentation. Can be used with every
   contexts.  This is a generic function.
 }
 \examples{
+if(interactive()){
+
 p <- l_plot(iris, linkingGroup="iris")
 i <- l_info_states(p)
 names(p)
@@ -38,10 +40,14 @@ l_info_states(l)
 
 h <- l_hist(iris$Sepal.Length, linkingGroup="iris")
 l_info_states(h)
+
+}
 }
 \seealso{
-Other loon interactive states: \code{\link{l_plot.default}},
-  \code{\link{l_plot}}, \code{\link{l_state_names}},
-  \code{\link{names.loon}}
+Other loon interactive states: 
+\code{\link{l_plot.default}()},
+\code{\link{l_plot}()},
+\code{\link{l_state_names}()},
+\code{\link{names.loon}()}
 }
 \concept{loon interactive states}

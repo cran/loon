@@ -15,7 +15,7 @@ then the layer argument is not used}
 \value{
 One of: \code{'group'}, \code{'polygon'}, \code{'text'},
   \code{'line'}, \code{'rectangle'}, \code{'oval'}, \code{'points'},
-  \code{'texts'}, \code{'polygons'}, \code{'rectangles'}, \code{'lines'} and 
+  \code{'texts'}, \code{'polygons'}, \code{'rectangles'}, \code{'lines'} and
   \code{'scatterplot'}, \code{'histogram'}, \code{'serialaxes'} and
   \code{'graph'}.
 }
@@ -27,10 +27,14 @@ To see the manual page of \code{\link{l_layer}} for all the
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l <- l_layer_rectangle(p, x=0:1, y=0:1)
 l_layer_getType(p, l)
 l_layer_getType(p, 'model')
+
+}
 }
 \seealso{
 \code{\link{l_layer}}

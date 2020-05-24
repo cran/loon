@@ -4,8 +4,17 @@
 \alias{l_plot.density}
 \title{The \code{l_plot} method for \code{density} objects.}
 \usage{
-\method{l_plot}{density}(x, y = NULL, xlabel = NULL, ylabel = NULL,
-  title = NULL, linewidth = 2, color = NULL, size = 0.5, ...)
+\method{l_plot}{density}(
+  x,
+  y = NULL,
+  xlabel = NULL,
+  ylabel = NULL,
+  title = NULL,
+  linewidth = 2,
+  color = NULL,
+  size = 0.5,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{density} object}
@@ -33,15 +42,21 @@ Creates an loon plot displaying contours
              of the supplied (kernel) density estimate
 }
 \examples{
+if(interactive()){
+
 ds <- density(faithful$eruptions)
 p <- l_plot(ds, color = "steelblue")
+
+}
 
 }
 \seealso{
 \code{\link{l_layer.density}}
 
-Other two-dimensional plotting functions: \code{\link{l_plot.decomposed.ts}},
-  \code{\link{l_plot.default}}, \code{\link{l_plot.stl}},
-  \code{\link{l_plot}}
+Other two-dimensional plotting functions: 
+\code{\link{l_plot.decomposed.ts}()},
+\code{\link{l_plot.default}()},
+\code{\link{l_plot.stl}()},
+\code{\link{l_plot}()}
 }
 \concept{two-dimensional plotting functions}

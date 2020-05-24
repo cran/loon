@@ -1,3 +1,38 @@
+# loon 1.3.0
+
+* several new features added to loon plots
+    - NAs are now accommodated
+    - histograms recognize factors to produce barplots
+
+* group by and facetting in loon plots
+    - l_plot() and l_hist() now accept arguments by and facet
+    
+* improved docuentation
+    - new vignettes
+    - better organized reference manual via l_web()
+    
+* in some OSes the function l_image_import_files() has stopped working
+    - seems to be a problem with the tcltk function tkimage.create()
+    - tkimage.create() function works on older .png files but seemingly not 
+    on newer ones
+    - l_make_glyphs() calls l_image_import_files() and so although it will still create the necessary png files, it may fail to read them back in.
+    - the problem has been observed (unreliably) to work if the png is further processed outside R.
+    - so demo("l_make_glyphs") has been removed
+    
+    
+# loon 1.2.3.9000
+
+* deprecated l_saveStatesRDS() 
+    - replaced by l_saveStates
+    - reasoning for name change is to have the same name be used in 
+    the Python release for the same functionality
+    - introduced l_getSavedStates() to read the states (instead of readRDS for the
+    same reason as above).
+    
+* updated l_cget()
+    - Fixed reading of labels to retrieve raw characters so that braces etc. can appear in labels
+    - updated l_hist.factor so that a layer of factor level labels appear below the corresponding bar
+    
 # loon 1.2.3
 
 * added l_saveStatesRDS()

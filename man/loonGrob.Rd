@@ -17,26 +17,19 @@
 \usage{
 loonGrob(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_compound}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_compound}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_layer_graph}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_layer_graph}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_layer_histogram}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_layer_histogram}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_layer_scatterplot}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_layer_scatterplot}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_navgraph}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_navgraph}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_navigator}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_navigator}(target, name = NULL, gp = NULL, vp = NULL)
 
-\method{loonGrob}{l_serialaxes}(target, name = NULL, gp = NULL,
-  vp = NULL)
+\method{loonGrob}{l_serialaxes}(target, name = NULL, gp = NULL, vp = NULL)
 
 \method{loonGrob}{l_ts}(target, name = NULL, gp = NULL, vp = NULL)
 }
@@ -62,6 +55,7 @@ Grid grobs are useful to create publication quality graphics.
 }
 \examples{
 
+\dontrun{
 widget <- with(iris, l_plot(Sepal.Length, Sepal.Width))
 
 lgrob <- loonGrob(widget)
@@ -70,7 +64,6 @@ library(grid)
 grid.ls(lgrob, viewports=TRUE, fullNames=TRUE)
 grid.newpage(); grid.draw(lgrob)
 
-\dontrun{
 p <- demo("l_layers", ask = FALSE)$value
 
 lgrob <- loonGrob(p)
@@ -165,7 +158,6 @@ h['colorStackingOrder'] <- c("selected", unique(h['color']))
 g <- loonGrob(h)
 grid.newpage(); grid.draw(g)
 
-
 h['colorStackingOrder'] <- rev(h['colorStackingOrder'])
 
 # To print directly use either
@@ -174,6 +166,7 @@ plot(h)
 grid.loon(h)
 }
 
+if(interactive()) {
 
 ## l_plot scatterplot examples
 
@@ -192,6 +185,7 @@ p['selected'] <- c(TRUE, FALSE)
 g <- loonGrob(p)
 grid.newpage(); grid.draw(g)
 
+}
 
 \dontrun{
 ## navgraph examples
@@ -211,14 +205,15 @@ grid.draw(lgrob)
 
 
 ## Serial axes (radial and parallel coordinate) examples
-
-s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
-sGrob_radial <- loonGrob(s)
-library(grid)
-grid.newpage(); grid.draw(sGrob_radial)
-s['axesLayout'] <- 'parallel'
-sGrob_parallel <- loonGrob(s)
-grid.newpage(); grid.draw(sGrob_parallel)
+if(interactive()) {
+  s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
+  sGrob_radial <- loonGrob(s)
+  library(grid)
+  grid.newpage(); grid.draw(sGrob_radial)
+  s['axesLayout'] <- 'parallel'
+  sGrob_parallel <- loonGrob(s)
+  grid.newpage(); grid.draw(sGrob_parallel)
+}
 
 
 \dontrun{

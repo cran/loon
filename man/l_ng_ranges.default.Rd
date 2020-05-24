@@ -7,12 +7,12 @@
 \method{l_ng_ranges}{default}(measures, data, separator = ":", ...)
 }
 \arguments{
-\item{measures}{matrix or data.frame with measures (columns) for variable 
+\item{measures}{matrix or data.frame with measures (columns) for variable
 pairs (rows) and rownames of the two variates separated by separator}
 
 \item{data}{data frame for scatterplot}
 
-\item{separator}{a string that separates the variable pair string into the 
+\item{separator}{a string that separates the variable pair string into the
 individual variables}
 
 \item{...}{arguments passed on to configure the scatterplot}
@@ -23,14 +23,16 @@ named list with plots-, graph-, plot-, navigator-, and context
   \code{env}.
 }
 \description{
-Measures object is a matrix or data.frame with measures 
-  (columns) for variable pairs (rows) and rownames of the two variates 
+Measures object is a matrix or data.frame with measures
+  (columns) for variable pairs (rows) and rownames of the two variates
   separated by separator
 }
 \details{
 For more information run: \code{l_help("learn_R_display_graph.html#l_ng_ranges")}
 }
 \examples{
+if (interactive()){
+
 # Simple example with generated data
 n <- 100
 dat <- data.frame(
@@ -57,11 +59,13 @@ m1d <- data.frame(
      row.names = names(dat)
 )
 
-nav <- l_ng_ranges(m1d, dat) 
+nav <- l_ng_ranges(m1d, dat)
+
+}
 }
 \seealso{
-\code{\link{l_ng_ranges}}, \code{\link{l_ng_ranges.measures}}, 
-  \code{\link{l_ng_ranges.scagnostics}}, \code{\link{measures1d}}, 
-  \code{\link{measures2d}}, \code{\link{scagnostics2d}}, 
+\code{\link{l_ng_ranges}}, \code{\link{l_ng_ranges.measures}},
+  \code{\link{l_ng_ranges.scagnostics}}, \code{\link{measures1d}},
+  \code{\link{measures2d}}, \code{\link{scagnostics2d}},
   \code{\link{l_ng_ranges}}
 }

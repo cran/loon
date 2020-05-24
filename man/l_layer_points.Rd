@@ -2,10 +2,20 @@
 % Please edit documentation in R/l_layer.R
 \name{l_layer_points}
 \alias{l_layer_points}
-\title{Layer a points}
+\title{Layer points}
 \usage{
-l_layer_points(widget, x, y = NULL, color = "gray60", size = 6,
-  label = "points", parent = "root", index = 0, ...)
+l_layer_points(
+  widget,
+  x,
+  y = NULL,
+  color = "gray60",
+  size = 6,
+  label = "points",
+  parent = "root",
+  index = 0,
+  active = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -14,7 +24,7 @@ l_layer_points(widget, x, y = NULL, color = "gray60", size = 6,
 function or any \emph{R} object with a plot method can be provided as x and
 y are passed on to \code{\link{xy.coords}}}
 
-\item{y}{the y coordinates of the line, optional if x is an appropriate 
+\item{y}{the y coordinates of the line, optional if x is an appropriate
 structure.}
 
 \item{color}{color of points}
@@ -27,7 +37,10 @@ structure.}
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{active}{a logical determining whether objects appear or not
+(default is \code{TRUE} for all).}
+
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{

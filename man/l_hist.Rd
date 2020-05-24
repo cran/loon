@@ -4,14 +4,59 @@
 \alias{l_hist}
 \title{Create an interactive histogram}
 \usage{
-l_hist(x, yshows = c("frequency", "density"), showStackedColors = TRUE,
-  origin = NULL, binwidth = NULL, showBinHandle = FALSE,
-  xlabel = NULL, parent = NULL, ...)
+l_hist(
+  x,
+  yshows = c("frequency", "density"),
+  by = NULL,
+  layout = c("grid", "wrap", "separate"),
+  connectedScales = c("cross", "row", "column", "both", "x", "y", "none"),
+  showStackedColors = TRUE,
+  origin = NULL,
+  binwidth = NULL,
+  showBinHandle = FALSE,
+  color = "grey60",
+  active = TRUE,
+  selected = FALSE,
+  xlabel = NULL,
+  parent = NULL,
+  ...
+)
 }
 \arguments{
-\item{x}{vector with numerical data to perform the binning onx,}
+\item{x}{vector with numerical data to perform the binning on x,}
 
 \item{yshows}{one of "frequency" (default) or  "density"}
+
+\item{by}{loon plot can be separated by some variables into multiple panels.
+This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.}
+
+\item{layout}{layout facets as \code{'grid'}, \code{'wrap'} or \code{'separate'}}
+
+\item{connectedScales}{Determines how the scales of the facets are to be connected depending
+on which \code{layout} is used.  For each value of \code{layout}, the scales are connected
+as follows:
+\itemize{
+\item{\code{layout = "wrap":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"x"}, then  only the "x"  scales are connected}
+   \item{\code{"y"}, then only the "y" scales are connected}
+   \item{\code{"both"},  both "x" and "y" scales are connected}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected.}
+   For any other value, only the "y" scale is connected.
+   }
+   }
+\item{\code{layout = "grid":}  Across all facets, when \code{connectedScales} is
+   \itemize{
+   \item{\code{"cross"}, then only the scales in the same row and the same column are connected}
+   \item{\code{"row"}, then both "x" and "y" scales of facets in the same row are connected}
+   \item{\code{"column"}, then both "x" and "y" scales of facets in the same column are connected}
+   \item{\code{"x"}, then all of the "x"  scales are connected (regardless of column)}
+   \item{\code{"y"}, then all of the "y" scales are connected (regardless of row)}
+   \item{\code{"both"},  both "x" and "y" scales are connected in all facets}
+   \item{\code{"none"},  neither "x" nor "y" scales are connected in any facets.}
+   }
+   }
+ }}
 
 \item{showStackedColors}{if TRUE (default) then bars will be coloured according to
 colours of the points; if FALSE, then the bars will be a uniform colour
@@ -20,19 +65,33 @@ except for highlighted points.}
 \item{origin}{numeric scalar to define the binning origin}
 
 \item{binwidth}{a numeric scalar to specify the binwidth
-If NULL \code{binwidth} is set using David Scott's rule when \code{x} is numeric and
+If NULL \code{binwidth} is set using David Scott's rule when \code{x} is numeric
+(namely 3.49 * sd(x)/(n ^(1/3)) if sd(x) > 0 and 1 if sd(x) == 0)
 and using the minumum numerical difference between factor levels when \code{x}
-is a factor or a character vector.}
+is a factor or a character vector (coerced to factor).}
 
 \item{showBinHandle}{If \code{TRUE}, then an interactive "bin handle" appears on the plot
 whose movement resets the \code{origin} and the \code{binwidth}.  Default is \code{FALSE}}
+
+\item{color}{colour fills of bins (default "grey60"); colours are repeated
+until matching the number x.}
+
+\item{active}{a logical determining whether x appears or not
+(default is \code{TRUE} for all x). If a logical vector is given of length
+equal to the number of x, then it identifies which x appears (\code{TRUE})
+and which does not (\code{FALSE}).}
+
+\item{selected}{a logical determining whether x appears selected at first
+(default is \code{FALSE} for all x). If a logical vector is given of length
+equal to the number of x, then it identifies which x is (\code{TRUE})
+and which is not (\code{FALSE}).}
 
 \item{xlabel}{label to be used on the horizontal axis. If NULL, an attempt at a meaningful label
 inferred from \code{x} will be made.}
 
 \item{parent}{parent widget path}
 
-\item{...}{named arguments to modify the histogram plot states}
+\item{...}{named arguments to modify the histogram plot states or layouts, see details.}
 }
 \value{
 widget handle
@@ -42,14 +101,24 @@ widget handle
   loon's other displays
 }
 \details{
-Note that when changing the \code{yshows} state form
+\itemize{
+  \item {
+  Note that when changing the \code{yshows} state from
   \code{'frequency'} to \code{'density'} you might have to use
   \code{\link{l_scaleto_world}} to show the complete histogram in the plotting
   region.
+  }
+  \item {Some arguments to modify layouts can be passed through,
+  e.g. "separate", "byrow", etc.
+  Check \code{\link{l_facet}} to see how these arguments work.
+  }
+}
 
 For more information run: \code{l_help("learn_R_display_hist")}
 }
 \examples{
+if(interactive()){
+
 h <- l_hist(iris$Sepal.Length)
 
 names(h)
@@ -80,6 +149,7 @@ grid.loon(h)
 # or to save the grid data structure (grob) for later use
 hg <- loonGrob(h)
 
+}
 }
 \seealso{
 \code{\link{l_plot}}

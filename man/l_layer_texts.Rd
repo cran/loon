@@ -2,28 +2,51 @@
 % Please edit documentation in R/l_layer.R
 \name{l_layer_texts}
 \alias{l_layer_texts}
-\title{Layer a texts}
+\title{Layer texts}
 \usage{
-l_layer_texts(widget, x, y, text, color = "gray60", size = 6,
-  angle = 0, label = "texts", parent = "root", index = 0, ...)
+l_layer_texts(
+  widget,
+  x,
+  y,
+  text,
+  color = "gray60",
+  size = 6,
+  angle = 0,
+  anchor = "center",
+  justify = "center",
+  label = "texts",
+  parent = "root",
+  index = 0,
+  active = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
 
-\item{x}{the coordinates of line. Alternatively, a single plotting structure,
-function or any \emph{R} object with a plot method can be provided as x and
-y are passed on to \code{\link{xy.coords}}}
+\item{x}{vector of x coordinates}
 
-\item{y}{the y coordinates of the line, optional if x is an appropriate 
-structure.}
+\item{y}{vector of y coordinates}
 
 \item{text}{vector with text strings}
 
-\item{color}{color of line}
+\item{color}{color of text}
 
 \item{size}{font size}
 
 \item{angle}{text rotation}
+
+\item{anchor}{specifies how the information in a text is to be displayed in the widget.
+Must be one of the values c("n", "ne", "e", "se", "s", "sw", "w", "nw", "center).
+For example, "nw" means display the information such that its top-left corner is at the
+top-left corner of the widget.}
+
+\item{justify}{when there are multiple lines of text displayed in a widget,
+this option determines how the lines line up with each other.
+Must be one of c("left", "center", "right").
+"Left" means that the lines' left edges all line up,
+"center" means that the lines' centers are aligned,
+and "right" means that the lines' right edges line up.}
 
 \item{label}{label used in the layers inspector}
 
@@ -31,7 +54,10 @@ structure.}
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{active}{a logical determining whether objects appear or not
+(default is \code{TRUE} for all).}
+
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -41,14 +67,23 @@ layer object handle, layer id
 Loon's displays that are based on Cartesian coordinates (i.e.
   scatterplot, histogram and graph display) allow for layering visual
   information including polygons, text and rectangles.
+
+Layer a vector of character strings.
 }
 \details{
+As a side effect of \code{Tcl}'s text-based design, it is best to
+  use \code{l_layer_text} if one would like to layer a single character
+  string (and not \code{\link{l_layer_texts}} with \code{n=1}).
+
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l <- l_layer_texts(p, x=1:3, y=3:1, text=c("This is", "a", "test"), size=20)
 l_scaleto_world(p)
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

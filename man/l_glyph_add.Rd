@@ -69,6 +69,8 @@ re-import them as as image glyphs using \code{\link{l_glyph_add_image}}.
 For more information run: \code{l_help("learn_R_display_plot.html#glyphs")}
 }
 \examples{
+if(interactive()){
+
 # Simple Example with Text Glyphs
 p <- with(olive, l_plot(stearic, eicosenoic, color=Region))
 g <- l_glyph_add_text(p, text=olive$Area, label="Area")
@@ -89,19 +91,22 @@ p['glyph'] <- c(
     rep(text_glyph, 3)
 )
 }
+}
 \seealso{
 \code{\link{l_glyph_add_text}}, \code{\link{l_make_glyphs}}
 
-Other glyph functions: \code{\link{l_glyph_add.default}},
-  \code{\link{l_glyph_add_image}},
-  \code{\link{l_glyph_add_pointrange}},
-  \code{\link{l_glyph_add_polygon}},
-  \code{\link{l_glyph_add_serialaxes}},
-  \code{\link{l_glyph_add_text}},
-  \code{\link{l_glyph_delete}},
-  \code{\link{l_glyph_getLabel}},
-  \code{\link{l_glyph_getType}}, \code{\link{l_glyph_ids}},
-  \code{\link{l_glyph_relabel}},
-  \code{\link{l_primitiveGlyphs}}
+Other glyph functions: 
+\code{\link{l_glyph_add.default}()},
+\code{\link{l_glyph_add_image}()},
+\code{\link{l_glyph_add_pointrange}()},
+\code{\link{l_glyph_add_polygon}()},
+\code{\link{l_glyph_add_serialaxes}()},
+\code{\link{l_glyph_add_text}()},
+\code{\link{l_glyph_delete}()},
+\code{\link{l_glyph_getLabel}()},
+\code{\link{l_glyph_getType}()},
+\code{\link{l_glyph_ids}()},
+\code{\link{l_glyph_relabel}()},
+\code{\link{l_primitiveGlyphs}()}
 }
 \concept{glyph functions}

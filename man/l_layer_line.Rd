@@ -4,8 +4,18 @@
 \alias{l_layer_line}
 \title{Layer a line}
 \usage{
-l_layer_line(widget, x, y = NULL, color = "black", linewidth = 1,
-  dash = "", label = "line", parent = "root", index = 0, ...)
+l_layer_line(
+  widget,
+  x,
+  y = NULL,
+  color = "black",
+  linewidth = 1,
+  dash = "",
+  label = "line",
+  parent = "root",
+  index = 0,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -14,14 +24,14 @@ l_layer_line(widget, x, y = NULL, color = "black", linewidth = 1,
 function or any \emph{R} object with a plot method can be provided as x and
 y are passed on to \code{\link{xy.coords}}}
 
-\item{y}{the y coordinates of the line, optional if x is an appropriate 
+\item{y}{the y coordinates of the line, optional if x is an appropriate
 structure.}
 
 \item{color}{color of line}
 
 \item{linewidth}{linewidth of outline}
 
-\item{dash}{dash pattern of line, see 
+\item{dash}{dash pattern of line, see
 \url{https://www.tcl.tk/man/tcl8.6/TkCmd/canvas.htm#M26}}
 
 \item{label}{label used in the layers inspector}
@@ -30,7 +40,7 @@ structure.}
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -45,6 +55,7 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
 
 p <- l_plot()
 l <- l_layer_line(p, x=c(1,2,3,4), y=c(1,3,2,4), color='red', linewidth=2)
@@ -54,6 +65,8 @@ l_scaleto_world(p)
 p <- l_plot()
 l <- l_layer_line(p, x=nhtemp)
 l_scaleto_layer(l)
+
+}
 
 }
 \seealso{

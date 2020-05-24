@@ -4,8 +4,21 @@
 \alias{l_serialaxes}
 \title{Create a Serialaxes Widget}
 \usage{
-l_serialaxes(data, sequence, scaling = "variable",
-  axesLayout = "radial", showAxes = TRUE, parent = NULL, ...)
+l_serialaxes(
+  data,
+  sequence,
+  scaling = "variable",
+  axesLayout = "radial",
+  by = NULL,
+  layout = c("grid", "wrap", "separate"),
+  showAxes = TRUE,
+  linewidth = 1,
+  color = "steelblue",
+  active = TRUE,
+  selected = FALSE,
+  parent = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a data frame with numerical data only}
@@ -17,11 +30,30 @@ how the data is scaled. See Details and Examples for more information.}
 
 \item{axesLayout}{either \code{"radial"} or \code{"parallel"}}
 
+\item{by}{loon plot can be separated by some variables into mutiple panels.
+This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.}
+
+\item{layout}{layouts in a \code{'grid'} or a \code{'wrap'}}
+
 \item{showAxes}{boolean to indicate whether axes should be shown or not}
+
+\item{linewidth}{vector with line widths}
+
+\item{color}{vector with line colors}
+
+\item{active}{a logical determining whether items appear or not
+(default is \code{TRUE} for all items). If a logical vector is given of length
+equal to the number of items, then it identifies which items appear (\code{TRUE})
+and which do not (\code{FALSE}).}
+
+\item{selected}{a logical determining whether items appear selected at first
+(default is \code{FALSE} for all items). If a logical vector is given of length
+equal to the number of items, then it identifies which items are (\code{TRUE})
+and which are not (\code{FALSE}).}
 
 \item{parent}{parent widget path}
 
-\item{...}{state arguments, see \code{\link{l_info_states}}.}
+\item{...}{named arguments to modify the serialaxes states or layouts, see details.}
 }
 \value{
 plot handle object
@@ -31,7 +63,9 @@ The serialaxes widget displays multivariate data either as a
   stacked star glyph plot, or as a parallel coordinate plot.
 }
 \details{
-The \code{scaling} state defines how the data is scaled. The axes
+\itemize{
+  \item {
+  The \code{scaling} state defines how the data is scaled. The axes
   display 0 at one end and 1 at the other. For the following explanation
   assume that the data is in a nxp dimensional matrix. The scaling options
   are then
@@ -41,8 +75,16 @@ observation \tab per row scaling\cr
 data \tab whole matrix scaling\cr
 none \tab do not scale
 }
+  }
+  \item {Some arguments to modify layouts can be passed through,
+  e.g. "separate", "byrow", etc.
+  Check \code{\link{l_facet}} to see how these arguments work.
+  }
+}
 }
 \examples{
+if(interactive()){
+
 s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
 s['axesLayout'] <- 'parallel'
 states <- l_info_states(s)
@@ -210,4 +252,6 @@ sa_none["axesLayout"] <- "radial"
 #        the best way to proceed (especially if there are natural lower and
 #        upper limits for each variable).
 #        Then scaling can always be changed via the inspector.
+
+}
 }

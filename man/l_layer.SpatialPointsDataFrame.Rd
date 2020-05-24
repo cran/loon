@@ -4,8 +4,7 @@
 \alias{l_layer.SpatialPointsDataFrame}
 \title{Layer points in SpatialPointsDataFrame object}
 \usage{
-\method{l_layer}{SpatialPointsDataFrame}(widget, x, asMainLayer = FALSE,
-  ...)
+\method{l_layer}{SpatialPointsDataFrame}(widget, x, asMainLayer = FALSE, ...)
 }
 \arguments{
 \item{widget}{widget widget path as a string or as an object handle}
@@ -30,8 +29,10 @@ Note that currently loon does neither support holes and ring
 }
 \examples{
 
+if (interactive()) {
+
 if (requireNamespace("rworldmap", quietly = TRUE)) {
-    world <- rworldmap::getMap(resolution = "coarse") 
+    world <- rworldmap::getMap(resolution = "coarse")
     p <- l_plot()
     lmap <- l_layer(p, world, asSingleLayer=TRUE)
     l_scaleto_world(p)
@@ -39,10 +40,10 @@ if (requireNamespace("rworldmap", quietly = TRUE)) {
     attr(lmap,'NAME')
 }
 }
+}
 \references{
 Applied Spatial Data Analysis with R by Bivand, Roger S. and
   Pebesma, Edzer and Gomez-Rubio and Virgilio
-  \url{http://www.springer.com/us/book/9781461476177}
 }
 \seealso{
 \code{\link[sp]{sp}}, \code{\link{l_layer}}

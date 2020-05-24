@@ -2,11 +2,22 @@
 % Please edit documentation in R/l_layer.R
 \name{l_layer_rectangles}
 \alias{l_layer_rectangles}
-\title{Layer a rectangles}
+\title{Layer rectangles}
 \usage{
-l_layer_rectangles(widget, x, y, color = "gray80", linecolor = "black",
-  linewidth = 1, label = "rectangles", parent = "root", index = 0,
-  ...)
+l_layer_rectangles(
+  widget,
+  x,
+  y,
+  color = "gray80",
+  linecolor = "black",
+  linewidth = 1,
+  label = "rectangles",
+  parent = "root",
+  index = 0,
+  group = NULL,
+  active = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -28,7 +39,12 @@ fill is transparant}
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{group}{separate x vector or y vector into a list by group.}
+
+\item{active}{a logical determining whether objects appear or not
+(default is \code{TRUE} for all).}
+
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -43,6 +59,7 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
 
 p <- l_plot()
 
@@ -56,6 +73,20 @@ l <- l_layer_rectangles(
 l_scaleto_world(p)
 
 l_info_states(l)
+
+# Set groups
+pp <- l_plot(x = c(0,1,1,2,2,3,5,6),
+             y = c(0,1,1,2,0,1,3,4))
+# x and y are inherited from pp
+ll <- l_layer_rectangles(
+     pp,
+     group = rep(1:4, each = 2),
+     color = c('red', 'blue', 'green', 'orange'),
+     linecolor = "black"
+)
+l_scaleto_world(pp)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

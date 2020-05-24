@@ -4,9 +4,18 @@
 \alias{l_layer.map}
 \title{Add a Map of class map as Drawings to Loon plot}
 \usage{
-\method{l_layer}{map}(widget, x, color = "", linecolor = "black",
-  linewidth = 1, label, parent = "root", index = 0,
-  asSingleLayer = TRUE, ...)
+\method{l_layer}{map}(
+  widget,
+  x,
+  color = "",
+  linecolor = "black",
+  linewidth = 1,
+  label,
+  parent = "root",
+  index = 0,
+  asSingleLayer = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path as a string or as an object handle}
@@ -44,6 +53,8 @@ The maps library provides some map data in polygon which can be
   drawings.
 }
 \examples{
+if(interactive()){
+
 if (requireNamespace("maps", quietly = TRUE)) {
   canada <- maps::map("world",  "Canada",
                       fill=TRUE, plot=FALSE)
@@ -56,5 +67,7 @@ if (requireNamespace("maps", quietly = TRUE)) {
   l_map['active'] <- FALSE
   l_map['active'] <- TRUE
   l_map['tag']
+}
+
 }
 }

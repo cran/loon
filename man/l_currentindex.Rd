@@ -22,14 +22,16 @@ Checks if there is a visual item below the mouse cursor and if
 For more details see \code{l_help("learn_R_bind.html#item-bindings")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot(iris[,1:2], color=iris$Species)
 
 printEntered <- function(W) {
-    cat(paste('Entered point ', l_currentindex(W), '\\n'))
+    cat(paste('Entered point ', l_currentindex(W), '\n'))
 }
 
 printLeave <- function(W) {
-    cat(paste('Left point ', l_currentindex(W), '\\n'))
+    cat(paste('Left point ', l_currentindex(W), '\n'))
 }
 
 l_bind_item(p, tags='model&&point', event='<Enter>',
@@ -37,6 +39,8 @@ l_bind_item(p, tags='model&&point', event='<Enter>',
 
 l_bind_item(p, tags='model&&point', event='<Leave>',
             callback=function(W) {printLeave(W)})
+
+}
 }
 \seealso{
 \code{\link{l_bind_item}}, \code{\link{l_currenttags}}

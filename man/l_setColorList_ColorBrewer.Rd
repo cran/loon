@@ -4,8 +4,10 @@
 \alias{l_setColorList_ColorBrewer}
 \title{Set loon's color mapping list to the colors from ColorBrewer}
 \usage{
-l_setColorList_ColorBrewer(palette = c("Set1", "Set2", "Set3", "Pastel1",
-  "Pastel2", "Paired", "Dark2", "Accent"))
+l_setColorList_ColorBrewer(
+  palette = c("Set1", "Set2", "Set3", "Pastel1", "Pastel2", "Paired", "Dark2",
+    "Accent")
+)
 }
 \arguments{
 \item{palette}{one of the following RColorBrewer palette name: Set1, Set2,
@@ -22,6 +24,8 @@ Only the following palettes in ColorBrewer are available: Set1,
 }
 \examples{
 
+if (interactive()){
+
 \dontrun{
 if (requireNamespace("RColorBrewer", quietly = TRUE)) {
   RColorBrewer::display.brewer.all()
@@ -30,6 +34,8 @@ if (requireNamespace("RColorBrewer", quietly = TRUE)) {
 
 l_setColorList_ColorBrewer("Set1")
 p <- l_plot(iris)
+
+}
 }
 \seealso{
 \code{\link{l_setColorList}}, \code{\link{l_setColorList_loon}},

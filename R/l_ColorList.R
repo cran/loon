@@ -270,6 +270,8 @@ l_colRemoveAlpha <- function (col) {
 #' @export
 #'
 #' @examples
+#' if(interactive()){
+#'
 #'
 #' l_plot(1:3, color=1:3) # loon's default mapping
 #'
@@ -283,6 +285,7 @@ l_colRemoveAlpha <- function (col) {
 #'
 #' # reset to default
 #' l_setColorList(cols)
+#' }
 #'
 #' \dontrun{
 #' # you can also perform the color mapping yourself, for example with
@@ -330,6 +333,8 @@ l_getColorList <- function() {
 #'
 #' @examples
 #'
+#' if (interactive()){
+#'
 #' \dontrun{
 #' if (requireNamespace("RColorBrewer", quietly = TRUE)) {
 #'   RColorBrewer::display.brewer.all()
@@ -338,6 +343,8 @@ l_getColorList <- function() {
 #'
 #' l_setColorList_ColorBrewer("Set1")
 #' p <- l_plot(iris)
+#'
+#' }
 l_setColorList_ColorBrewer <- function(palette=c("Set1", "Set2", "Set3",
                                                  "Pastel1", "Pastel2", "Paired",
                                                  "Dark2", "Accent")) {

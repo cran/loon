@@ -4,8 +4,18 @@
 \alias{l_layer_oval}
 \title{Layer a oval}
 \usage{
-l_layer_oval(widget, x, y, color = "gray80", linecolor = "black",
-  linewidth = 1, label = "oval", parent = "root", index = 0, ...)
+l_layer_oval(
+  widget,
+  x,
+  y,
+  color = "gray80",
+  linecolor = "black",
+  linewidth = 1,
+  label = "oval",
+  parent = "root",
+  index = 0,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -26,7 +36,7 @@ l_layer_oval(widget, x, y, color = "gray80", linecolor = "black",
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -41,9 +51,13 @@ Loon's displays that are based on Cartesian coordinates (i.e.
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l <- l_layer_oval(p, c(1,5), c(2,12), color='steelblue')
 l_configure(p, panX=0, panY=0, deltaX=20, deltaY=20)
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

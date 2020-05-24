@@ -9,11 +9,27 @@
 #' @param scaling one of 'variable', 'data', 'observation' or 'none' to specify
 #'   how the data is scaled. See Details and Examples for more information.
 #' @param axesLayout either \code{"radial"} or \code{"parallel"}
+#' @param by loon plot can be separated by some variables into mutiple panels.
+#' This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.
+#' @param layout layouts in a \code{'grid'} or a \code{'wrap'}
 #' @param showAxes boolean to indicate whether axes should be shown or not
+#' @param linewidth vector with line widths
+#' @param color vector with line colors
+#' @param active a logical determining whether items appear or not
+#' (default is \code{TRUE} for all items). If a logical vector is given of length
+#' equal to the number of items, then it identifies which items appear (\code{TRUE})
+#' and which do not (\code{FALSE}).
+#' @param selected a logical determining whether items appear selected at first
+#' (default is \code{FALSE} for all items). If a logical vector is given of length
+#' equal to the number of items, then it identifies which items are (\code{TRUE})
+#' and which are not (\code{FALSE}).
 #' @template param_parent
 #' @template param_dots_state_args
+#' @param ... named arguments to modify the serialaxes states or layouts, see details.
 #'
-#' @details The \code{scaling} state defines how the data is scaled. The axes
+#' @details \itemize{
+#'   \item {
+#'   The \code{scaling} state defines how the data is scaled. The axes
 #'   display 0 at one end and 1 at the other. For the following explanation
 #'   assume that the data is in a nxp dimensional matrix. The scaling options
 #'   are then
@@ -23,6 +39,12 @@
 #' data \tab whole matrix scaling\cr
 #' none \tab do not scale
 #' }
+#'   }
+#'   \item {Some arguments to modify layouts can be passed through,
+#'   e.g. "separate", "byrow", etc.
+#'   Check \code{\link{l_facet}} to see how these arguments work.
+#'   }
+#' }
 #'
 #'
 #' @return plot handle object
@@ -30,6 +52,8 @@
 #' @export
 #'
 #' @examples
+#' if(interactive()){
+#'
 #' s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
 #' s['axesLayout'] <- 'parallel'
 #' states <- l_info_states(s)
@@ -197,10 +221,27 @@
 #' #        the best way to proceed (especially if there are natural lower and
 #' #        upper limits for each variable).
 #' #        Then scaling can always be changed via the inspector.
+#'
+#' }
 
-l_serialaxes <- function(data, sequence, scaling="variable", axesLayout='radial',
-                         showAxes=TRUE, parent=NULL, ... ){
+l_serialaxes <- function(data,
+                         sequence,
+                         scaling="variable",
+                         axesLayout='radial',
+                         by = NULL,
+                         layout = c("grid", "wrap", "separate"),
+                         showAxes=TRUE,
+                         linewidth = 1,
+                         color = "steelblue",
+                         active = TRUE,
+                         selected = FALSE,
+                         parent=NULL, ... ){
 
+    args <- list(...)
+    # set by args, used for facetting
+    by_args <- args[byArgs]
+    # args passed into loonPlotFactory
+    args[byArgs] <- NULL
 
     data <- as.data.frame(data)
 
@@ -208,16 +249,142 @@ l_serialaxes <- function(data, sequence, scaling="variable", axesLayout='radial'
         sequence <- names(data)
     }
 
-    plot <- loonPlotFactory('::loon::serialaxes', 'serialaxes', 'loon serialaxes plot', parent,
-                    data=l_data(data),
-                    sequence=sequence,
-                    showAxes=showAxes,
-                    scaling=scaling,
-                    axesLayout=axesLayout,
-                    ...)
+    sync <- args$sync
 
-    class(plot) <- c("l_serialaxes", class(plot))
+    if(is.null(sync)) {
+        sync <- "pull"
+        if(length(color) > 1) {
+            sync <- "push"
+        } else {
+            if(length(color) == 1 && !is.na(color) && color != "steelblue") sync <- "push"
+        }
 
-    plot
+        if(length(linewidth) != 1) {
+            sync <- "push"
+        } else {
+            if(length(linewidth) == 1 && !is.na(linewidth) && linewidth != 1) sync <- "push"
+        }
+    }
 
+    n <- dim(data)[1]
+    len_color <- length(color)
+    if (len_color > 1) {
+        if (len_color != n) {
+            color <- rep_len(color, n)
+        }
+    } else {
+        if(is.na(color)) color <- "steelblue"
+    }
+
+    len_linewidth <- length(linewidth)
+    if (len_linewidth > 1) {
+        if (len_linewidth != n) {
+            linewidth <- rep_len(linewidth, n)
+        }
+    } else {
+        if(is.na(linewidth)) linewidth <- 1
+    }
+
+    len_active <- length(active)
+    if (len_active > 1) {
+        if (len_active != n)
+            stop(paste0("When more than length 1, length of active must match number of points:",
+                        n)
+            )
+    } else {
+        if(is.na(active)) active <- TRUE
+    }
+
+    len_selected <- length(selected)
+    if (len_selected > 1) {
+        if (len_selected != n)
+            stop(paste0("When more than length 1, length of selected must match number of points:",
+                        n)
+            )
+    } else {
+        if(is.na(selected)) selected <- FALSE
+    }
+
+    linkingGroup <- args[["linkingGroup"]]
+    args$linkingGroup <- NULL
+    # n dimensional states NA check
+    args$data <- data
+    args$color <- color
+    args$linewidth <- linewidth
+    args$active <- active
+    args$selected <- selected
+
+    if(is.null(by)) {
+        args <- l_na_omit("l_serialaxes", args)
+        args$data <- l_data(args$data)
+
+        plot <- do.call(
+            loonPlotFactory,
+            c(
+                args,
+                list(
+                    factory_tclcmd = '::loon::serialaxes',
+                    factory_path = 'serialaxes',
+                    factory_window_title = 'loon serialaxes plot',
+                    parent = parent,
+                    sequence = sequence,
+                    showAxes = showAxes,
+                    scaling = scaling,
+                    axesLayout = axesLayout
+                )
+            )
+        )
+
+        if(!is.null(linkingGroup)) {
+            l_configure(plot,
+                        linkingGroup = linkingGroup,
+                        sync = sync)
+        }
+
+        class(plot) <- c("l_serialaxes", class(plot))
+        return(plot)
+
+    } else {
+
+        # convert all types of 'by' to a data frame
+        byDeparse <- deparse(substitute(by))
+
+        if(is.atomic(by)) {
+            if(length(by) == n) {
+                by <- setNames(data.frame(by, stringsAsFactors = FALSE), byDeparse)
+            } else {
+                warning("Set 'by' as variables is not recommended")
+                by <- data[by]
+            }
+        } else {
+
+            if(is.null(names(by))) {
+
+                by <- as.data.frame(by, stringsAsFactors = FALSE)
+                names(by) <- NULL
+            } else {
+                by <- as.data.frame(by, stringsAsFactors = FALSE)
+            }
+        }
+
+        plots <- loonFacets(type = "l_serialaxes",
+                            by,
+                            args,
+                            byDeparse = byDeparse,
+                            layout = match.arg(layout),
+                            by_args = Filter(Negate(is.null), by_args),
+                            linkingGroup = linkingGroup,
+                            sync = sync,
+                            parent = parent,
+                            factory_tclcmd = '::loon::serialaxes',
+                            factory_path = 'serialaxes',
+                            factory_window_title = 'loon serialaxes plot',
+                            sequence = sequence,
+                            showAxes = showAxes,
+                            scaling = scaling,
+                            axesLayout = axesLayout)
+
+        return(plots)
+
+    }
 }

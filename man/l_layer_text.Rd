@@ -4,8 +4,19 @@
 \alias{l_layer_text}
 \title{Layer a text}
 \usage{
-l_layer_text(widget, x, y, text, color = "gray60", size = 6,
-  angle = 0, label = "text", parent = "root", index = 0, ...)
+l_layer_text(
+  widget,
+  x,
+  y,
+  text,
+  color = "gray60",
+  size = 6,
+  angle = 0,
+  label = "text",
+  parent = "root",
+  index = 0,
+  ...
+)
 }
 \arguments{
 \item{widget}{widget path name as a string}
@@ -28,7 +39,7 @@ l_layer_text(widget, x, y, text, color = "gray60", size = 6,
 
 \item{index}{of the newly added layer in its parent group}
 
-\item{...}{additional state initialization arguments, see 
+\item{...}{additional state initialization arguments, see
 \code{\link{l_info_states}}}
 }
 \value{
@@ -49,8 +60,12 @@ As a side effect of \code{Tcl}'s text-based design, it is best to
 For more information run: \code{l_help("learn_R_layer")}
 }
 \examples{
+if(interactive()){
+
 p <- l_plot()
 l <- l_layer_text(p, 0, 0, "Hello World")
+
+}
 }
 \seealso{
 \code{\link{l_layer}}, \code{\link{l_info_states}}

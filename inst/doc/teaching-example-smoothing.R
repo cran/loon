@@ -1,36 +1,36 @@
-## ----knitr_setup, include=FALSE------------------------------------------
+## ----knitr_setup, include=FALSE-----------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
-## ----setup, warning=FALSE, message=FALSE, error=FALSE--------------------
+## ----setup, warning=FALSE, message=FALSE, error=FALSE-------------------------
 library(loon)
 
-## ----loadElemStatLearn, eval=FALSE---------------------------------------
-#  library("ElemStatLearn")
+## ----loadBoneData, eval=FALSE-------------------------------------------------
+#  data(bone, package = "loon.data")
 #  summary(bone)
 
-## ----scatterplot, eval=FALSE---------------------------------------------
+## ----scatterplot, eval=FALSE--------------------------------------------------
 #  # The plot
 #  x <- bone$age
-#  y <- bone$spnbmd
+#  y <- bone$rspnbmd
 #  #  A scatterplot
 #  p <- l_plot(x, y,
 #              color="darkgrey",
-#              xlabel="age", ylabel="spnbmd",
+#              xlabel="age", ylabel="rspnbmd",
 #              showGuides = TRUE, showScales = TRUE,
 #              itemLabel = paste0("IDnum = ", bone$idnum, "\n",
-#                                 bone$gender, "\n",
+#                                 bone$sex, "\n",
 #                                 "Age: ", bone$age),
 #              showItemLabels = TRUE,
 #              linkingGroup="Bone density",
-#              title = "Spinal bone mineral density (spnbmd)")
+#              title = "Spinal bone mineral density (rspnbmd)")
 
-## ----changeVals, eval=FALSE----------------------------------------------
+## ----changeVals, eval=FALSE---------------------------------------------------
 #  p["showItemLabels"]
 #  p["showGuides"]
 #  p["swapAxes"] <- TRUE
 #  p["swapAxes"] <- FALSE
 
-## ----addAxis, eval=FALSE-------------------------------------------------
+## ----addAxis, eval=FALSE------------------------------------------------------
 #  axis <- l_layer_line(p,
 #                       x=extendrange(x, f=0.5), y=c(0,0),
 #                       label="axis", linewidth=2,
@@ -39,22 +39,20 @@ library(loon)
 #                       index="end")   # last argument places axis behind other layers
 #  
 
-## ----histogram, eval=FALSE-----------------------------------------------
-#  h <- l_hist(as.numeric(bone$gender), # note as.numeric(...)
-#              binwidth = 1, showBinHandle = FALSE,
-#              showStackedColors = TRUE,
-#              xlabel = "gender",
+## ----histogram, eval=FALSE----------------------------------------------------
+#  h <- l_hist(bone$sex,
+#              xlabel = "sex",
 #              linkingGroup="Bone density",
-#              title = "Gender (female=1; male=2)"
+#              title = "Sex"
 #              )
 
-## ----second plot, eval=FALSE---------------------------------------------
+## ----second plot, eval=FALSE--------------------------------------------------
 #  p2 <- l_plot(bone$idnum, bone$age,
 #               xlabel="idnum", ylabel="age",
 #               linkingGroup="Bone density",
 #               title = "ID numbers and age")
 
-## ----smooth, eval=FALSE--------------------------------------------------
+## ----smooth, eval=FALSE-------------------------------------------------------
 #  library(splines)
 #  # Fit a smoothing spline
 #  fitsmooth <- smooth.spline(x, y, df=5)
@@ -65,7 +63,7 @@ library(loon)
 #                         label="smooth fit", linewidth=4,
 #                         color = "blue")
 
-## ----update smooth, eval=FALSE-------------------------------------------
+## ----update smooth, eval=FALSE------------------------------------------------
 #  
 #  ## Define the update function
 #  updateSmooth <- function(myPlot, minpts, df, color="blue") {
@@ -116,13 +114,13 @@ library(loon)
 #    tcl("update", "idletasks")
 #  }
 
-## ----bindSmooth, eval=FALSE----------------------------------------------
+## ----bindSmooth, eval=FALSE---------------------------------------------------
 #  # Here we "bind" the anonymous to the named state changes of p
 #  l_bind_state(p, c("selected"),
 #               function() {updateSmooth(p, 10, 5, "blue")}
 #  )
 
-## ----Gaussian weights, eval=FALSE----------------------------------------
+## ----Gaussian weights, eval=FALSE---------------------------------------------
 #  GaussWt <- function(x) {
 #    # Get an estimated standard deviation
 #    h <- diff(range(x))/4
@@ -132,7 +130,7 @@ library(loon)
 #    dnorm(x, mean=xloc, sd=h)
 #  }
 
-## ----locally fitted line, eval = FALSE-----------------------------------
+## ----locally fitted line, eval = FALSE----------------------------------------
 #  # Fit a local line using some Gaussian weights.
 #  # Prediction will be at the median of x, fit by
 #  ### weights that decrease with x's
@@ -146,10 +144,10 @@ library(loon)
 #                          linewidth=4,
 #                          color = "blue")
 
-## ----hide layer, eval=FALSE----------------------------------------------
+## ----hide layer, eval=FALSE---------------------------------------------------
 #  l_layer_hide(p, smooth)
 
-## ----update line, eval=FALSE---------------------------------------------
+## ----update line, eval=FALSE--------------------------------------------------
 #  updateLocalLine <- function(myPlot, minpts, df, volor="blue") {
 #    ## Get the values for x and y from the plot
 #    ## For x
@@ -197,7 +195,7 @@ library(loon)
 #    tcl("update", "idletasks")
 #  }
 
-## ----bindLine, eval=FALSE------------------------------------------------
+## ----bindLine, eval=FALSE-----------------------------------------------------
 #  # Here we "bind" the anonymous to the named state changes of p
 #  l_bind_state(p, c("active","selected"),
 #               function() {updateLocalLine(p, 10, 5, "blue")}
