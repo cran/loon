@@ -25,8 +25,8 @@
 #'
 #'   }
 #'
-#'   For other mappings see the \code{\link[scales]{col_numeric}} and
-#'   \code{\link[scales]{col_factor}} functions from the scales package.
+#'   For other mappings see the \code{\link[scales:col_numeric]{col_numeric}} and
+#'   \code{\link[scales:col_numeric]{col_factor}} functions from the scales package.
 #'
 #'
 #' @return A function that takes a vector with values and maps them to a vector
@@ -54,7 +54,9 @@
 #'   grid::grid.newpage()
 #'   grid::pushViewport(grid::plotViewport())
 #'   grid::grid.rect()
-#'   n <- 2^(1:5)
+#'   n <- c(2,4,8,16, 21)
+#'   # beyond this, colors are generated algorithmically
+#'   # generating a warning
 #'   grid::pushViewport(grid::dataViewport(xscale=c(0, max(n)+1),
 #'                      yscale=c(0, length(n)+1)))
 #'   grid::grid.yaxis(at=c(1:length(n)), label=paste("n =", n))
@@ -64,7 +66,7 @@
 #'                      default.units = "native", pch=15,
 #'                      gp=grid::gpar(col=cols))
 #'   }
-#'   grid::grid.text("note the fist i colors are shared for each n",
+#'   grid::grid.text("note the first i colors are shared for each n",
 #'                   y = grid::unit(1,"npc") + grid::unit(1, "line"))
 #' }
 #'
@@ -90,9 +92,9 @@ color_loon <- function() {
 #'   for all positive natural numbers \code{m}. See the details in the
 #'   \code{\link{l_setColorList}} documentation.
 #'
-#' @param n numer of different colors in the palette
+#' @param n number of different colors in the palette
 #'
-#' @return vector with hexencoded color values
+#' @return vector with hex-encoded color values
 #'
 #' @export
 #'
@@ -256,7 +258,7 @@ l_colRemoveAlpha <- function (col) {
 #'   inspector these new colors show up in the modify color list.
 #'
 #'   When other color mappings of data values are required (e.g. numerical data
-#'   to a color gradient) then the functions in the \code{\link[scales]{scales}}
+#'   to a color gradient) then the functions in the \code{\link[scales:scales-package]{scales}}
 #'   R package provide various mappings including mappings for qualitative,
 #'   diverging and sequential values.
 #'
