@@ -1,16 +1,17 @@
 
 #' @title Create an interactive loon plot widget
-#'
-#' @description \code{l_plot} is a generic function for creating interactive
-#'   visualization environments for \R objects.
+#' @name l_plot
+#' @description \code{l_plot} is a generic function for creating an interactive
+#'   visualization environments for R objects.
 #'
 #' @family two-dimensional plotting functions
 #' @family loon interactive states
 #'
-#' @param x	the coordinates of points in the \code{\link{l_plot}}.
-#' Alternatively, a single plotting structure, function, or any R object having an \code{\link{l_plot}}
-#' method can be provided.
-#' @param y	the y coordinates of points in the \code{\link{l_plot}}, optional if x is an
+#' @param x the coordinates of points in the \code{\link{l_plot}}.
+#' Alternatively, a single plotting structure (see the function \code{\link{xy.coords}} for details),
+#' \code{\link{formula}}, or any \R object (e.g. \code{\link{density}},\code{\link{stl}}, etc)
+#' is accommodated.
+#' @param y the y coordinates of points in the \code{\link{l_plot}}, optional if x is an
 #' appropriate structure.
 #' @param ... named arguments to modify plot states. See \code{\link{l_info_states}}
 #' of any instantiated \code{l_plot} for examples of names and values.
@@ -22,11 +23,10 @@
 #' This is the workhorse of `loon` and is often a key part of many
 #' other displays (e.g. \code{\link{l_pairs}} and \code{\link{l_navgraph}}).
 #'
-#' For example, the  methods include \code{\link{l_plot.default}} (the basic interactive scatterplot),
-#' \code{\link{l_plot.density}} (layers output of \code{\link{density}} in an empty scatterplot),
-#'  \code{\link{l_plot.map}}  (layers a map in an empty scatterplot), and
-#' \code{\link{l_plot.stl}} (a compound display of the output of \code{\link{stl}}).
-#'
+#' For example, the  methods include \code{l_plot.default} (the basic interactive scatterplot),
+#' \code{l_plot.density} (layers output of \code{\link{density}} in an empty scatterplot),
+#'  \code{l_plot.map} (layers a map in an empty scatterplot), and
+#' \code{l_plot.stl} (a compound display of the output of \code{\link{stl}}).
 #'
 #' A complete list is had from \code{methods(l_plot)}.
 #'
@@ -58,160 +58,32 @@
 #'
 #'   }
 #'
-#'
-#' @template return_widget_handle
-#'
-#' @seealso  \code{\link{l_plot_arguments}} and \code{\link{l_plot.default}}.
-#'
-#'
-#' @export
-#'
-#' @examples
-#' if(interactive()){
-#'
-#' # ordinary use
-#' p <- with(iris, l_plot(Sepal.Width, Petal.Length, color=Species))
-#'
-#' versi <- iris$Species == "versicolor"
-#' p["glyph"][versi] <- "ctriangle"
-#'
-#' # Get an R (grid) graphics plot of the current loon plot
-#' plot(p)
-#' # or with more control about grid parameters
-#' grid.loon(p)
-#' # or to save the grid data structure (grob) for later use
-#' pg <- loonGrob(p)
-#'
-#' # plot a density estimate
-#' set.seed(314159)
-#' ds <- density(rnorm(1000))
-#' p <- l_plot(ds,  title = "density estimate",
-#'             xlabel = "x", ylabel = "density",
-#'             showScales = TRUE)
-#' plot(p)
-#'
+#' @return \itemize{
+#' \item{
+#' The input is a \code{stl} or a \code{decomposed.ts} object,
+#' a structure of class \code{"l_ts"} containing four loon plots
+#' each representing a part of the decomposition
+#' by name: "original", "trend", "seasonal", and "remainder"
 #' }
-l_plot <- function(x, y, ...) {
-    UseMethod("l_plot")
-}
-
-
-#' @title The default \code{l_plot} for plotting data
-#'
-#' @description Creates an interactive 2d scatterplot. Also, if no loon
-#'   inspector is open then the \code{l_plot} call will also open a loon
-#'   inspector.
-#'
-#' @family two-dimensional plotting functions
-#' @family loon interactive states
-#' @method l_plot default
-#' @param x the \code{x} and \code{y} arguments provide the x and y
-#'  coordinates for the plot.
-#'  Any reasonable way of defining the coordinates is acceptable.
-#'  See the function \code{\link{xy.coords}} for details.
-#'  If supplied separately, they must be of the same length.
-#' @param y argument description is as for the \code{x} argument above.
-#' @param by loon plot can be separated by some variables into multiple panels.
-#' This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.
-#' @param layout layout facets as \code{'grid'}, \code{'wrap'} or \code{'separate'}
-#' @param connectedScales Determines how the scales of the facets are to be connected depending
-#' on which \code{layout} is used.  For each value of \code{layout}, the scales are connected
-#' as follows:
+#' \item{
+#' The input is a vector, formula, data.frame, ...
 #' \itemize{
-#' \item{\code{layout = "wrap":}  Across all facets, when \code{connectedScales} is
-#'    \itemize{
-#'    \item{\code{"x"}, then  only the "x"  scales are connected}
-#'    \item{\code{"y"}, then only the "y" scales are connected}
-#'    \item{\code{"both"},  both "x" and "y" scales are connected}
-#'    \item{\code{"none"},  neither "x" nor "y" scales are connected.}
-#'    For any other value, only the "y" scale is connected.
-#'    }
-#'    }
-#' \item{\code{layout = "grid":}  Across all facets, when \code{connectedScales} is
-#'    \itemize{
-#'    \item{\code{"cross"}, then only the scales in the same row and the same column are connected}
-#'    \item{\code{"row"}, then both "x" and "y" scales of facets in the same row are connected}
-#'    \item{\code{"column"}, then both "x" and "y" scales of facets in the same column are connected}
-#'    \item{\code{"x"}, then all of the "x"  scales are connected (regardless of column)}
-#'    \item{\code{"y"}, then all of the "y" scales are connected (regardless of row)}
-#'    \item{\code{"both"},  both "x" and "y" scales are connected in all facets}
-#'    \item{\code{"none"},  neither "x" nor "y" scales are connected in any facets.}
-#'    }
-#'    }
-#'  }
-#' @param color colours of points; colours are repeated
-#'  until matching the number points.
-#'  Default is found using \code{\link{l_getOption}("color")}.
-#' @param glyph shape of point; must be one of the primitive glyphs
-#' "circle", "ccircle", "ocircle", "square", "csquare", "osquare", "triangle", "ctriangle",
-#' "otriangle", "diamond", "cdiamond", or "odiamond".
-#' Prefixes "c" and "o" mean closed and open, respectively.
-#' Default is found using \code{\link{l_getOption}("glyph")}.
-#'
-#' Non-primitive glyphs such as polygons, images, text, point ranges, and even interactive glyphs like
-#' serial axes glyphs may be added, but only after the plot has been created.
-#' @param size size of the symbol (roughly in terms of area).
-#' Default is found using \code{\link{l_getOption}("size")}.
-#' @param active a logical determining whether points appear or not
-#' (default is \code{TRUE} for all points). If a logical vector is given of length
-#' equal to the number of points, then it identifies which points appear (\code{TRUE})
-#' and which do not (\code{FALSE}).
-#' @param selected a logical determining whether points appear selected at first
-#' (default is \code{FALSE} for all points). If a logical vector is given of length
-#' equal to the number of points, then it identifies which points are (\code{TRUE})
-#' and which are not (\code{FALSE}).
-#' @param xlabel Label for the horizontal (x) axis. If missing,
-#' one will be inferred from \code{x} if possible.
-#' @param ylabel Label for the vertical (y) axis. If missing,
-#' one will be inferred from \code{y} (or \code{x}) if possible.
-#' @param title Title for the plot, default is an empty string.
-#' @param showLabels logical to determine whether axes label (and title) should
-#' be presented.
-#' @param showScales logical to determine whether numerical scales should
-#' be presented on both axes.
-#' @param showGuides logical to determine whether to present background guidelines
-#' to help determine locations.
-#' @param guidelines colour of the guidelines shown when \code{showGuides = TRUE}.
-#'  Default is found using \code{\link{l_getOption}("guidelines")}.
-#' @param guidesBackground  colour of the background to the guidelines shown when
-#' \code{showGuides = TRUE}.
-#' Default is found using \code{\link{l_getOption}("guidesBackground")}.
-#' @param foreground foreground colour used by all other drawing.
-#' Default is found using \code{\link{l_getOption}("foreground")}.
-#' @param background background colour used for the plot.
-#' Default is found using \code{\link{l_getOption}("background")}.
-#' @param parent a valid Tk parent widget path. When the parent widget is
-#'   specified (i.e. not \code{NULL}) then the plot widget needs to be placed using
-#'   some geometry manager like \code{\link{tkpack}} or \code{\link{tkplace}} in
-#'   order to be displayed. See the examples below.
-#' @param ... named arguments to modify plot states or layouts, see details.
-#'
-#'
-#' @details \itemize{
-#'   \item {The scatterplot displays a number of direct interactions with the
-#'   mouse and keyboard, these include: zooming towards the mouse cursor using
-#'   the mouse wheel, panning by right-click dragging and various selection
-#'   methods using the left mouse button such as sweeping, brushing and
-#'   individual point selection. See the documentation for \code{\link{l_plot}}
-#'   for more details about the interaction gestures.
-#'   }
-#'   \item {Some arguments to modify layouts can be passed through,
-#'   e.g. "separate", "byrow", etc. Check \code{\link{l_facet}}
-#'   to see how these arguments work.
-#'   }
+#' \item{\code{by = NULL}: a \code{loon} widget will be returned}
+#' \item{\code{by} is not \code{NULL}: an \code{l_facet} object (a list) will be returned and
+#' each element is a \code{loon} widget displaying a subset of interest.}
+#' }
+#' }
 #' }
 #'
 #'
 #'
+#' @seealso Turn interactive loon plot static \code{\link{loonGrob}}, \code{\link{grid.loon}}, \code{\link{plot.loon}}.
 #'
-#' @seealso  \code{\link{l_plot_arguments}}
+#'
 #' @export
-#' @export l_plot.default
-#'
 #' @examples
-#' if(interactive()){
-#'
-#'
+#' if(interactive()) {
+#' ########################## l_plot.default ##########################
 #' # default use as scatterplot
 #'
 #' p1 <- with(iris, l_plot(Sepal.Length, Sepal.Width, color=Species,
@@ -239,7 +111,16 @@ l_plot <- function(x, y, ...) {
 #' gridExtra::grid.arrange(loonGrob(p1), loonGrob(p2), nrow = 1)
 #'
 #' # Layout facets
-#' p <- with(mtcars, l_plot(wt, mpg, by = cyl, layout = "wrap"))
+#' ### facet wrap
+#' p3 <- with(mtcars, l_plot(wt, mpg, by = cyl, layout = "wrap"))
+#' # it is equivalent to
+#' # p3 <- l_plot(mpg~wt, by = ~cyl, layout = "wrap", on = mtcars)
+#'
+#' ### facet grid
+#' p4 <- l_plot(x = 1:6, y = 1:6,
+#'              by = size ~ color,
+#'              size = c(rep(50, 2), rep(25, 2), rep(50, 2)),
+#'              color = c(rep("red", 3), rep("green", 3)))
 #'
 #' # Use with other tk widgets
 #' tt <- tktoplevel()
@@ -255,10 +136,86 @@ l_plot <- function(x, y, ...) {
 #' tkgrid.columnconfigure(tt, 1, weight=1)
 #'
 #' tkgrid.rowconfigure(tt, 0, weight=1)
+#' ########################## l_plot.decomposed.ts ##########################
+#' decompose <- decompose(co2)
+#' p <- l_plot(decompose, title = "Atmospheric carbon dioxide over Mauna Loa")
+#' # names of plots in the display
+#' names(p)
+#' # names of states associated with the seasonality plot
+#' names(p$seasonal)
+#' # which can be set
+#' p$seasonal['color'] <- "steelblue"
 #'
+#' ########################## l_plot.stl ##########################
+#' co2_stl <- stl(co2, "per")
+#' p <- l_plot(co2_stl, title = "Atmospheric carbon dioxide over Mauna Loa")
+#' # names of plots in the display
+#' names(p)
+#' # names of states associated with the seasonality plot
+#' names(p$seasonal)
+#' # which can be set
+#' p$seasonal['color'] <- "steelblue"
+#' ########################## l_plot.density ##########################
+#' # plot a density estimate
+#' set.seed(314159)
+#' ds <- density(rnorm(1000))
+#' p <- l_plot(ds,  title = "density estimate",
+#'             xlabel = "x", ylabel = "density",
+#'             showScales = TRUE)
+#'
+#' ########################## l_plot.map ##########################
+#' if (requireNamespace("maps", quietly = TRUE)) {
+#'    p <- l_plot(maps::map('world', fill=TRUE, plot=FALSE))
+#' }
 #'}
+#'
+l_plot <- function(x, y, ...) {
+    UseMethod("l_plot")
+}
+
+
+#' @title The default \code{l_plot} for plotting data
+#' @rdname l_plot
+#'
+#' @method l_plot default
+#' @template param_by
+#' @template param_on
+#' @template param_layout
+#' @template param_connectedScales
+#' @template param_pointcolor
+#' @template param_glyph
+#' @template param_pointsize
+#' @template param_active
+#' @template param_selected
+#' @template param_xlabel
+#' @template param_ylabel
+#' @template param_title
+#' @template param_showLabels
+#' @template param_showScales
+#' @template param_showGuides
+#' @template param_guidelines
+#' @template param_guidesBackground
+#' @template param_foreground
+#' @template param_background
+#' @template param_parent
+#'
+#' @details
+#' The scatterplot displays a number of direct interactions with the
+#' mouse and keyboard, these include: zooming towards the mouse cursor using
+#' the mouse wheel, panning by right-click dragging and various selection
+#' methods using the left mouse button such as sweeping, brushing and
+#' individual point selection. See the documentation for \code{\link{l_plot}}
+#' for more details about the interaction gestures.
+#'
+#'
+#' Some arguments to modify layouts can be passed through,
+#' e.g. "separate", "ncol", "nrow", etc. Check \code{\link{l_facet}}
+#' to see how these arguments work.
+#'
+#' @export
 l_plot.default <-  function(x, y = NULL,
                             by = NULL,
+                            on,
                             layout = c("grid", "wrap", "separate"),
                             connectedScales = c("cross", "row", "column", "both", "x", "y", "none"),
                             color = l_getOption("color"),
@@ -274,13 +231,16 @@ l_plot.default <-  function(x, y = NULL,
                             guidesBackground = l_getOption("guidesBackground"),
                             foreground = l_getOption("foreground"),
                             background = l_getOption("background"),
-                            parent = NULL, ...) {
+                            parent = NULL,
+                            ...) {
 
-    args <- list(...)
+    dotArgs <- list(...)
     # set by args, used for facetting
-    by_args <- args[l_byArgs()]
+    byArgs <- dotArgs[l_byArgs()]
     # args passed into loonPlotFactory
-    args[l_byArgs()] <- NULL
+    dotArgs[l_byArgs()] <- NULL
+
+    l_className <- "l_plot"
 
     if(missing(title)) { title <- "" }
 
@@ -299,7 +259,7 @@ l_plot.default <-  function(x, y = NULL,
         plot <- do.call(
             loonPlotFactory,
             c(
-                args,
+                dotArgs,
                 list(
                     factory_tclcmd = '::loon::plot',
                     factory_path = 'plot',
@@ -321,119 +281,91 @@ l_plot.default <-  function(x, y = NULL,
             )
         )
 
-        class(plot) <- c("l_plot", class(plot))
+        class(plot) <- c(l_className, class(plot))
         return(plot)
 
     } else {
-
-        sync <- args$sync
-
-        if(is.null(sync)) {
-            sync <- "pull"
-            if(length(color) > 1) {
-                sync <- "push"
-            } else {
-                if(length(color) == 1 && !is.na(color) && color != "grey60") sync <- "push"
-            }
-
-            if(length(size) != 1) {
-                sync <- "push"
-            } else {
-                if(length(size) == 1 && !is.na(size) && size != 4) sync <- "push"
-            }
-
-            if(length(glyph) != 1) {
-                sync <- "push"
-            } else {
-                if(length(glyph) == 1 && !is.na(glyph) && glyph != "ccircle") sync <- "push"
-            }
-        }
 
         ## Get x, y, xlab, ylab
         ## similar to plot.default use of xy.coords
         xlab <- deparse(substitute(x))
         ylab <- deparse(substitute(y))
         xOrigin <- x
-        xy <- xy.coords(x, y)
+
+        if(is.atomic(x)) {
+            if(is.character(x)) x <- as.factor(x)
+            if(!is.null(y) && is.character(y)) y <- as.factor(y)
+        }
+        if(inherits(x, "formula") && !missing(on)) {
+
+            x <- model.frame(x, data = on)
+            xy <- list()
+            colnames <- colnames(x)
+            xy$y <- x[[1L]]
+            xy$ylab <- colnames[1L]
+
+            if(ncol(x) > 1L) {
+                # the first column is y
+                # the second column is x
+                # reverse x and y
+                xy$x <- x[[2L]]
+                xy$xlab <- colnames[2L]
+            } else {
+                xy$x <- seq(length(x[[1L]]))
+                xy$xlab <- "index"
+            }
+        } else {
+            xy <- xy.coords(x, y)
+        }
+
+
         x <- xy$x
         y <- xy$y
 
-        if (missing(xlabel)){
+        if (missing(xlabel))
             xlabel <- if (is.null(xy$xlab)) xlab else xy$xlab
-        }
 
-        if (missing(ylabel)) {
+        if (missing(ylabel))
             ylabel <- if (is.null(xy$ylab)) ylab else xy$ylab
-        }
+
         ## make sure points parameters are right
-
         n <- length(x)
-        len_color <- length(color)
-        if (len_color > 1) {
-            if (len_color != n) {
-                color <- rep_len(color, n)
-            }
-        } else {
-            if(is.na(color)) color <- "grey60"
-        }
 
-        len_size <- length(size)
-        if (len_size > 1) {
-            if (len_size != n) {
-                size <- rep_len(size, n)
-            }
-        } else {
-            if(is.na(size)) size <- 4
-        }
+        # check which states are modified
+        call <- match.call()
+        modifiedLinkedStates <- l_modifiedLinkedStates(l_className, names(call))
 
-        len_active <- length(active)
-        if (len_active > 1) {
-            if (len_active != n)
-                stop(paste0("When more than length 1, length of active must match number of points:",
-                            n)
-                )
-        } else {
-            if(is.na(active)) active <- TRUE
-        }
+        color <- aes_settings(color, n, ifNoStop = FALSE)
+        size <- aes_settings(size, n, ifNoStop = FALSE)
+        glyph <- aes_settings(glyph, n, ifNoStop = FALSE)
+        active <- aes_settings(active, n, ifNoStop = TRUE)
+        selected <- aes_settings(selected, n, ifNoStop = TRUE)
 
-        len_selected <- length(selected)
-        if (len_selected > 1) {
-            if (len_selected != n)
-                stop(paste0("When more than length 1, length of selected must match number of points:",
-                            n)
-                )
-        } else {
-            if(is.na(selected)) selected <- FALSE
-        }
+        # `sync` and `linkingGroup` are set after the plot is created
+        # reason: set aesthetics first, then pull aesthetics from other plots (if they exist)
+        linkingGroup <- dotArgs[["linkingGroup"]]
+        dotArgs$linkingGroup <- NULL
+        sync <- dotArgs[["sync"]]
+        # if null, it is always **pull**
+        if(is.null(sync)) sync <- "pull"
+        dotArgs$sync <- NULL
 
-        len_glyph <- length(glyph)
-        if (len_glyph > 1) {
-            if (len_glyph != n)
-                stop(paste0("When more than length 1, length of glyph must match number of points:",
-                            n)
-                )
-        } else {
-            if(is.na(glyph)) glyph <- "ccircle"
-        }
-        # linkingGroup is set after the plot is created
-        linkingGroup <- args[["linkingGroup"]]
-        args$linkingGroup <- NULL
         # n dimensional states NA check
-        args$x <- x
-        args$y <- y
-        args$color <- color
-        args$glyph <- glyph
-        args$size <- size
-        args$active <- active
-        args$selected <- selected
+        dotArgs$x <- x
+        dotArgs$y <- y
+        dotArgs$color <- color
+        dotArgs$glyph <- glyph
+        dotArgs$size <- size
+        dotArgs$active <- active
+        dotArgs$selected <- selected
 
         if(is.null(by)) {
-            args <- l_na_omit("l_plot.default", args)
+            dotArgs <- l_na_omit(paste0(c(l_className, "default"), collapse = "."), dotArgs)
 
             plot <- do.call(
                 loonPlotFactory,
                 c(
-                    args,
+                    dotArgs,
                     list(factory_tclcmd = '::loon::plot',
                          factory_path = 'plot',
                          factory_window_title = 'loon scatterplot',
@@ -452,50 +384,48 @@ l_plot.default <-  function(x, y = NULL,
             )
 
             if(!is.null(linkingGroup)) {
+
+                syncTemp <- ifelse(length(modifiedLinkedStates) == 0,  sync, "pull")
+                if(syncTemp == "push")
+                    message("The modification of linked states is not detected",
+                            " so that the default settings will be pushed to all plots")
+                # configure plot (linking)
                 l_configure(plot,
                             linkingGroup = linkingGroup,
-                            sync = sync)
+                            sync = syncTemp)
+
+                if(sync == "push" && length(modifiedLinkedStates) > 0) {
+
+                    do.call(l_configure,
+                            c(
+                                list(
+                                    target = plot,
+                                    linkingGroup = linkingGroup,
+                                    sync = sync
+                                ),
+                                dotArgs[modifiedLinkedStates]
+                            )
+                    )
+                } else {
+                    l_linkingWarning(plot, sync, args = dotArgs,
+                                     modifiedLinkedStates = modifiedLinkedStates,
+                                     l_className = l_className)
+                }
             }
 
-
-            class(plot) <- c("l_plot", class(plot))
+            class(plot) <- c(l_className, class(plot))
             return(plot)
 
         } else {
 
-            # convert all types of 'by' to a data frame
-            byDeparse <- deparse(substitute(by))
-
-            if(is.atomic(by)) {
-                if(length(by) == n) {
-                    by <- setNames(data.frame(by, stringsAsFactors = FALSE), byDeparse)
-                } else {
-                    # 'by' is a char vector
-                    # 'x' should be a data.frame
-                    if(!is.data.frame(xOrigin))
-                        stop("If 'by' are variable names, ",
-                             xlab,
-                             " should be a data frame")
-                    by <- xOrigin[by]
-                }
-            } else {
-
-                if(is.null(names(by))) {
-
-                    by <- as.data.frame(by, stringsAsFactors = FALSE)
-                    names(by) <- NULL
-                } else {
-                    by <- as.data.frame(by, stringsAsFactors = FALSE)
-                }
-            }
-
-            plots <- loonFacets(type = "l_plot",
-                                by,
-                                args,
-                                byDeparse = byDeparse,
+            plots <- loonFacets(type = l_className,
+                                by = by,
+                                args = dotArgs,
+                                on = on,
+                                bySubstitute = substitute(by), # for warning or error generations
                                 layout = match.arg(layout),
                                 connectedScales = match.arg(connectedScales),
-                                by_args = Filter(Negate(is.null), by_args),
+                                byArgs = Filter(Negate(is.null), byArgs),
                                 linkingGroup = linkingGroup,
                                 sync = sync,
                                 parent = parent,
@@ -505,6 +435,7 @@ l_plot.default <-  function(x, y = NULL,
                                 factory_tclcmd = '::loon::plot',
                                 factory_path = 'plot',
                                 factory_window_title = 'loon scatterplot',
+                                modifiedLinkedStates = modifiedLinkedStates,
                                 showLabels = showLabels,
                                 showScales = showScales,
                                 showGuides = showGuides,
@@ -517,3 +448,4 @@ l_plot.default <-  function(x, y = NULL,
         }
     }
 }
+

@@ -8,7 +8,7 @@
 #'        Default is given by \code{\link{l_getOption}("color")}.
 #' @param size points size of all time series.
 #'        Default is given by \code{\link{l_getOption}("size")}.
-#' @param lcolor line colour of all time series.
+#' @param linecolor line colour of all time series.
 #'        Default is given by \code{\link{l_getOption}("color")}.
 #' @param linewidth line width of all time series (incl. original and decomposed components.
 #'        Default is given by \code{\link{l_getOption}("linewidth")}.
@@ -20,10 +20,11 @@
 #' @param title an overall title for the entire display. If \code{NULL} (the default), the title will be "Seasonal Trend Analysis".
 #' @param tk_title provides an alternative window name to Tk's \code{wm title}.  If \code{NULL}, \code{stl} will be used.
 #' @param linkingGroup name of linking group.
-#'        If \code{NULL}, one is created from the data name and class associated with \code{stlOrDecomposedTS}.
+#'        If missing, one is created from the data name and class associated with \code{stlOrDecomposedTS}.
 #' @param showScales a logical as to whether to display the scales on all axes, default is TRUE.
 #' @param showGuides a logical as to whether to display background guide lines on all plots, default is TRUE.
 #' @param showLabels a logical as to whether to display axes labels on all plots, default is TRUE.
+#' @param call a call in which all of the specified arguments are specified by their full names
 #' @param ... keyword value pairs passed off to \code{l_plot()} which constructs each loon scatterplot component.
 #'
 #'
@@ -38,29 +39,33 @@
 l_plot_ts <- function(x,
                       color = l_getOption("color"),
                       size = l_getOption("size"),
-                      lcolor = l_getOption("color"),
+                      linecolor = l_getOption("color"),
                       linewidth = l_getOption("linewidth"),
                       xlabel = NULL,  ylabel = NULL,
                       title = NULL, tk_title = NULL,
-                      linkingGroup = NULL,
+                      linkingGroup,
                       showScales=TRUE,
                       showGuides=TRUE,
                       showLabels=TRUE,
-                      ...){
-
-    if (is.null(lcolor)) lcolor <- getOption("color")
-    if (is.null(color)) color <- getOption("color")
+                      call = match.call(),
+                      ...) {
 
     stlOrDecomposedTS <- x  # Just to remind us about what x is
 
     nameOfData <- strsplit(toString(stlOrDecomposedTS$call), ", ")[[1]][2]
     if (is.na(nameOfData)) nameOfData <- "a time series"
-    if (is.null(linkingGroup)) linkingGroup <- paste(nameOfData, class(stlOrDecomposedTS))
 
-    if(inherits(stlOrDecomposedTS, "decomposed.ts")){
+    new.linkingGroup <- FALSE
+    if (missing(linkingGroup)) {
+        new.linkingGroup <- TRUE
+        linkingGroup <- paste(nameOfData, class(stlOrDecomposedTS))
+    }
+
+    if(inherits(stlOrDecomposedTS, "decomposed.ts")) {
+
         data <- stlOrDecomposedTS$x
 
-        if(is.null(data)){
+        if(is.null(data)) {
             data <- with(stlOrDecomposedTS,
                          if (type == "additive") {
                              random + trend + seasonal
@@ -79,7 +84,9 @@ l_plot_ts <- function(x,
         xy.trend <- list(x = xy.raw$x[index.trend], y = stlOrDecomposedTS$trend[index.trend])
         xy.remainder <- list(x = xy.raw$x[index.random], y = stlOrDecomposedTS$random[index.random])
         xy.seasonal <- list(x = xy.raw$x[index.seasonal], y = stlOrDecomposedTS$seasonal[index.seasonal])
-    } else if(inherits(stlOrDecomposedTS, "stl")){
+
+    } else if(inherits(stlOrDecomposedTS, "stl")) {
+
         stl <- stlOrDecomposedTS$time.series
 
         # extract trend, seasonal and remainder
@@ -94,13 +101,13 @@ l_plot_ts <- function(x,
 
     }
 
-    if(is.null(xlabel) == TRUE ){
+    if(is.null(xlabel) == TRUE) {
         xlabel <- rep("time", 4)
     } else {
         if(length(xlabel) == 1) {
             xlabel <- rep(xlabel, 4)
         } else {
-            if(length(xlabel) != 4){
+            if(length(xlabel) != 4) {
                 warning("The length of xlabel should be 4, see Arguments xlabel and ylabel")
             }
         }
@@ -122,84 +129,113 @@ l_plot_ts <- function(x,
 
     decompType <- if(inherits(stlOrDecomposedTS, "stl")) "loess" else "moving averages"
     if(is.null(tk_title)){tk_title <- paste0(decompType, " decomposition of ", nameOfData)}
-    if(is.null(title)){title <- paste0("Decomposition (", decompType,") of ", nameOfData)
+    if(is.null(title)){title <- paste0("Decomposition (", decompType,") of ", nameOfData)}
+
+    dotArgs <- list(...)
+    parent <- dotArgs$parent
+    new.toplevel <- FALSE
+    if(is.null(parent)) {
+        new.toplevel <- TRUE
+        parent <- l_toplevel()
     }
 
-    parent <- l_toplevel()
+
+    modifiedLinkedStates <- l_modifiedLinkedStates("l_plot", names(call))
+
     subwin <- l_subwin(parent, 'ts')
     tktitle(parent) <- paste(tk_title, "--path:", subwin)
     child <- as.character(tcl('frame', subwin))
 
-    p1 <- l_plot(parent = child,
-                 x = xy.raw$x,
-                 y = xy.raw$y,
-                 color = color, size = size,
-                 ylabel = ylabel[1],
-                 xlabel = xlabel[1],
-                 title = title,
-                 linkingGroup = linkingGroup,
-                 showScales = showScales,
-                 showGuides = showGuides,
-                 showLabels = showLabels,
-                 ... )
+    dotArgs$parent <- child
+    dotArgs$color <- color
+    dotArgs$size <- size
+
+    sync <- dotArgs[['sync']]
+    # if null, it is always **pull**
+    if(is.null(sync)) sync <- "pull"
+    dotArgs[['sync']] <- NULL
+
+    p1 <- do.call(l_plot,
+                  c(
+                      list(
+                          x = xy.raw$x,
+                          y = xy.raw$y,
+                          ylabel = ylabel[1],
+                          xlabel = xlabel[1],
+                          title = title,
+                          showScales = showScales,
+                          showGuides = showGuides,
+                          showLabels = showLabels
+                      ),
+                      dotArgs
+                  ))
 
     l1 <- l_layer_line(p1,
                        x = xy.raw$x,
                        y= xy.raw$y,
-                       color= lcolor,
+                       color= linecolor,
                        linewidth = linewidth, index="end")
 
-    p2 <- l_plot(parent = child,
-                 x = xy.trend$x,
-                 y = xy.trend$y,
-                 color = color, size = size,
-                 ylabel = ylabel[2],
-                 xlabel = xlabel[2],
-                 linkingGroup = linkingGroup,
-                 showScales = showScales,
-                 showGuides = showGuides,
-                 showLabels = showLabels,
-                 ...)
+
+    p2 <- do.call(l_plot,
+                  c(
+                      list(
+                          x = xy.trend$x,
+                          y = xy.trend$y,
+                          ylabel = ylabel[2],
+                          xlabel = xlabel[2],
+                          showScales = showScales,
+                          showGuides = showGuides,
+                          showLabels = showLabels
+                      ),
+                      dotArgs
+                  ))
 
     l2 <- l_layer_line(p2,
                        x= xy.trend$x,
                        y= xy.trend$y,
-                       color=lcolor, linewidth = linewidth,
+                       color=linecolor, linewidth = linewidth,
                        index="end")
 
-    p3 <- l_plot(parent = child,
-                 x = xy.seasonal$x,
-                 y = xy.seasonal$y,
-                 color = color, size=size,
-                 ylabel = ylabel[3],
-                 xlabel = xlabel[3],
-                 linkingGroup = linkingGroup,
-                 showScales = showScales,
-                 showGuides = showGuides,
-                 showLabels = showLabels,
-                 ...)
+    p3 <- do.call(l_plot,
+                  c(
+                      list(
+                          x = xy.seasonal$x,
+                          y = xy.seasonal$y,
+                          ylabel = ylabel[3],
+                          xlabel = xlabel[3],
+                          showScales = showScales,
+                          showGuides = showGuides,
+                          showLabels = showLabels
+                      ),
+                      dotArgs
+                  ))
 
     l3 <- l_layer_line(p3,
                        x = xy.seasonal$x,
                        y = xy.seasonal$y,
-                       color = lcolor, linewidth = linewidth ,
+                       color = linecolor,
+                       linewidth = linewidth ,
                        index="end")
 
-    p4 <- l_plot(parent = child,
-                 x = xy.remainder$x,
-                 y = xy.remainder$y,
-                 color = color, size=size,
-                 ylabel = ylabel[4],
-                 xlabel = xlabel[4],
-                 linkingGroup = linkingGroup,
-                 showScales = showScales,
-                 showGuides = showGuides,
-                 showLabels = showLabels,
-                 ...)
+    p4 <- do.call(l_plot,
+                  c(
+                      list(
+                          x = xy.remainder$x,
+                          y = xy.remainder$y,
+                          ylabel = ylabel[4],
+                          xlabel = xlabel[4],
+                          showScales = showScales,
+                          showGuides = showGuides,
+                          showLabels = showLabels
+                      ),
+                      dotArgs
+                  ))
+
     l4 <- l_layer_line(p4,
                        x = xy.remainder$x,
                        y = xy.remainder$y,
-                       color = lcolor, linewidth = linewidth,
+                       color = linecolor, linewidth = linewidth,
                        index="end")
 
     ## make the canvas resize to fairly small
@@ -213,7 +249,57 @@ l_plot_ts <- function(x,
                }
            })
 
-    lapply(seq(length(plots)),
+    # configure sync
+    len <- length(plots)
+    lapply(seq(len),
+           function(i) {
+
+               plot <- plots[[i]]
+               type <- class(plot)[1L]
+
+               if(!new.linkingGroup) {
+
+                   syncTemp <- ifelse(length(modifiedLinkedStates) == 0,  sync, "pull")
+                   # give message once
+                   if(i == 1L && syncTemp == "push") {
+                       message("The modification of linked states is not detected",
+                               " so that the default settings will be pushed to all plots")
+                   }
+                   l_configure(plot,
+                               linkingGroup = linkingGroup,
+                               sync = syncTemp)
+
+                   if(sync == "push" && length(modifiedLinkedStates) > 0) {
+
+                       do.call(l_configure,
+                               c(
+                                   list(
+                                       target = plot,
+                                       linkingGroup = linkingGroup,
+                                       sync = sync
+                                   ),
+                                   dotArgs[modifiedLinkedStates]
+                               )
+                       )
+                   } else {
+
+                       # all four plots are the same type
+                       # so give warnings once
+                       if(i == 1L)
+                           l_linkingWarning(plot, sync,
+                                            args = dotArgs,
+                                            modifiedLinkedStates = modifiedLinkedStates)
+                   }
+
+               } else {
+
+                   l_configure(plot,
+                               linkingGroup = linkingGroup,
+                               sync = sync)
+               }
+           })
+
+    lapply(seq(len),
            function(i) {
                tkgrid(plots[[i]],
                       row = i - 1,
@@ -222,9 +308,9 @@ l_plot_ts <- function(x,
                tkgrid.rowconfigure(child, i - 1, weight=1)
            })
     tkgrid.columnconfigure(child, 0, weight=1)
-    tkpack(child, fill="both", expand=TRUE)
-    # tkpack(p1, p2, p3, p4,  expand = TRUE, fill = "both")
 
+    if(new.toplevel)
+        tkpack(child, fill="both", expand=TRUE)
 
     ## Bind so that they show the same x range
     l_bind_state(p1, c("panX", "zoomX"), function(W)updateZoomPan(W))

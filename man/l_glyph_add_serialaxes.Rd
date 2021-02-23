@@ -12,6 +12,7 @@ l_glyph_add_serialaxes(
   scaling = "variable",
   axesLayout = "radial",
   showAxes = FALSE,
+  andrews = FALSE,
   axesColor = "gray70",
   showEnclosing = FALSE,
   bboxColor = "gray70",
@@ -35,6 +36,8 @@ how the data is scaled. See Details and Examples for more information.}
 
 \item{showAxes}{boolean to indicate whether axes should be shown or not}
 
+\item{andrews}{Andrew's curve (a 'Fourier' transformation)}
+
 \item{axesColor}{color of axes}
 
 \item{showEnclosing}{boolean, circle (axesLayout=radial) or sqaure
@@ -48,7 +51,7 @@ unit circle or rectangle with height 1 if scaling=none)}
 \item{...}{state arguments}
 }
 \description{
-Serialaxes glyph show either a star glyph or a parralel
+Serialaxes glyph show either a star glyph or a parallel
   coordinate glyph for each point.
 }
 \examples{

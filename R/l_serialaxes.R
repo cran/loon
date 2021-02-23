@@ -1,30 +1,37 @@
-#' @title Create a Serialaxes Widget
-#'
-#' @description The serialaxes widget displays multivariate data either as a
-#'   stacked star glyph plot, or as a parallel coordinate plot.
-#'
-#'
+#' @title Create an interactive serialaxes (parallel axes or radial axes) plot
+#' @name l_serialaxes
+#' @family loon interactive states
+#' @description \code{l_serialaxes} is a generic function for displaying multivariate data either as a
+#' stacked star glyph plot, or as a parallel coordinate plot.
 #' @param data a data frame with numerical data only
+#' @param ... named arguments to modify the serialaxes plot states or layouts
+#'
+#' @templateVar page  learn_R_display_hist
+#' @template see_l_help_page
+#'
+#' @template return_widget_handle
+#'
+#'
+#' @export
+l_serialaxes <- function(data, ...) {
+    UseMethod("l_serialaxes")
+}
+
+
+#' @rdname l_serialaxes
 #' @param sequence vector with variable names that defines the axes sequence
 #' @param scaling one of 'variable', 'data', 'observation' or 'none' to specify
 #'   how the data is scaled. See Details and Examples for more information.
 #' @param axesLayout either \code{"radial"} or \code{"parallel"}
-#' @param by loon plot can be separated by some variables into mutiple panels.
-#' This argument can take a \code{vector}, a \code{list} of same lengths or a \code{data.frame} as input.
-#' @param layout layouts in a \code{'grid'} or a \code{'wrap'}
+#' @template param_by
+#' @template param_on
+#' @template param_layout
+#' @param andrews Andrew's plot (a 'Fourier' transformation)
 #' @param showAxes boolean to indicate whether axes should be shown or not
-#' @param linewidth vector with line widths.
-#' Default is given by \code{\link{l_getOption}("linewidth")}.
-#' @param color vector with line colors.
-#' Default is given by \code{\link{l_getOption}("color")}.
-#' @param active a logical determining whether items appear or not
-#' (default is \code{TRUE} for all items). If a logical vector is given of length
-#' equal to the number of items, then it identifies which items appear (\code{TRUE})
-#' and which do not (\code{FALSE}).
-#' @param selected a logical determining whether items appear selected at first
-#' (default is \code{FALSE} for all items). If a logical vector is given of length
-#' equal to the number of items, then it identifies which items are (\code{TRUE})
-#' and which are not (\code{FALSE}).
+#' @param linewidth vector with line widths. Default is given by \code{\link{l_getOption}("linewidth")}.
+#' @param color vector with line colors. Default is given by \code{\link{l_getOption}("color")}.
+#' @template param_active
+#' @template param_selected
 #' @template param_parent
 #' @template param_dots_state_args
 #' @param ... named arguments to modify the serialaxes states or layouts, see details.
@@ -48,18 +55,11 @@
 #'   }
 #' }
 #'
-#'
-#' @return plot handle object
-#'
+#' @seealso Turn interactive loon plot static \code{\link{loonGrob}}, \code{\link{grid.loon}}, \code{\link{plot.loon}}.
 #' @export
 #'
 #' @examples
 #' if(interactive()){
-#'
-#' s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
-#' s['axesLayout'] <- 'parallel'
-#' states <- l_info_states(s)
-#' names(states)
 #'
 #' #######
 #' #
@@ -226,24 +226,48 @@
 #'
 #' }
 
-l_serialaxes <- function(data,
-                         sequence,
-                         scaling="variable",
-                         axesLayout='radial',
-                         by = NULL,
-                         layout = c("grid", "wrap", "separate"),
-                         showAxes=TRUE,
-                         linewidth = l_getOption("linewidth"),
-                         color = l_getOption("color"),
-                         active = TRUE,
-                         selected = FALSE,
-                         parent=NULL, ... ){
+l_serialaxes.default <- function(data,
+                                 sequence,
+                                 scaling="variable",
+                                 axesLayout='radial',
+                                 by = NULL,
+                                 on,
+                                 layout = c("grid", "wrap", "separate"),
+                                 andrews = FALSE,
+                                 showAxes=TRUE,
+                                 color = l_getOption("color"),
+                                 active = TRUE,
+                                 selected = FALSE,
+                                 linewidth = l_getOption("linewidth"),
+                                 parent=NULL,
+                                 ...) {
 
-    args <- list(...)
-    # set by args, used for facetting
-    by_args <- args[l_byArgs()]
-    # args passed into loonPlotFactory
-    args[l_byArgs()] <- NULL
+    dotArgs <- list(...)
+    # set by dotArgs, used for facetting
+    byArgs <- dotArgs[l_byArgs()]
+    # dotArgs passed into loonPlotFactory
+    dotArgs[l_byArgs()] <- NULL
+
+    l_className <- "l_serialaxes"
+
+    if(missing(data)) {
+        plot <- do.call(
+            loonPlotFactory,
+            c(
+                dotArgs,
+                list(
+                    factory_tclcmd = '::loon::serialaxes',
+                    factory_path = 'serialaxes',
+                    factory_window_title = 'loon serialaxes plot',
+                    parent = parent,
+                    showAxes = showAxes
+                )
+            )
+        )
+
+        class(plot) <- c(l_className, class(plot))
+        return(plot)
+    }
 
     data <- as.data.frame(data)
 
@@ -251,79 +275,40 @@ l_serialaxes <- function(data,
         sequence <- names(data)
     }
 
-    sync <- args$sync
-
-    if(is.null(sync)) {
-        sync <- "pull"
-        if(length(color) > 1) {
-            sync <- "push"
-        } else {
-            if(length(color) == 1 && !is.na(color) && color != "steelblue") sync <- "push"
-        }
-
-        if(length(linewidth) != 1) {
-            sync <- "push"
-        } else {
-            if(length(linewidth) == 1 && !is.na(linewidth) && linewidth != 1) sync <- "push"
-        }
-    }
-
     n <- dim(data)[1]
-    len_color <- length(color)
-    if (len_color > 1) {
-        if (len_color != n) {
-            color <- rep_len(color, n)
-        }
-    } else {
-        if(is.na(color)) color <- l_getOption("color")
-    }
 
-    len_linewidth <- length(linewidth)
-    if (len_linewidth > 1) {
-        if (len_linewidth != n) {
-            linewidth <- rep_len(linewidth, n)
-        }
-    } else {
-        if(is.na(linewidth)) linewidth <- 1
-    }
+    call <- match.call()
+    modifiedLinkedStates <- l_modifiedLinkedStates(l_className, names(call))
 
-    len_active <- length(active)
-    if (len_active > 1) {
-        if (len_active != n)
-            stop(paste0("When more than length 1, length of active must match number of points:",
-                        n)
-            )
-    } else {
-        if(is.na(active)) active <- TRUE
-    }
+    color <- aes_settings(color, n, ifNoStop = FALSE)
+    linewidth <- aes_settings(linewidth, n, ifNoStop = FALSE)
+    active <- aes_settings(active, n, ifNoStop = TRUE)
+    selected <- aes_settings(selected, n, ifNoStop = TRUE)
 
-    len_selected <- length(selected)
-    if (len_selected > 1) {
-        if (len_selected != n)
-            stop(paste0("When more than length 1, length of selected must match number of points:",
-                        n)
-            )
-    } else {
-        if(is.na(selected)) selected <- FALSE
-    }
+    # `sync` and `linkingGroup` are set after the plot is created
+    # reason: set aesthetics first, then pull aesthetics from other plots (if they exist)
+    linkingGroup <- dotArgs[["linkingGroup"]]
+    dotArgs$linkingGroup <- NULL
+    sync <- dotArgs[["sync"]]
+    # if null, it is always **pull**
+    if(is.null(sync)) sync <- "pull"
+    dotArgs$sync <- NULL
 
-    linkingGroup <- args[["linkingGroup"]]
-    args$linkingGroup <- NULL
     # n dimensional states NA check
-    args$data <- data
-    args$color <- color
-    args$linewidth <- linewidth
-    args$active <- active
-    args$selected <- selected
+    dotArgs$data <- data
+    dotArgs$color <- color
+    dotArgs$linewidth <- linewidth
+    dotArgs$active <- active
+    dotArgs$selected <- selected
 
     if(is.null(by)) {
-        args <- l_na_omit("l_serialaxes", args)
-        args$data <- l_data(args$data)
+        dotArgs <- l_na_omit(l_className, dotArgs)
+        dotArgs$data <- l_data(dotArgs$data)
 
         plot <- do.call(
             loonPlotFactory,
             c(
-                args,
+                dotArgs,
                 list(
                     factory_tclcmd = '::loon::serialaxes',
                     factory_path = 'serialaxes',
@@ -332,55 +317,61 @@ l_serialaxes <- function(data,
                     sequence = sequence,
                     showAxes = showAxes,
                     scaling = scaling,
-                    axesLayout = axesLayout
+                    axesLayout = axesLayout,
+                    andrews = andrews
                 )
             )
         )
 
         if(!is.null(linkingGroup)) {
+
+            syncTemp <- ifelse(length(modifiedLinkedStates) == 0,  sync, "pull")
+            if(syncTemp == "push")
+                message("The modification of linked states is not detected",
+                        " so that the default settings will be pushed to all plots")
+            # configure plot (linking)
             l_configure(plot,
                         linkingGroup = linkingGroup,
-                        sync = sync)
+                        sync = syncTemp)
+
+            if(sync == "push" && length(modifiedLinkedStates) > 0) {
+
+                do.call(l_configure,
+                        c(
+                            list(
+                                target = plot,
+                                linkingGroup = linkingGroup,
+                                sync = sync
+                            ),
+                            dotArgs[modifiedLinkedStates]
+                        )
+                )
+            } else {
+                l_linkingWarning(plot, sync, args = dotArgs,
+                                 modifiedLinkedStates = modifiedLinkedStates,
+                                 l_className = l_className)
+            }
         }
 
-        class(plot) <- c("l_serialaxes", class(plot))
+        class(plot) <- c(l_className, class(plot))
         return(plot)
 
     } else {
 
-        # convert all types of 'by' to a data frame
-        byDeparse <- deparse(substitute(by))
-
-        if(is.atomic(by)) {
-            if(length(by) == n) {
-                by <- setNames(data.frame(by, stringsAsFactors = FALSE), byDeparse)
-            } else {
-                warning("Set 'by' as variables is not recommended")
-                by <- data[by]
-            }
-        } else {
-
-            if(is.null(names(by))) {
-
-                by <- as.data.frame(by, stringsAsFactors = FALSE)
-                names(by) <- NULL
-            } else {
-                by <- as.data.frame(by, stringsAsFactors = FALSE)
-            }
-        }
-
-        plots <- loonFacets(type = "l_serialaxes",
-                            by,
-                            args,
-                            byDeparse = byDeparse,
+        plots <- loonFacets(type = l_className,
+                            by = by,
+                            args = dotArgs,
+                            on = on,
+                            bySubstitute = substitute(by), # for warning or error generations
                             layout = match.arg(layout),
-                            by_args = Filter(Negate(is.null), by_args),
+                            byArgs = Filter(Negate(is.null), byArgs),
                             linkingGroup = linkingGroup,
                             sync = sync,
                             parent = parent,
                             factory_tclcmd = '::loon::serialaxes',
                             factory_path = 'serialaxes',
                             factory_window_title = 'loon serialaxes plot',
+                            modifiedLinkedStates = modifiedLinkedStates,
                             sequence = sequence,
                             showAxes = showAxes,
                             scaling = scaling,

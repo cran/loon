@@ -1,7 +1,32 @@
-## ----knitr_setup, include=FALSE-----------------------------------------------
-knitr::opts_chunk$set(echo = TRUE)
+## ----setup, include=FALSE-----------------------------------------------------
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.align = "center", 
+                      fig.width = 6, 
+                      fig.height = 5,
+                      out.width = "80%", 
+                      collapse = TRUE,
+                      comment = "#>",
+                      tidy.opts = list(width.cutoff = 65),
+                      tidy = FALSE)
 
-## ----setup, warning=FALSE, message=FALSE, error=FALSE-------------------------
+set.seed(12314159)
+library(loon.data)
+library(loon)
+library(knitr)
+
+imageDirectory <- "./images/teaching-example-smoothing"
+dataDirectory <- "./data/teaching-example-smoothing"
+path_concat <- function(path1, ..., sep="/") {
+    # The "/" is standard unix directory separator and so will
+    # work on Macs and Linux.
+    # In windows the separator might have to be sep = "\" or 
+    # even sep = "\\" or possibly something else. 
+    paste(path1, ..., sep = sep)
+    }
+
+## ----library loon, warning=FALSE, message=FALSE, error=FALSE------------------
 library(loon)
 
 ## ----loadBoneData, eval=FALSE-------------------------------------------------

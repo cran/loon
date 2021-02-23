@@ -6,6 +6,7 @@
 \usage{
 l_pairs(
   data,
+  connectedScales = c("cross", "none"),
   linkingGroup,
   linkingKey,
   showItemLabels = TRUE,
@@ -17,13 +18,20 @@ l_pairs(
   showSerialAxes = FALSE,
   serialAxesArgs = list(),
   parent = NULL,
+  span = 10L,
   ...
 )
 }
 \arguments{
 \item{data}{a data.frame with numerical data to create the scatterplot matrix}
 
-\item{linkingGroup}{string giving the linkingGroup for all plots.  If missing,
+\item{connectedScales}{Determines how the scales of the panels are to be connected.
+\itemize{
+\item{\code{"cross"}: only the scales in the same row and the same column are connected;}
+\item{\code{"none"}: neither "x" nor "y" scales are connected in any panels.}
+}}
+
+\item{linkingGroup}{string giving the linkingGroup for all plots. If missing,
 a default \code{linkingGroup} will be determined from deparsing the \code{data}.}
 
 \item{linkingKey}{a vector of strings to provide a linking identity for each row of the
@@ -50,7 +58,12 @@ in the bottom left of the pairs plot (or not)}
 
 \item{serialAxesArgs}{additional arguments to modify the `l_serialaxes` states}
 
-\item{parent}{parent widget path}
+\item{parent}{a valid Tk parent widget path. When the parent widget is
+specified (i.e. not \code{NULL}) then the plot widget needs to be placed using
+some geometry manager like \code{\link{tkpack}} or \code{\link{tkplace}} in
+order to be displayed. See the examples below.}
+
+\item{span}{How many column/row occupies for each widget}
 
 \item{...}{named arguments to modify the `l_plot` states of the scatterplots}
 }

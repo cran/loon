@@ -17,8 +17,8 @@ Sometimes it is simpler to work with objects of class loongraph
   than to work with object of class graph.
 }
 \details{
-See 
-  \url{http://www.bioconductor.org/packages/release/bioc/html/graph.html} for
+See
+  \url{https://www.bioconductor.org/packages/release/bioc/html/graph.html} for
   more information about the graph R package.
 
 For more information run: \code{l_help("learn_R_display_graph.html.html#graph-utilities")}

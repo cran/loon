@@ -39,7 +39,7 @@ loonInspectorFactory <- function(factory_tclcmd, factory_path, factory_window_ti
 #' @templateVar section graph-utilities
 #' @template see_l_help_page
 #'
-#' @template return_widget_handle
+#' @return a loon widget
 #'
 #' @export
 #'
@@ -225,7 +225,7 @@ l_hist_inspector_analysis <- function(parent=NULL, ...) {
 }
 
 
-#' @templateVar type Serialaxes Analysis
+#' @templateVar type Serialaxes
 #' @template man_inspector
 #'
 #' @export
@@ -239,6 +239,23 @@ l_serialaxes_inspector <- function(parent=NULL, ...) {
     loonInspectorFactory("::loon::serialaxes_inspector", "serialaxesinspector",
                          "Serialaxes inspector", parent, ...)
 }
+
+# As layers are accommodated in serialaxes plot,
+# uncomment the following code
+# #' @templateVar type Serialaxes Analysis
+# #' @template man_inspector
+# #'
+# #' @export
+# #'
+# #' @examples
+# #' if(interactive()){
+# #'
+# #' i <- l_serialaxes_inspector_analysis()
+# #' }
+# l_serialaxes_inspector_analysis <- function(parent=NULL, ...) {
+#    loonInspectorFactory("::loon::serialaxes_inspector_analysis", "serialaxesinspectoranalysis",
+#                         "Serialaxes analysis inspector", parent, ...)
+# }
 
 
 #' @templateVar type Graph

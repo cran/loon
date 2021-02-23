@@ -7,13 +7,14 @@
 facet_grid_layout(
   plots,
   subtitles,
+  by = NULL,
   prop = 10,
   parent = NULL,
   title = "",
   xlabel = "",
   ylabel = "",
   labelLocation = c("top", "right"),
-  byrow = TRUE,
+  byrow = FALSE,
   swapAxes = FALSE,
   labelBackground = "gray80",
   labelForeground = "black",
@@ -21,6 +22,7 @@ facet_grid_layout(
   labelRelief = "groove",
   sep = "*",
   maxCharInOneRow = 15,
+  new.toplevel = TRUE,
   ...
 )
 }
@@ -29,6 +31,9 @@ facet_grid_layout(
 
 \item{subtitles}{The subtitles of the layout. It is a list and the length is equal to
 the number of \code{by} variables. Each element in a list is the unique values of such \code{by} variable.}
+
+\item{by}{an object of class "formula" (or one that can be coerced to that class):
+a symbolic description of the plots separated by}
 
 \item{prop}{The proportion of the label height and widget height}
 
@@ -70,6 +75,9 @@ Length one vector for layout \code{wrap}, 'top' or 'bottom'.
 \item{sep}{The character string to separate or combine a vector}
 
 \item{maxCharInOneRow}{Max char in one row. If it exceeds the max, then a char will be displayed into two rows}
+
+\item{new.toplevel}{determine whether the parent is a new top level.
+If it is not a new window, the widgets will not be packed}
 
 \item{...}{named arguments to modify plot states.
 See \code{\link{l_info_states}} of any instantiated l_plot for examples of names and values.}
