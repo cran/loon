@@ -1,8 +1,8 @@
 Package: loon
 Type: Package
 Title: Interactive Statistical Data Visualization
-Version: 1.3.2
-Date: 2021-02-20
+Version: 1.3.3
+Date: 2021-02-24
 Authors@R: c(person(given = "Adrian", family = "Waddell", 
                     email = "adrian@waddell.ch", 
                     role = c("aut")),
@@ -31,11 +31,11 @@ LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-02-21 16:44:30 UTC; rwoldford
+Packaged: 2021-02-25 01:51:27 UTC; rwoldford
 Author: Adrian Waddell [aut],
   R. Wayne Oldford [aut, cre, ths],
   Zehao Xu [ctb],
   Martin Gauch [ctb]
 Maintainer: R. Wayne Oldford <rwoldford@uwaterloo.ca>
 Repository: CRAN
-Date/Publication: 2021-02-23 12:20:11 UTC
+Date/Publication: 2021-02-25 11:40:02 UTC
