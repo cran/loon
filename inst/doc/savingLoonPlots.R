@@ -13,15 +13,8 @@ library(loon.data)
 library(loon)
 library(gridExtra)
 
-imageDirectory <- "./images/savingLoonPlots"
-dataDirectory <- "./data/savingLoonPlots"
-path_concat <- function(path1, ..., sep="/") {
-    # The "/" is standard unix directory separator and so will
-    # work on Macs and Linux.
-    # In windows the separator might have to be sep = "\" or 
-    # even sep = "\\" or possibly something else. 
-    paste(path1, ..., sep = sep)
-    }
+imageDirectory <- file.path(".", "images", "savingLoonPlots")
+dataDirectory <- file.path(".", "data", "savingLoonPlots")
 
 ## ----basic plots, eval = FALSE------------------------------------------------
 #  library(loon)
@@ -106,12 +99,12 @@ path_concat <- function(path1, ..., sep="/") {
 
 ## ----load the saved plots, echo = FALSE, eval=FALSE---------------------------
 #  # The one exported from RStudio
-#  knitr::include_graphics(path_concat(imageDirectory, "myplot_via_RStudio.png"))
+#  knitr::include_graphics(file.path(imageDirectory, "myplot_via_RStudio.png"))
 #  # Followed by the one saved using l_export
 #  # (note that background grid is missing)
-#  knitr::include_graphics(path_concat(imageDirectory, "myplot_via_l_export.pdf"))
+#  knitr::include_graphics(file.path(imageDirectory, "myplot_via_l_export.pdf"))
 #  # And finally, the one saved using R's png device
-#  knitr::include_graphics(path_concat(imageDirectory, "myplot_via_R.png"))
+#  knitr::include_graphics(file.path(imageDirectory, "myplot_via_R.png"))
 
 ## ----p saveStates, eval = FALSE-----------------------------------------------
 #  l_saveStates(p, file = "p_savedStates")
@@ -120,7 +113,7 @@ path_concat <- function(path1, ..., sep="/") {
 #  p_savedStates <- l_getSavedStates(file = "p_savedStates")
 
 ## ----get p states back, echo = FALSE------------------------------------------
-p_savedStates <- l_getSavedStates(file = path_concat(dataDirectory, "p_savedStates"))
+p_savedStates <- l_getSavedStates(file = file.path(dataDirectory, "p_savedStates"))
 
 ## ----new plot and copy, eval = FALSE------------------------------------------
 #  new_p <- l_plot(iris$Petal.Width, iris$Petal.Length)
@@ -151,7 +144,7 @@ names(p_savedStates)
 #  p_focusOnVersicolor <- l_getSavedStates(file = "p_focusOnVersicolor")
 
 ## ---- echo = FALSE------------------------------------------------------------
-p_focusOnVersicolor <- l_getSavedStates(file = path_concat(dataDirectory, "p_focusOnVersicolor"))
+p_focusOnVersicolor <- l_getSavedStates(file = file.path(dataDirectory, "p_focusOnVersicolor"))
 
 ## ----copy all but basic states, eval = FALSE----------------------------------
 #  l_copyStates(source = p_focusOnVersicolor,

@@ -6,9 +6,8 @@ knitr::opts_chunk$set(
 
 set.seed(12314159)
 
-imageDirectory <- "./images/intro"
-dataDirectory <- "data"
-path_concat <- function(path1, path2, sep="/") {paste(path1, path2, sep = sep)}
+imageDirectory <- file.path(".", "images", "intro")
+# dataDirectory <- file.path(".", "data", "intro")
 
 ## ----library_loon, eval = TRUE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE----
 library(loon)
@@ -26,25 +25,25 @@ library(loon)
 #  [1] "l_plot" "loon"
 
 ## ----loonQuakeOriginal, out.width= "60%", fig.align="center", echo=FALSE------
-knitr::include_graphics(path_concat(imageDirectory, "quakesOriginal.png"))
+knitr::include_graphics(file.path(imageDirectory, "quakesOriginal.png"))
 
 ## ----looninspectorQuakeOriginal, out.width= "30%", fig.align="center", echo=FALSE----
-knitr::include_graphics(path_concat(imageDirectory, "inspectorQuakesOriginal.png"))
+knitr::include_graphics(file.path(imageDirectory, "inspectorQuakesOriginal.png"))
 
 ## ----panning, out.width= "40%", fig.align="center", echo=FALSE----------------
-knitr::include_graphics(path_concat(imageDirectory, "panning.png"))
+knitr::include_graphics(file.path(imageDirectory, "panning.png"))
 
 ## ----zooming, out.width= "40%", fig.align="center", echo=FALSE----------------
-knitr::include_graphics(path_concat(imageDirectory, "zooming.png"))
+knitr::include_graphics(file.path(imageDirectory, "zooming.png"))
 
 ## ----point selection, out.width= "40%", fig.align="center", echo=FALSE--------
-knitr::include_graphics(path_concat(imageDirectory, "selecting.png"))
+knitr::include_graphics(file.path(imageDirectory, "selecting.png"))
 
 ## ----select defaults, out.width= "40%", fig.align="left", echo=FALSE----------
-knitr::include_graphics(path_concat(imageDirectory, "inspectorSelectDefaults.png"))
+knitr::include_graphics(file.path(imageDirectory, "inspectorSelectDefaults.png"))
 
 ## ----looninspector plus 10 cols, out.width= "30%", fig.align="center", echo=FALSE----
-knitr::include_graphics(path_concat(imageDirectory, "inspectorQuakesPlus10Cols.png"))
+knitr::include_graphics(file.path(imageDirectory, "inspectorQuakesPlus10Cols.png"))
 
 ## ----l_getColorList, eval = FALSE, tidy = TRUE--------------------------------
 #  head(l_getColorList())
@@ -341,16 +340,16 @@ knitr::include_graphics(path_concat(imageDirectory, "inspectorQuakesPlus10Cols.p
 #  [1] "layer0"
 
 ## ----quakesGuidesMapInspector, out.width= "30%", fig.align="center", echo=FALSE----
-knitr::include_graphics(path_concat(imageDirectory, "quakesGuidesMapInspector.png"))
+knitr::include_graphics(file.path(imageDirectory, "quakesGuidesMapInspector.png"))
 
 ## ----quakesGuidesMap, out.width= "50%", fig.align="center", echo=FALSE--------
-knitr::include_graphics(path_concat(imageDirectory, "quakesGuidesMap.png"))
+knitr::include_graphics(file.path(imageDirectory, "quakesGuidesMap.png"))
 
 ## ----worldViewScaling, out.width= "90%", fig.align="center", echo=FALSE-------
-knitr::include_graphics(path_concat(imageDirectory, "quakesWorldViewScaling.png"))
+knitr::include_graphics(file.path(imageDirectory, "quakesWorldViewScaling.png"))
 
 ## ----quakesLayersInspector, out.width= "70%", fig.align="center", echo=FALSE----
-knitr::include_graphics(path_concat(imageDirectory, "quakesLayersInspector.png"))
+knitr::include_graphics(file.path(imageDirectory, "quakesLayersInspector.png"))
 
 ## ----loon and base syntax, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 5, out.width = "75%", warning=FALSE, message=FALSE, tidy=FALSE----
 #  # Base graphics
