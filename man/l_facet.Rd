@@ -23,6 +23,8 @@ l_facet(widget, by, on, layout = c("grid", "wrap", "separate"), ...)
   labelForeground = "black",
   labelBorderwidth = 2,
   labelRelief = c("groove", "flat", "raised", "sunken", "ridge", "solid"),
+  plotWidth = 200,
+  plotHeight = 200,
   parent = NULL,
   ...
 )
@@ -40,6 +42,8 @@ l_facet(widget, by, on, layout = c("grid", "wrap", "separate"), ...)
   labelForeground = "black",
   labelBorderwidth = 2,
   labelRelief = c("groove", "flat", "raised", "sunken", "ridge", "solid"),
+  plotWidth = 200,
+  plotHeight = 200,
   parent = NULL,
   ...
 )
@@ -105,13 +109,17 @@ Length one vector for layout \code{wrap}, 'top' or 'bottom'.
 }
 }}
 
-\item{labelBackground}{Label background color}
+\item{labelBackground}{Label background colour}
 
-\item{labelForeground}{Label foreground color}
+\item{labelForeground}{Label foreground colour}
 
 \item{labelBorderwidth}{Label border width}
 
 \item{labelRelief}{Label relief}
+
+\item{plotWidth}{default plot width (in pixels)}
+
+\item{plotHeight}{default plot height (in pixels)}
 
 \item{parent}{a valid Tk parent widget path. When the parent widget is
 specified (i.e. not \code{NULL}) then the plot widget needs to be placed using

@@ -17,10 +17,12 @@ facet_wrap_layout(
   labelLocation = "top",
   byrow = FALSE,
   swapAxes = FALSE,
-  labelBackground = "gray80",
-  labelForeground = "black",
+  labelBackground = l_getOption("facetLabelBackground"),
+  labelForeground = l_getOption("foreground"),
   labelBorderwidth = 2,
-  labelRelief = "groove",
+  labelRelief = "ridge",
+  plotWidth = 200,
+  plotHeight = 200,
   sep = "*",
   maxCharInOneRow = 15,
   new.toplevel = TRUE,
@@ -73,6 +75,10 @@ Length one vector for layout \code{wrap}, 'top' or 'bottom'.
 \item{labelBorderwidth}{Label border width}
 
 \item{labelRelief}{Label relief}
+
+\item{plotWidth}{default plot width (in pixel)}
+
+\item{plotHeight}{default plot height (in pixel)}
 
 \item{sep}{The character string to separate or combine a vector}
 

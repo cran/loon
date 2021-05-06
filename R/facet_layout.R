@@ -29,6 +29,8 @@
 #' @param labelForeground Label foreground color
 #' @param labelBorderwidth Label border width
 #' @param labelRelief Label relief
+#' @param plotWidth default plot width (in pixel)
+#' @param plotHeight default plot height (in pixel)
 #' @param sep The character string to separate or combine a vector
 #' @param maxCharInOneRow Max char in one row. If it exceeds the max, then a char will be displayed into two rows
 #' @param new.toplevel determine whether the parent is a new top level.
@@ -47,9 +49,12 @@ facet_grid_layout <- function(plots,
                               labelLocation = c("top", "right"),
                               byrow = FALSE,
                               swapAxes = FALSE,
-                              labelBackground = "gray80", labelForeground = "black",
+                              labelBackground = l_getOption("facetLabelBackground"),
+                              labelForeground = l_getOption("foreground"),
                               labelBorderwidth = 2,
-                              labelRelief = "groove",
+                              labelRelief = "ridge",
+                              plotWidth = 200,
+                              plotHeight = 200,
                               sep = "*",
                               maxCharInOneRow = 15,
                               new.toplevel = TRUE,
@@ -58,12 +63,12 @@ facet_grid_layout <- function(plots,
     len <- length(subtitles)
     span <- prop
 
-    # tk configure
+    # tk configure canvas size
     sapply(plots,
            function(p) {
                tkconfigure(paste(p,'.canvas',sep=''),
-                           width=100,
-                           height=100)
+                           width = plotWidth,
+                           height = plotHeight)
            }
     )
     plot_names <- names(plots)
@@ -223,7 +228,8 @@ facet_grid_layout <- function(plots,
                        rep(fluid_colsLabel[[fluid_colsLabel_name]], prod(lengths(colsLabel[1:(j - 1)])))
                    }
                    fluid_colsLabel[fluid_colsLabel_name] <<- NULL
-                   columnspan <- prod(lengths(fluid_colsLabel)) * span
+                   extent <- prod(lengths(fluid_colsLabel))
+                   columnspan <- extent * span
 
                    name <- column_names[j]
                    label <- if(is.null(name)) {
@@ -244,7 +250,9 @@ facet_grid_layout <- function(plots,
 
                        text <- label[i]
                        tkcolname <- as.character(tcltk::tcl('label',
-                                                            as.character(l_subwin(parent, 'label')),
+                                                            as.character(l_subwin(parent,
+                                                                                  paste0('columnlabel-', columnLabelLocation, '-',
+                                                                                         'x', j, 'y', i, 'extent', extent))),
                                                             text = text,
                                                             bg = labelBackground,
                                                             fg = labelForeground,
@@ -295,7 +303,9 @@ facet_grid_layout <- function(plots,
                    fluid_rowsLabel[fluid_rowsLabel_name] <<- NULL
 
                    name <- row_names[i]
-                   rowspan <- prod(lengths(fluid_rowsLabel)) * span
+
+                   extent <- prod(lengths(fluid_rowsLabel))
+                   rowspan <- extent * span
                    for(j in seq(length(row))) {
                        # row index
                        label <- row[j]
@@ -306,9 +316,10 @@ facet_grid_layout <- function(plots,
                                   paste(name, color.id(label), sep = ":"),
                                   paste(name, label, sep = ":"))
                        }
-
                        tkrowname <- as.character(tcltk::tcl('label',
-                                                            as.character(l_subwin(parent,'label')),
+                                                            as.character(l_subwin(parent,
+                                                                                  paste0('rowlabel-', rowLabelLocation, '-',
+                                                                                         'x', j, 'y', i, 'extent', extent))),
                                                             text = paste(paste0(" ", strsplit(text, "")[[1]], " "), collapse = "\n"),
                                                             bg = labelBackground,
                                                             fg = labelForeground,
@@ -332,17 +343,16 @@ facet_grid_layout <- function(plots,
                })
     }
 
-    labelBG <- "grey70"
     # pack title
     if(title != "") {
 
         title <- as.character(tcltk::tcl('label',
-                                         as.character(l_subwin(parent,'label')),
+                                         as.character(l_subwin(parent,'title')),
                                          text = title,
-                                         bg = labelBG,
+                                         bg = l_getOption("canvas_bg_guides"),
                                          fg = labelForeground,
                                          borderwidth = labelBorderwidth,
-                                         relief = "raised"))
+                                         relief = "flat"))
 
         tkgrid(title,
                row = 0,
@@ -356,12 +366,12 @@ facet_grid_layout <- function(plots,
     if(xlabel != "") {
 
         tkXlabel <- as.character(tcltk::tcl('label',
-                                            as.character(l_subwin(parent,'label')),
+                                            as.character(l_subwin(parent,'xlabel')),
                                             text = xlabel,
-                                            bg = labelBG,
+                                            bg = l_getOption("canvas_bg_guides"),
                                             fg = labelForeground,
                                             borderwidth = labelBorderwidth,
-                                            relief = "raised"))
+                                            relief = "flat"))
 
         tkgrid(tkXlabel,
                row = len_rowsLabel + title_pos + nrowsLabel * span + len_colsLabel,
@@ -376,12 +386,12 @@ facet_grid_layout <- function(plots,
     if(ylabel != "") {
 
         tkYlabel <- as.character(tcltk::tcl('label',
-                                            as.character(l_subwin(parent,'label')),
+                                            as.character(l_subwin(parent,'ylabel')),
                                             text = paste(paste0(" ", strsplit(ylabel, "")[[1]], " "), collapse = "\n"),
-                                            bg = labelBG,
+                                            bg = l_getOption("canvas_bg_guides"),
                                             fg = labelForeground,
                                             borderwidth = labelBorderwidth,
-                                            relief = "raised"))
+                                            relief = "flat"))
 
         tkgrid(tkYlabel,
                row = title_pos + row_start_pos,
@@ -449,6 +459,8 @@ facet_grid_layout <- function(plots,
 #' @param labelForeground Label foreground color
 #' @param labelBorderwidth Label border width
 #' @param labelRelief Label relief
+#' @param plotWidth default plot width (in pixel)
+#' @param plotHeight default plot height (in pixel)
 #' @param sep The character string to separate or combine a vector
 #' @param maxCharInOneRow Max char in one row. If it exceeds the max, then a char will be displayed into two rows
 #' @param new.toplevel determine whether the parent is a new top level.
@@ -468,9 +480,12 @@ facet_wrap_layout <- function(plots,
                               labelLocation = "top",
                               byrow = FALSE,
                               swapAxes = FALSE,
-                              labelBackground = "gray80", labelForeground = "black",
+                              labelBackground = l_getOption("facetLabelBackground"),
+                              labelForeground = l_getOption("foreground"),
                               labelBorderwidth = 2,
-                              labelRelief = "groove",
+                              labelRelief = "ridge",
+                              plotWidth = 200,
+                              plotHeight = 200,
                               sep = "*",
                               maxCharInOneRow = 15,
                               new.toplevel = TRUE,
@@ -532,8 +547,8 @@ facet_wrap_layout <- function(plots,
     sapply(plots,
            function(p) {
                tkconfigure(paste(p,'.canvas',sep=''),
-                           width=100,
-                           height=100)
+                           width = plotWidth,
+                           height = plotHeight)
            }
     )
     plot_names <- names(plots)
@@ -593,7 +608,8 @@ facet_wrap_layout <- function(plots,
                                }
 
                                tklabel <- as.character(tcltk::tcl('label',
-                                                                  as.character(l_subwin(parent, 'label')),
+                                                                  as.character(l_subwin(parent,
+                                                                                        paste0('label-top-', 'x', i, 'y', j, 'p', k))),
                                                                   text = text,
                                                                   bg = labelBackground,
                                                                   fg = labelForeground,
@@ -631,7 +647,8 @@ facet_wrap_layout <- function(plots,
                                }
 
                                tklabel <- as.character(tcltk::tcl('label',
-                                                                  as.character(l_subwin(parent, 'label')),
+                                                                  as.character(l_subwin(parent,
+                                                                                        paste0('label-bottom-', 'x', i, 'y', j, 'p', k))),
                                                                   text = text,
                                                                   bg = labelBackground,
                                                                   fg = labelForeground,
@@ -689,7 +706,8 @@ facet_wrap_layout <- function(plots,
                                }
 
                                tklabel <- as.character(tcltk::tcl('label',
-                                                                  as.character(l_subwin(parent, 'label')),
+                                                                  as.character(l_subwin(parent,
+                                                                                        paste0('label-top-', 'x', i, 'y', j, 'p', k))),
                                                                   text = text,
                                                                   bg = labelBackground,
                                                                   fg = labelForeground,
@@ -727,7 +745,8 @@ facet_wrap_layout <- function(plots,
                                }
 
                                tklabel <- as.character(tcltk::tcl('label',
-                                                                  as.character(l_subwin(parent, 'label')),
+                                                                  as.character(l_subwin(parent,
+                                                                                        paste0('label-bottom-', 'x', i, 'y', j, 'p', k))),
                                                                   text = text,
                                                                   bg = labelBackground,
                                                                   fg = labelForeground,
@@ -752,12 +771,12 @@ facet_wrap_layout <- function(plots,
     if(title != "") {
 
         title <- as.character(tcltk::tcl('label',
-                                         as.character(l_subwin(parent,'label')),
+                                         as.character(l_subwin(parent,'title')),
                                          text = title,
-                                         bg = labelBackground,
+                                         bg = l_getOption("canvas_bg_guides"),
                                          fg = labelForeground,
                                          borderwidth = labelBorderwidth,
-                                         relief = "raised"))
+                                         relief = "flat"))
 
         tkgrid(title,
                row = 0,
@@ -771,12 +790,12 @@ facet_wrap_layout <- function(plots,
     if(xlabel != "") {
 
         tkXlabel <- as.character(tcltk::tcl('label',
-                                            as.character(l_subwin(parent,'label')),
+                                            as.character(l_subwin(parent,'xlabel')),
                                             text = xlabel,
-                                            bg = labelBackground,
+                                            bg = l_getOption("canvas_bg_guides"),
                                             fg = labelForeground,
                                             borderwidth = labelBorderwidth,
-                                            relief = "raised"))
+                                            relief = "flat"))
 
         tkgrid(tkXlabel,
                row = title_pos + nrow * span,
@@ -791,12 +810,12 @@ facet_wrap_layout <- function(plots,
     if(ylabel != "") {
 
         tkYlabel <- as.character(tcltk::tcl('label',
-                                            as.character(l_subwin(parent,'label')),
+                                            as.character(l_subwin(parent,'ylabel')),
                                             text = paste(paste0(" ", strsplit(ylabel, "")[[1]], " "), collapse = "\n"),
-                                            bg = labelBackground,
+                                            bg = l_getOption("canvas_bg_guides"),
                                             fg = labelForeground,
                                             borderwidth = labelBorderwidth,
-                                            relief = "raised"))
+                                            relief = "flat"))
 
         tkgrid(tkYlabel,
                row = title_pos,
