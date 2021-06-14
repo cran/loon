@@ -1,3 +1,13 @@
+# loon 1.3.7
+
+* A new function `l_colorName` is exported which returns the build-in color names based on the 12 or 6 hex code. 
+
+* For `loonGrob`, remove the lines at the base of the tick marks
+
+# loon 1.3.6
+
+* fixed printing bug just introduced by change to facets. 
+
 # loon 1.3.5
 
 * `l_web()` now expanded to provide access to other `loon` related package documentation from the 
