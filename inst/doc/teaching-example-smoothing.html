@@ -12,7 +12,7 @@
 
 <meta name="author" content="R.W. Oldford" />
 
-<meta name="date" content="2021-05-31" />
+<meta name="date" content="2021-09-23" />
 
 <title>Smoothers and Bone Mineral Density</title>
 
@@ -141,9 +141,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Smoothers and Bone Mineral Density</h1>
 <h4 class="author">R.W. Oldford</h4>
-<h4 class="date">2021-05-31</h4>
+<h4 class="date">2021-09-23</h4>
 
 
+<div id="TOC">
+<ul>
+<li><a href="#illustrates">Illustrates:</a></li>
+<li><a href="#the-data-bone-mineral-density">The data: Bone mineral density</a></li>
+<li><a href="#the-scatterplot">The scatterplot</a></li>
+<li><a href="#histogram">Histogram</a></li>
+<li><a href="#panning-and-brushing">Panning and brushing</a></li>
+<li><a href="#adding-a-dynamically-changing-smooth">Adding a (dynamically changing) smooth</a></li>
+<li><a href="#a-smooth-as-a-running-linear-fit">A smooth as a running linear fit</a></li>
+</ul>
+</div>
 
 <div id="illustrates" class="section level3">
 <h3>Illustrates:</h3>
@@ -236,73 +247,79 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="adding-a-dynamically-changing-smooth" class="section level2">
 <h2>Adding a (dynamically changing) smooth</h2>
-<p>To summarize the relationship, a smooth curve could be added to any scatterplot. Here, we will add a smoothing spline fitted to bone mineral density as a function of time (i.e. to the data of <code>p</code>).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a smoothing spline</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fitsmooth <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df=</span><span class="dv">5</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>xOrder <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>smooth <span class="ot">&lt;-</span> <span class="fu">l_layer_line</span>(p,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x=</span>x[xOrder],</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y=</span><span class="fu">predict</span>(fitsmooth,<span class="at">x=</span>x[xOrder])<span class="sc">$</span>y,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label=</span><span class="st">&quot;smooth fit&quot;</span>, <span class="at">linewidth=</span><span class="dv">4</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
-<p>The smooth shows that the change in spinal bone mineral density rises up to about 12 years of age and then declines thereafter ultimately hitting zero.</p>
+<p>To summarize the relationship, first add a straight line fitted by <code>lm()</code> using the function <code>l_layer_smooth()</code> and the method <code>&quot;lm&quot;</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_layer_smooth</span>(p, <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> <span class="st">&quot;straight line fit&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">linecolor =</span> <span class="st">&quot;firebrick&quot;</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">linedash =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">linewidth =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p>The same function could also be used to add a smooth (default <code>method = &quot;loess&quot;</code>). Instead, we will add a smoothing spline from the <code>splines</code> package and use it to fit bone mineral density as a function of time (i.e. to the data of <code>p</code>).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a smoothing spline</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fitsmooth <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df=</span><span class="dv">5</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>xOrder <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>smooth <span class="ot">&lt;-</span> <span class="fu">l_layer_line</span>(p,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x =</span> x[xOrder],</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> <span class="fu">predict</span>(fitsmooth, <span class="at">x =</span> x[xOrder])<span class="sc">$</span>y,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label =</span> <span class="st">&quot;smooth fit&quot;</span>, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">linewidth =</span> <span class="dv">4</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p>Unlike the straight line fit, the smooth shows that the change in spinal bone mineral density rises up to about 12 years of age and then declines thereafter ultimately hitting zero.</p>
 <p>Of course this is the aggregate behaviour, over both sexes. It might be interesting to see how this changes for males and for females. We could do this by adding a smooth for each sex but there may be other subgroups of the data that we would like to investigate. To that end we introduce a <strong>dynamic update</strong> to the smooth.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the update function</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>updateSmooth <span class="ot">&lt;-</span> <span class="cf">function</span>(myPlot, minpts, df, <span class="at">color=</span><span class="st">&quot;blue&quot;</span>) {</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Get the values for x and y from the plot</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">##</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For x</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;xTemp&quot;</span>]</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(xnew) <span class="sc">==</span> <span class="dv">0</span>) {xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;x&quot;</span>]}</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For y</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;yTemp&quot;</span>]</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(ynew) <span class="sc">==</span> <span class="dv">0</span>) {ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;y&quot;</span>]}</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Now **only** use the active selected points to construct the smooth</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  sel <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;selected&quot;</span>] <span class="sc">&amp;</span> myPlot[<span class="st">&quot;active&quot;</span>]</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> xnew[sel]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> ynew[sel]</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  Nsel <span class="ot">&lt;-</span> <span class="fu">sum</span>(sel)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (Nsel <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">&amp;</span> <span class="fu">diff</span>(<span class="fu">range</span>(xnew)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Find the range of the selected x values</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    xrng <span class="ot">&lt;-</span> <span class="fu">extendrange</span>(xnew)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    xvals.temp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(xrng),</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">to=</span><span class="fu">max</span>(xrng), </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">length.out=</span><span class="dv">100</span>)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Redo our smooth **only** if we have enough points</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((Nsel <span class="sc">&gt;</span> minpts) <span class="sc">&amp;</span> (minpts <span class="sc">&gt;</span> (df <span class="sc">+</span> <span class="dv">1</span>))){</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>      fit.temp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(xnew, ynew, <span class="at">df=</span>df)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>      ypred.temp <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.temp,<span class="at">x=</span>xvals.temp)<span class="sc">$</span>y</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      <span class="do">## update the smooth</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (smooth <span class="sc">%in%</span> <span class="fu">l_layer_ids</span>(myPlot)) {</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="do">## reconfigure the smooth with new data</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">l_configure</span>(smooth, <span class="at">x=</span>xvals.temp, <span class="at">y=</span>ypred.temp)</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="do">## If the smooth has been deleted, then we recreate it </span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="do">## (N.B. in the global environment)</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        smooth <span class="ot">&lt;&lt;-</span>  <span class="fu">l_layer_line</span>(myPlot,</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">x=</span>xvals.temp, </span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">y=</span>ypred.temp,</span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">label=</span><span class="st">&quot;smooth fit&quot;</span>, </span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">linewidth=</span><span class="dv">4</span>,</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">color =</span> color)</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>      } </span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Update the tcl language&#39;s event handler</span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tcl</span>(<span class="st">&quot;update&quot;</span>, <span class="st">&quot;idletasks&quot;</span>)</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Define the update function</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>updateSmooth <span class="ot">&lt;-</span> <span class="cf">function</span>(myPlot, minpts, df, <span class="at">color=</span><span class="st">&quot;blue&quot;</span>) {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Get the values for x and y from the plot</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">##</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For x</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;xTemp&quot;</span>]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(xnew) <span class="sc">==</span> <span class="dv">0</span>) {xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;x&quot;</span>]}</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For y</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;yTemp&quot;</span>]</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(ynew) <span class="sc">==</span> <span class="dv">0</span>) {ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;y&quot;</span>]}</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Now **only** use the active selected points to construct the smooth</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  sel <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;selected&quot;</span>] <span class="sc">&amp;</span> myPlot[<span class="st">&quot;active&quot;</span>]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> xnew[sel]</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> ynew[sel]</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  Nsel <span class="ot">&lt;-</span> <span class="fu">sum</span>(sel)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (Nsel <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">&amp;</span> <span class="fu">diff</span>(<span class="fu">range</span>(xnew)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Find the range of the selected x values</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    xrng <span class="ot">&lt;-</span> <span class="fu">extendrange</span>(xnew)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    xvals.temp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(xrng),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">to=</span><span class="fu">max</span>(xrng), </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">length.out=</span><span class="dv">100</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Redo our smooth **only** if we have enough points</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((Nsel <span class="sc">&gt;</span> minpts) <span class="sc">&amp;</span> (minpts <span class="sc">&gt;</span> (df <span class="sc">+</span> <span class="dv">1</span>))){</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      fit.temp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(xnew, ynew, <span class="at">df=</span>df)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      ypred.temp <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.temp,<span class="at">x=</span>xvals.temp)<span class="sc">$</span>y</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>      <span class="do">## update the smooth</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (smooth <span class="sc">%in%</span> <span class="fu">l_layer_ids</span>(myPlot)) {</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="do">## reconfigure the smooth with new data</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">l_configure</span>(smooth, <span class="at">x=</span>xvals.temp, <span class="at">y=</span>ypred.temp)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="do">## If the smooth has been deleted, then we recreate it </span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="do">## (N.B. in the global environment)</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        smooth <span class="ot">&lt;&lt;-</span>  <span class="fu">l_layer_line</span>(myPlot,</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">x=</span>xvals.temp, </span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">y=</span>ypred.temp,</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">label=</span><span class="st">&quot;smooth fit&quot;</span>, </span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">linewidth=</span><span class="dv">4</span>,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">color =</span> color)</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>      } </span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Update the tcl language&#39;s event handler</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tcl</span>(<span class="st">&quot;update&quot;</span>, <span class="st">&quot;idletasks&quot;</span>)</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Now, we would like to have this update called whenever any interesting change in state occurs. There are numerous such possible states (see <code>names(p)</code>, <code>names(l_info_states(p))</code>, or <code>l_help(&quot;learn_R_bind&quot;)</code> ). Here we bind an anonymous function of no arguments to be called whenever there is any change in the values of <code>p</code> contained in its <code>selected</code> state. This means that the function is called if any point in <code>p</code> is selected or deselected.</p>
 <p>Note also that the smooth is based on the <strong>temporary</strong> <code>x</code> and <code>y</code> values. Points in a <strong>scatterplot may be moved</strong> by selecting them with the control button depressed (as well as shift for multiple selection). Alternatively, <strong>selected points may be pushed together, distributed vertically or horizontally, arranged on a grid, or jittered</strong> by selecting the corresponding <code>move</code> button from the <code>Modify</code> panel of the inspector. All points can be returned to their original position by clicking the recover button</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">l_bind_state</span>(p, <span class="fu">c</span>(<span class="st">&quot;selected&quot;</span>),</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>() {<span class="fu">updateSmooth</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">l_bind_state</span>(p, <span class="fu">c</span>(<span class="st">&quot;selected&quot;</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>() {<span class="fu">updateSmooth</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Now go to the histogram and select first the female bar, then the make bar, and watch how the smoothing spline adapts to the sex. Clearly, females have greater changes in spinal bone mineral density at a younger age than do males. No doubt this is a consequence of the different ages at which girls and boys sexually mature.</p>
 <p>Brushing any set of points, from any of the linked plots will now cause the smooth function to automatically recalculate and redisplay. In this way one might pursue, for example how the smooth changes over subsets of <code>idnum</code> values.</p>
 <p>Note that the points must be both active and selected. We could, for example, focus on how the smooth changes <em>only for any subset of females</em> by first deactivating all males and then brushing the subset of the females.</p>
@@ -313,81 +330,81 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Linear smoothers can be thought of as the connected predicted values of locally fitted linear models having weights which are maximal at the point <span class="math inline">\(x\)</span> where the prediction is being made and which drop off to zero for <span class="math inline">\(x\)</span> values far away from it.</p>
 <p>To illustrate this we add a straight line to the scatterplot that is fitted to the data via weighted least squares using Gaussian weights. For any collection of <span class="math inline">\(x\)</span> values, the prediction will be made at their median.</p>
 <p>The Gaussian weight function will be centred at the median:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GaussWt <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get an estimated standard deviation</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">range</span>(x))<span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Centre at median</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  xloc <span class="ot">&lt;-</span> <span class="fu">median</span>(x)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Gaussian density</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dnorm</span>(x, <span class="at">mean=</span>xloc, <span class="at">sd=</span>h)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>GaussWt <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get an estimated standard deviation</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">range</span>(x))<span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Centre at median</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  xloc <span class="ot">&lt;-</span> <span class="fu">median</span>(x)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Gaussian density</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dnorm</span>(x, <span class="at">mean=</span>xloc, <span class="at">sd=</span>h)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Use these weights to fit a line to the data.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a local line using some Gaussian weights.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prediction will be at the median of x, fit by</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">### weights that decrease with x&#39;s</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># distance from the median.</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>fitwls <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">weights=</span><span class="fu">GaussWt</span>(x))</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>linewls <span class="ot">&lt;-</span> <span class="fu">l_layer_line</span>(p, </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x=</span>x,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">y=</span><span class="fu">predict</span>(fitwls,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>x)),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="st">&quot;Fitted line&quot;</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">linewidth=</span><span class="dv">4</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a local line using some Gaussian weights.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prediction will be at the median of x, fit by</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">### weights that decrease with x&#39;s</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># distance from the median.</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>fitwls <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">weights=</span><span class="fu">GaussWt</span>(x))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>linewls <span class="ot">&lt;-</span> <span class="fu">l_layer_line</span>(p, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x=</span>x,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">y=</span><span class="fu">predict</span>(fitwls,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>x)),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="st">&quot;Fitted line&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">linewidth=</span><span class="dv">4</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p>Clicking on the <code>Layers</code> tab in the inspector shows the scatterplot, the axis, the smooth fit, and the Gaussian weight straight line. Select the last of these and render it invisible by clicking on that button, or, by programmatically by executing the following.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_layer_hide</span>(p, smooth)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_layer_hide</span>(p, smooth)</span></code></pre></div>
 <p>Now make the fitted line update to fit only the selected points.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>updateLocalLine <span class="ot">&lt;-</span> <span class="cf">function</span>(myPlot, minpts, df, <span class="at">volor=</span><span class="st">&quot;blue&quot;</span>) {</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Get the values for x and y from the plot</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For x</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;xTemp&quot;</span>]</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(xnew) <span class="sc">==</span> <span class="dv">0</span>) {xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;x&quot;</span>]}</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For y</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;yTemp&quot;</span>]</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(ynew) <span class="sc">==</span> <span class="dv">0</span>) {ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;y&quot;</span>]}</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Now **only** use the active selected points to construct the smooth</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  sel <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;selected&quot;</span>] <span class="sc">&amp;</span> myPlot[<span class="st">&quot;active&quot;</span>]</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> xnew[sel]</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> ynew[sel]</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  Nsel <span class="ot">&lt;-</span> <span class="fu">sum</span>(sel)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (Nsel <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">&amp;</span> <span class="fu">diff</span>(<span class="fu">range</span>(xnew)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    xrng <span class="ot">&lt;-</span> <span class="fu">extendrange</span>(xnew)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    xvals.temp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(xrng),</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">to=</span><span class="fu">max</span>(xrng), </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">length.out=</span><span class="dv">100</span>)</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Redo line if more than two points.</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (Nsel<span class="sc">&gt;</span> <span class="dv">2</span>) {</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>      fit.wls <span class="ot">&lt;-</span>  <span class="fu">lm</span>(ynew <span class="sc">~</span> xnew, <span class="at">weights=</span><span class="fu">GaussWt</span>(xnew))</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>      ywls.temp <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.wls,</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">xnew=</span>xvals.temp))</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>      <span class="do">## update the fit</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (linewls <span class="sc">%in%</span> <span class="fu">l_layer_ids</span>(myPlot)) {</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">l_configure</span>(linewls, <span class="at">x=</span>xvals.temp, <span class="at">y=</span>ywls.temp)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="do">## If it&#39;s been deleted, we recreate it (in the global environment).</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        linewls <span class="ot">&lt;&lt;-</span> <span class="fu">l_layer_line</span>(myPlot,</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">x=</span>xvals.temp,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">y=</span><span class="fu">predict</span>(fitwls,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>xvals.temp)</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>                                 ),</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">label=</span><span class="st">&quot;GaussWt at median line&quot;</span>, </span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">linewidth=</span><span class="dv">4</span>,</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">color=</span><span class="st">&quot;blue&quot;</span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Update the tcl language&#39;s event handler</span></span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tcl</span>(<span class="st">&quot;update&quot;</span>, <span class="st">&quot;idletasks&quot;</span>)</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>updateLocalLine <span class="ot">&lt;-</span> <span class="cf">function</span>(myPlot, minpts, df, <span class="at">volor=</span><span class="st">&quot;blue&quot;</span>) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Get the values for x and y from the plot</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For x</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;xTemp&quot;</span>]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(xnew) <span class="sc">==</span> <span class="dv">0</span>) {xnew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;x&quot;</span>]}</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## For y</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;yTemp&quot;</span>]</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(ynew) <span class="sc">==</span> <span class="dv">0</span>) {ynew <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;y&quot;</span>]}</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Now **only** use the active selected points to construct the smooth</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  sel <span class="ot">&lt;-</span> myPlot[<span class="st">&quot;selected&quot;</span>] <span class="sc">&amp;</span> myPlot[<span class="st">&quot;active&quot;</span>]</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  xnew <span class="ot">&lt;-</span> xnew[sel]</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  ynew <span class="ot">&lt;-</span> ynew[sel]</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  Nsel <span class="ot">&lt;-</span> <span class="fu">sum</span>(sel)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (Nsel <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">&amp;</span> <span class="fu">diff</span>(<span class="fu">range</span>(xnew)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    xrng <span class="ot">&lt;-</span> <span class="fu">extendrange</span>(xnew)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    xvals.temp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(xrng),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">to=</span><span class="fu">max</span>(xrng), </span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">length.out=</span><span class="dv">100</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Redo line if more than two points.</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (Nsel<span class="sc">&gt;</span> <span class="dv">2</span>) {</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>      fit.wls <span class="ot">&lt;-</span>  <span class="fu">lm</span>(ynew <span class="sc">~</span> xnew, <span class="at">weights=</span><span class="fu">GaussWt</span>(xnew))</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>      ywls.temp <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.wls,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">xnew=</span>xvals.temp))</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="do">## update the fit</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (linewls <span class="sc">%in%</span> <span class="fu">l_layer_ids</span>(myPlot)) {</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">l_configure</span>(linewls, <span class="at">x=</span>xvals.temp, <span class="at">y=</span>ywls.temp)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>        <span class="do">## If it&#39;s been deleted, we recreate it (in the global environment).</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        linewls <span class="ot">&lt;&lt;-</span> <span class="fu">l_layer_line</span>(myPlot,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">x=</span>xvals.temp,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">y=</span><span class="fu">predict</span>(fitwls,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>xvals.temp)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>                                 ),</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">label=</span><span class="st">&quot;GaussWt at median line&quot;</span>, </span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">linewidth=</span><span class="dv">4</span>,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">color=</span><span class="st">&quot;blue&quot;</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Update the tcl language&#39;s event handler</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tcl</span>(<span class="st">&quot;update&quot;</span>, <span class="st">&quot;idletasks&quot;</span>)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>And now bind this update function to change in <code>p</code> of either the <code>select</code> or the <code>active</code> states.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">l_bind_state</span>(p, <span class="fu">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;selected&quot;</span>),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>() {<span class="fu">updateLocalLine</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we &quot;bind&quot; the anonymous to the named state changes of p</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">l_bind_state</span>(p, <span class="fu">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;selected&quot;</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>() {<span class="fu">updateLocalLine</span>(p, <span class="dv">10</span>, <span class="dv">5</span>, <span class="st">&quot;blue&quot;</span>)}</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Selecting the male or female sex in the histograms will show the weighted least squares line for that sex. Brushing a tall thin vertical brush on <code>p2</code> will show how the fitted line changes (or not) as the similar <code>idnum</code>s change. But most interestingly, and the object of this lesson, is to brush <code>p2</code> with a short very wide brush so that the <code>age</code> can be kept roughly constant. As <code>age</code> increases or decreases, the line segment changes its fit: both in height and in slope. The smooth seen earlier is essentially the connected midpoints of these line segments.</p>
 </div>
 

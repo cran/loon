@@ -142,6 +142,10 @@ loonGrob.l_plot3D <- function(target,  name = NULL, gp = NULL, vp = NULL) {
   layers_grob <- loonGrob(rl, name = "l_plot_layers")
 
   axes_coords <- target["axesCoords"]
+
+  scaleFator2radius <- function(x) {
+    x/12.5
+  }
   radius <- scaleFator2radius(target["axisScaleFactor"])
 
   adjust_brightness <- function(z_coord, r, g, b) {
@@ -242,6 +246,9 @@ cartesian2dGrob <- function(widget, interiorPlotGrob = NULL, name = NULL, gp = N
     margins <- apply(cbind(margins, minimumMargins), 1, max)
   }
   # loon pixel margin to grid margin
+  pixels_2_lines <- function(x) {
+    x / 20
+  }
   margins <- pixels_2_lines(margins)
 
 
@@ -394,7 +401,7 @@ cartesian2dGrob <- function(widget, interiorPlotGrob = NULL, name = NULL, gp = N
           ),
           # Axes
           gTree(children = gList(condGrob(test =  showScales,
-                                          grobFun = .xaxisGrob,
+                                          grobFun = xaxisGrob,
                                           name = "x axis",
                                           at = xaxis.major,
                                           gp = gpar(fontfamily = scalesFont$family,
@@ -402,7 +409,7 @@ cartesian2dGrob <- function(widget, interiorPlotGrob = NULL, name = NULL, gp = N
                                                     fontface = scalesFont$face
                                           )),
                                  condGrob(test =  showScales,
-                                          grobFun = .yaxisGrob,
+                                          grobFun = yaxisGrob,
                                           name = "y axis",
                                           at = yaxis.major,
                                           gp = gpar(fontfamily = scalesFont$family,
@@ -482,7 +489,7 @@ loonGrob.l_layer_polygon <- function(target, name = NULL, gp = NULL, vp = NULL) 
       gp = if(is.null(gp)) {
         gpar(fill = states$color,
              col = states$linecolor,
-             lwd = states$linewidth
+             lwd = as_grid_size(states$linewidth, "lines")
         )
       } else gp,
       name = if(is.null(name)) {
@@ -512,7 +519,7 @@ loonGrob.l_layer_line <- function(target, name = NULL, gp = NULL, vp = NULL) {
     linesGrob(
       x = states$x, y = states$y,
       gp = if(is.null(gp)) gpar(col = states$color,
-                                lwd = states$linewidth,
+                                lwd = as_grid_size(states$linewidth, "lines"),
                                 lty = dash2lty(states$dash)) else gp,
       name = if(is.null(name)) {
         label <- l_layer_getLabel(widget, target)
@@ -554,7 +561,7 @@ loonGrob.l_layer_rectangle <- function(target, name = NULL, gp = NULL, vp = NULL
       width = width, height = height,
       gp = if(is.null(gp)) gpar(fill = states$color,
                                 col = states$linecolor,
-                                lwd = states$linewidth) else gp,
+                                lwd = as_grid_size(states$linewidth, "lines")) else gp,
       name = if(is.null(name)) {
         label <- l_layer_getLabel(widget, target)
         paste0("l_layer_rectangle: ", label, " ", names(label))
@@ -600,7 +607,7 @@ loonGrob.l_layer_oval <- function(target, name = NULL, gp = NULL, vp = NULL) {
       gp = if(is.null(gp)) {
         gpar(fill = states$color,
              col = states$linecolor,
-             lwd = states$linewidth)
+             lwd = as_grid_size(states$linewidth, "lines"))
       } else gp,
       name = if(is.null(name)) {
         label <- l_layer_getLabel(widget, target)
@@ -641,7 +648,7 @@ loonGrob.l_layer_text <- function(target, name = NULL, gp = NULL, vp = NULL) {
       just = states$justify,
       rot = states$angle,
       gp=if(is.null(gp)) {
-        gpar(fontsize= as_r_text_size(states$size),
+        gpar(fontsize = as_grid_size(states$size, "texts"),
              col=states$color)
       } else gp,
       name = if(is.null(name)) {
@@ -673,15 +680,16 @@ loonGrob.l_layer_points <- function(target, name = NULL, gp = NULL, vp = NULL) {
   y <- states$y[active]
 
   if(length(x)!=0  && length(y) !=0 ){
-    size  <- as_r_point_size(states$size[active])
+    size  <- as_grid_size(states$size[active], "points", pch = 19)
     color <- states$color[active]
 
     pointsGrob(
       x = x, y = y,
       gp = if(is.null(gp)) {
-        gpar(col = color, cex = size)
+        gpar(col = color,
+             fontsize = size)
       } else gp,
-      pch = 16,
+      pch = 19,
       name = if(is.null(name)) {
         label <- l_layer_getLabel(widget, target)
         paste0("l_layer_points: ", label, " ", names(label))
@@ -712,7 +720,7 @@ loonGrob.l_layer_texts <- function(target, name = NULL, gp = NULL, vp = NULL) {
 
   if(length(x) > 0  && length(y) > 0 ){
     text  <- states$text[active]
-    size  <- as_r_text_size(states$size[active])
+    size  <- as_grid_size(states$size[active], "text")
     angle  <- states$angle[active]
     anchor  <- states$anchor[active]
     justify  <- states$justify[active]
@@ -778,7 +786,7 @@ loonGrob.l_layer_polygons <- function(target, name = NULL, gp = NULL, vp = NULL)
                                gp = gpar(
                                  fill = fill[i],
                                  col = linecolor[i],
-                                 lwd = linewidth[i]
+                                 lwd = as_grid_size(linewidth[i], "lines")
                                )
                              )
                            }
@@ -834,7 +842,7 @@ loonGrob.l_layer_rectangles <- function(target, name = NULL, gp = NULL, vp = NUL
                             height = height,
                             gp = gpar(fill = fill[i],
                                       col = linecolor[i],
-                                      lwd = linewidth[i])
+                                      lwd = as_grid_size(linewidth[i], "lines"))
                           )
                         }
     )
@@ -878,7 +886,7 @@ loonGrob.l_layer_lines <- function(target, name = NULL, gp = NULL, vp = NULL) {
                             x = x[[i]],
                             y = y[[i]],
                             gp = gpar(col = linecolor[i],
-                                      lwd = linewidth[i])
+                                      lwd = as_grid_size(linewidth[i], "lines"))
                           )
                         }
     )
@@ -903,12 +911,25 @@ loonGrob.l_layer_lines <- function(target, name = NULL, gp = NULL, vp = NULL) {
 }
 
 # Get Attributes ====
+#' @title Glyph to Pch
+#' @description turn a loon point glyph to an R \code{graphics} plotting 'character' (pch)
+#' @param glyph glyph type in \code{loon}, must be "circle", "ocircle",
+#' "ccircle", "square", "osquare", "csquare", "triangle", "otriangle", "ctriangle",
+#' "diamond", "cdiamond", "odiamond". If the input glyph is not valid, \code{NA} is returned.
+#' @return a \code{\link{pch}} type
+#' @export
+#' @examples
+#' glyph_to_pch(c("circle", "ocircle", "ccircle",
+#'                "square", "osquare", "csquare",
+#'                "triangle", "otriangle", "ctriangle",
+#'                "diamond", "cdiamond", "odiamond",
+#'                "foo"))
 glyph_to_pch <- function(glyph) {
 
   vapply(glyph, function(x) {
     switch(
       x,
-      circle = 16,
+      circle = 19,
       ocircle = 1,
       ccircle = 21,
       square = 15,
@@ -926,12 +947,29 @@ glyph_to_pch <- function(glyph) {
 
 }
 
-pixels_2_lines <- function(x) {
-  x / 20
-}
-
 # Model layers have selected state
+#' @title Return the Displayed Color
+#' @description Always reflect the current displayed color.
+#' @param color the \code{loon} widget color
+#' @param selected the selected states
+#' @details In \code{loon}, each element (i.e. point, bin, line) has a "temporary" color and
+#' a "permanent" color. If one element is selected, the color is switched to the "temporary" color to highlight it.
+#' If the selection state is eliminated, the "permanent" color of this element will be displayed.
+#' Our function always gives the "temporary" displayed color.
+#' @return The color shown on the plot
+#' @export
+#' @examples
+#' if(interactive()) {
+#'   p <- l_plot(1:10)
+#'   p['selected'][c(1,3,5)] <- TRUE
+#'
+#'   displayedColor <- get_display_color(p['color'], p['selected'])
+#'   plot(1:10, bg = as_hex6color(displayedColor), pch = 21)
+#' }
 get_display_color <- function(color, selected) {
+
+  if(missing(selected)) return(color)
+  if(!any(selected)) return(color)
 
   sel_color <- as.character(l_getOption("select-color"))
 
@@ -943,6 +981,16 @@ get_display_color <- function(color, selected) {
   color
 }
 
+#' @title Return Font Information
+#' @param tkFont A specified tk font character, one of
+#' \code{l_getOption("font-scales")}, \code{l_getOption("font-title")},
+#' \code{l_getOption("font-xlabel")}, \code{l_getOption("font-ylabel")}
+#' @export
+#' @return A list of font information, containing font "family",
+#' font "face" and font "size"
+#' @examples
+#' fontscales <- l_getOption("font-scales")
+#' get_font_info_from_tk(fontscales)
 get_font_info_from_tk <- function(tkFont) {
 
   fontInfo <- as.character(.Tcl(paste("font actual", tkFont)))
@@ -964,9 +1012,6 @@ get_font_info_from_tk <- function(tkFont) {
 
   list(family = fontFamily, face = fontFace, size = fontSize)
 }
-
-
-
 
 xy_coords_layer <- function(layer, native_unit = TRUE) {
 
@@ -1028,22 +1073,28 @@ cartesian_model_widget_states <- c(
 
 
 #' get layer states
+#' @title Get Layer States
+#' @description Return the input widget states
+#' @template param_target
+#' @param native_unit return numerical vectors or \code{\link{unit}} objects
+#' @param omit deprecated
 #'
-#' @noRd
+#' @export
+#'
 #' @examples
 #'
-#' \dontrun{
+#' if(interactive()){
 #' p <- l_plot(x = c(0,1), y = c(0,1))
-#' l <- l_layer_rectangle(p, x = c(0,1), y = c(0,1))
-#'
-#' loon:::get_layer_states(p)
-#' loon:::get_layer_states(as.vector(p))
-#'
-#' loon:::get_layer_states(l)
-#' loon:::get_layer_states(c(as.vector(p), as.vector(l)))
+#' l <- l_layer_rectangle(p, x = c(0,0.5), y = c(0, 0.5))
+#' # the coordinates are in `unit`
+#' get_layer_states(p)
+#' # the coordinates are numerical
+#' get_layer_states(p, native_unit = FALSE)
+#' # get `l_layer` state
+#' get_layer_states(l)
 #' }
 #'
-get_layer_states <- function(target, omit = NULL, native_unit = TRUE) {
+get_layer_states <- function(target, native_unit = TRUE, omit = NULL) {
 
   if (!is(target, "loon")) {
     target <- l_create_handle(target)
@@ -1060,7 +1111,7 @@ get_layer_states <- function(target, omit = NULL, native_unit = TRUE) {
   }
 
   states_info <- l_info_states(obj_states)
-  state_names <- setdiff(names(states_info), c(omit, cartesian_model_widget_states))
+  state_names <- setdiff(names(states_info), c(cartesian_model_widget_states))
 
   states <- setNames(lapply(state_names,
                             function(state) l_cget(target, state)),
@@ -1088,6 +1139,22 @@ get_layer_states <- function(target, omit = NULL, native_unit = TRUE) {
 
 
 # only works for scatterplot and serialaxes
+#' @title Get the Order of the Display
+#' @description In \code{loon}, if points (in scatter plot) or lines
+#' (in parallel or radial coordinate) are highlighted, the displayed order will be changed.
+#' This function always reflects the current displayed order
+#' @param widget An \code{l_plot} or \code{l_serialaxes} widget
+#' @export
+#'
+#' @examples
+#' if(interactive()) {
+#'   p <- l_plot(rnorm(10))
+#'   get_model_display_order(p)
+#'   p['selected'][c(1,3,5,7)] <- TRUE
+#'   # The 1st, 3rd, 5th, 7th points will be drawn afterwards
+#'   # to make sure that they are displayed on top
+#'   get_model_display_order(p)
+#' }
 get_model_display_order <- function(widget) {
 
   n <- l_cget(widget, "n")
@@ -1118,7 +1185,7 @@ get_model_display_order <- function(widget) {
     # TODO: A bug in l_serialaxes;
     # In l_serialaxes, `tcl` only return active model order instead of full order
     # It should be fixed in `tcl`, so far it is fixed in R temporarily.
-    c(setdiff(1:n, order), order)
+    c(setdiff(seq(n), order), order)
   }
 }
 
@@ -1383,8 +1450,4 @@ dash2lty <- function(x) {
     x <- as.numeric(x)
     x[1]
   }
-}
-
-scaleFator2radius <- function(x) {
-  x/12.5
 }

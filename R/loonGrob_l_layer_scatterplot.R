@@ -47,28 +47,28 @@ loonGrob.l_layer_scatterplot <- function(target, name = NULL, gp = NULL, vp = NU
         )
 
         pch <- glyph_to_pch(s_a$glyph)
-        if (!any(is.na(pch)) && !any(pch %in% 21:24)) {
-            # No NAs and no points with borders
-            points <- pointsGrob(name = "points: primitive glyphs without borders",
+
+        if (!any(is.na(pch))) {
+
+            color <- s_a$color
+            fill <- rep(NA, length(color))
+
+            pointsWithBorders <- pch %in% 21:24
+            fill[pointsWithBorders] <- color[pointsWithBorders]
+            color[pointsWithBorders] <- loon::l_getOption("foreground")
+
+            points <- pointsGrob(name = "points: primitive glyphs",
                                  x = s_a$x,
                                  y = s_a$y,
                                  pch = pch,
-                                 gp = gpar(col = s_a$color,
-                                           cex = as_r_point_size(s_a$size))
+                                 gp = gpar(fill = fill,
+                                           col = color,
+                                           fontsize = as_grid_size(s_a$size, "points",
+                                                                   pch = pch))
             )
-        } else if (!any(is.na(pch)) && all(pch %in% 21:24)) {
-            # No NAs and ALL points with borders
-            points <- pointsGrob(name = "points: primitive glyphs with borders",
-                                 x = s_a$x,
-                                 y = s_a$y,
-                                 pch = pch,
-                                 gp = gpar(fill = s_a$color,
-                                           col = l_getOption("foreground"),
-                                           cex = as_r_point_size(s_a$size))
-            )
+
         } else {
             # possibly some NAs (means some points are text, polygons, images, etc.)
-            # and/or a mix of regular and closed points.
             scaleInfo <- get_glyph_scale_info(widget)
             names_scaleInfo <- names(scaleInfo)
 
@@ -128,9 +128,10 @@ loonGlyphGrob.primitive_glyph <- function(widget, x, glyph_info) {
     glyph <- glyph_info$glyph
 
     if (glyph %in% l_primitiveGlyphs()) {
-        cex <- as_r_point_size(glyph_info$size)
-        col <- glyph_info$color
         pch <- glyph_to_pch(glyph)
+        col <- glyph_info$color
+        fontsize <- as_grid_size(glyph_info$size, "points",
+                                 pch = pch)
         # is there a fill colour?
         filled <- (pch %in% 21:24)
         if (filled) {
@@ -139,7 +140,7 @@ loonGlyphGrob.primitive_glyph <- function(widget, x, glyph_info) {
                        pch = pch,
                        gp = gpar(fill = col,
                                  col = l_getOption("foreground"),
-                                 cex = cex),
+                                 fontsize = fontsize),
                        name = paste0("primitive_glyph ", glyph_info$index)
             )
         } else {
@@ -147,7 +148,7 @@ loonGlyphGrob.primitive_glyph <- function(widget, x, glyph_info) {
                        y = glyph_info$y,
                        pch = pch,
                        gp = gpar(col = col,
-                                 cex = cex),
+                                 fontsize = fontsize),
                        name = paste0("primitive_glyph ", glyph_info$index)
             )
         }
@@ -195,41 +196,64 @@ loonGlyphGrob.image <-  function(widget, x, glyph_info) {
     # get the scaled_image
     height <- as.numeric(tcl("image", "height", tcl_img_i))
     width <- as.numeric(tcl("image", "width", tcl_img_i))
-
-    area <- as.numeric(tcl("::loon::map_image_size", size_i))
-
-    scale <- sqrt(area/(width*height))
-
-    image_w <- floor(scale*width)
-    image_h <- floor(scale*height)
+    ratio <- height/width
+    # area <- as.numeric(tcl("::loon::map_image_size", size_i))
+    # scale <- sqrt(area/(width*height))
+    # image_w <- floor(scale*width)
+    # image_h <- floor(scale*height)
+    # width_p <- unit(as_r_image_size(image_w), "mm")
+    # height_p <- unit(as_r_image_size(image_h), "mm")
 
     scaled_img <- as.character(tkimage.create("photo"))
-    tcl(tcl("set", "::loon::Options(image_scale)"),  tcl_img_i,  image_w, image_h,  scaled_img)
+    tcl(tcl("set", "::loon::Options(image_scale)"),  tcl_img_i,
+        round(width), round(height),  scaled_img)
 
     r_img <- tcl_img_2_r_raster(scaled_img)
 
     tcl("image", "delete", scaled_img)
 
-    width_p <- unit(as_r_image_size(image_w), "mm")
-    height_p <- unit(as_r_image_size(image_h), "mm")
+    # THIS IS A HACK
+    height_p <- as_grid_size(size_i,
+                             type = "image",
+                             adjust = 0.6,
+                             ratio = ratio)
+    width_p <- height_p/ratio
 
     gTree(
         children = gList(
             rectGrob(x = glyph_info$x, y = glyph_info$y, just = "centre",
-                     width = width_p+unit(2, "mm"), height = height_p+unit(2, "mm"),
+                     width = unit(width_p, "cm") + unit(2, "mm"),
+                     height = unit(height_p, "cm") + unit(2, "mm"),
                      gp = gpar(
                          fill = glyph_info$color,
                          col = NA
                      ),
                      name = "image_border"),
             rasterGrob(r_img, x = glyph_info$x, y = glyph_info$y, just = "centre",
-                       width = width_p, height = height_p,
+                       width = unit(width_p, "cm"),
+                       height = unit(height_p, "cm"),
                        name = "image")
         ),
         name = paste0("image_glyph ", glyph_info$index)
     )
 
 }
+
+#' @title A tk Image Object to a Raster Object
+#' @description Turn a tk image object to an R \code{raster} object
+#' @param img a tk image object
+#' @export
+#' @examples
+#' if(requireNamespace("grid")) {
+#' puglia <- list.files(file.path(find.package(package = 'loon'), "images"),
+#'                      full.names = TRUE)[1L]
+#' # `img` is a tk image object
+#' img <- setNames(l_image_import_files(puglia),
+#'                 tools::file_path_sans_ext(basename(puglia)))
+#' raster <- tcl_img_2_r_raster(img)
+#' grid::grid.newpage()
+#' grid::grid.raster(raster)
+#' }
 
 tcl_img_2_r_raster <- function(img) {
     if (!(img %in% as.character(tcl("image", "names"))))
@@ -242,7 +266,6 @@ tcl_img_2_r_raster <- function(img) {
     img_mat <- matrix(img_data, nrow = height, byrow = TRUE)
 
     as.raster(img_mat)
-
 }
 
 
@@ -253,7 +276,7 @@ loonGlyphGrob.text <-  function(widget, x, glyph_info) {
     textGrob(label = gh['text'][glyph_info$index],
              x = glyph_info$x,
              y = glyph_info$y,
-             gp=gpar(fontsize = as_r_text_size(glyph_info$size),
+             gp=gpar(fontsize = as_grid_size(glyph_info$size, "texts"),
                      col = glyph_info$color),
              name = paste0("text_glyph ", glyph_info$index)
     )
@@ -265,19 +288,22 @@ loonGlyphGrob.pointrange <-  function(widget, x, glyph_info) {
 
     showArea <- gh['showArea']
 
+    pch <- if (showArea) 21 else 19
+
     gTree(
         children =  gList(
             pointsGrob(x = glyph_info$x, y = glyph_info$y,
                        gp = gpar(col = glyph_info$color,
-                                 cex = as_r_point_size(glyph_info$size)),
-                       pch = if (showArea) 21 else 19,
+                                 fontsize = as_grid_size(glyph_info$size, "points",
+                                                         pch = pch)),
+                       pch = pch,
                        name = "point"),
             linesGrob(x = rep(glyph_info$x, 2),
                       y = unit(c(gh['ymin'][glyph_info$index],
                                  gh['ymax'][glyph_info$index]),
                                "native"),
                       gp = gpar(col = glyph_info$color,
-                                lwd =  gh['linewidth'][glyph_info$index]),
+                                lwd =  as_grid_size(gh['linewidth'][glyph_info$index], "lines")),
                       name = "range")
         ),
         name = paste0("pointrange_glyph ", glyph_info$index)
@@ -294,29 +320,30 @@ loonGlyphGrob.polygon <-  function(widget, x, glyph_info) {
     color <- glyph_info$color
     size <- glyph_info$size
 
-    poly_x <- gh['x'][[glyph_info$index]] * as_r_polygon_size(size)
-    poly_y <- - gh['y'][[glyph_info$index]] * as_r_polygon_size(size)
+    # THIS IS A HACK
+    poly_x <- gh['x'][[glyph_info$index]] * as_grid_size(size, "polygon", 0.6)
+    poly_y <- - gh['y'][[glyph_info$index]] * as_grid_size(size, "polygon", 0.6)
 
     x <- glyph_info$x
     y <- glyph_info$y
 
     if(showArea){
-        polygonGrob(x = x + unit(poly_x, "mm"),
-                    y = y + unit(poly_y, "mm"),
+        polygonGrob(x = x + unit(poly_x, "cm"),
+                    y = y + unit(poly_y, "cm"),
                     gp = gpar(
                         fill = color,
                         col =  color,
-                        lwd = linewidth
+                        lwd = as_grid_size(linewidth, "lines")
                     ),
                     name = paste0("polygon_glyph: showArea ", glyph_info$index)
         )
     } else {
-        polylineGrob(x = x + unit(c(poly_x, poly_x[1]), "mm"),
-                     y = y + unit(c(poly_y, poly_y[1]), "mm"),
+        polylineGrob(x = x + unit(c(poly_x, poly_x[1]), "cm"),
+                     y = y + unit(c(poly_y, poly_y[1]), "cm"),
                      gp = gpar(
                          fill = color,
-                         col =  color,
-                         lwd = linewidth
+                         col = color,
+                         lwd = as_grid_size(linewidth, "lines")
                      ),
                      name = paste0("polygon_glyph ", glyph_info$index)
         )
@@ -358,9 +385,12 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
     xpos <- glyph_info$x
     ypos <- glyph_info$y
 
-    if(axesLayout == "parallel"){
-        scaleX <- as_r_serialaxes_size(size, "x", "parallel")
-        scaleY <- as_r_serialaxes_size(size, "y", "parallel")
+    if(axesLayout == "parallel") {
+
+        # default setting
+        # height:width = 1:2
+        scaleX <- as_grid_size(size, "parallel", p = p)
+        scaleY <- scaleX/2
 
         lineXaxis <- seq(-0.5 * scaleX, 0.5 * scaleX, length.out = dimension)
         lineYaxis <- (scaledData[glyph_info$index, ] - 0.5) * scaleY
@@ -377,8 +407,8 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
                     test = showEnclosing,
                     grobFun = polylineGrob,
                     name = "boundary",
-                    x = xpos + unit((c(0, 0, 1, 0, 0, 1, 1, 1) - 0.5) * scaleX, "mm"),
-                    y = ypos + unit((c(0, 0, 0, 1, 1, 0, 1, 1) - 0.5) * scaleY, "mm"),
+                    x = xpos + unit((c(0, 0, 1, 0, 0, 1, 1, 1) - 0.5) * scaleX, "cm"),
+                    y = ypos + unit((c(0, 0, 0, 1, 1, 0, 1, 1) - 0.5) * scaleY, "cm"),
                     id = rep(1:4, 2),
                     gp = gpar(col = bboxColor)
                 ),
@@ -386,27 +416,30 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
                     test = showAxes,
                     grobFun = polylineGrob,
                     name = "axes",
-                    x = xpos + rep(unit(xaxis, "mm"), each = 2),
-                    y = ypos + rep(unit(c(- 0.5 * scaleY, 0.5 * scaleY), "mm"), p),
+                    x = xpos + rep(unit(xaxis, "cm"), each = 2),
+                    y = ypos + rep(unit(c(- 0.5 * scaleY, 0.5 * scaleY), "cm"), p),
                     id = rep(1:p, each = 2),
                     gp = gpar(col = axesColor)
                 ),
                 if(showArea) {
-                    polygonGrob(x = xpos + unit(c(lineXaxis, rev(lineXaxis)), "mm"),
-                                y = ypos + unit(c(lineYaxis, rep(-0.5 * scaleY, dimension)), "mm"),
+                    polygonGrob(x = xpos + unit(c(lineXaxis, rev(lineXaxis)), "cm"),
+                                y = ypos + unit(c(lineYaxis, rep(-0.5 * scaleY, dimension)), "cm"),
                                 gp = gpar(fill = color, col = NA),
                                 name = "polyline: showArea")
                 } else {
-                    linesGrob(x = xpos + unit(lineXaxis, "mm"),
-                              y = ypos + unit(lineYaxis, "mm"),
+                    linesGrob(x = xpos + unit(lineXaxis, "cm"),
+                              y = ypos + unit(lineYaxis, "cm"),
                               gp = gpar(col = color),
                               name = "polyline")
                 }
             ), name = paste0("serialaxes_glyph: parallel ",  glyph_info$index)
         )
     } else {
-        scaleX <- as_r_serialaxes_size(size, "x", "radial")
-        scaleY <- as_r_serialaxes_size(size, "y", "radial")
+
+        # diameter is returned
+        # convert to radius
+        scaleX <- as_grid_size(size, "radial")/2
+        scaleY <- as_grid_size(size, "radial")/2
 
         angle <- seq(0, 2*pi, length.out = dimension + 1)[1:dimension]
         radialxaxis <- scaleX * scaledData[glyph_info$index,] * cos(angle)
@@ -428,13 +461,13 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
         gTree(
             children = gList(
                 if(showArea) {
-                    polygonGrob(x = xpos + unit(c(radialxaxis, radialxaxis[1]), "mm"),
-                                y = ypos + unit(c(radialyaxis, radialyaxis[1]), "mm"),
+                    polygonGrob(x = xpos + unit(c(radialxaxis, radialxaxis[1]), "cm"),
+                                y = ypos + unit(c(radialyaxis, radialyaxis[1]), "cm"),
                                 gp = gpar(fill = color, col = NA),
                                 name = "polyline: showArea")
                 } else {
-                    linesGrob(x = xpos + unit(c(radialxaxis, radialxaxis[1]), "mm"),
-                              y = ypos + unit(c(radialyaxis, radialyaxis[1]), "mm"),
+                    linesGrob(x = xpos + unit(c(radialxaxis, radialxaxis[1]), "cm"),
+                              y = ypos + unit(c(radialyaxis, radialyaxis[1]), "cm"),
                               gp = gpar(col = color),
                               name = "polyline")
                 },
@@ -442,16 +475,16 @@ loonGlyphGrob.serialaxes <-  function(widget, x, glyph_info) {
                     test = showEnclosing,
                     grobFun = polylineGrob,
                     name = "boundary",
-                    x = xpos + unit(scaleX * cos(seq(0, 2*pi, length=101)), "mm"),
-                    y = ypos + unit(scaleY * sin(seq(0, 2*pi, length=101)), "mm"),
+                    x = xpos + unit(scaleX * cos(seq(0, 2*pi, length=101)), "cm"),
+                    y = ypos + unit(scaleY * sin(seq(0, 2*pi, length=101)), "cm"),
                     gp = gpar(col = bboxColor)
                 ),
                 condGrob(
                     test = showAxes,
                     grobFun = polylineGrob,
                     name = "axes",
-                    x = xpos + unit(c(rep(0, p), xaxis), "mm"),
-                    y = ypos + unit(c(rep(0, p), yaxis), "mm"),
+                    x = xpos + unit(c(rep(0, p), xaxis), "cm"),
+                    y = ypos + unit(c(rep(0, p), yaxis), "cm"),
                     id = rep(1:p, 2),
                     gp = gpar(col = axesColor)
                 )
@@ -528,3 +561,27 @@ get_glyph_scale_info <- function(widget){
     names(scaleInfo) <- paste(name, unique_glyph)
     scaleInfo
 }
+
+# if (!any(is.na(pch)) && !any(pch %in% 21:24)) {
+#     # No NAs and no points with borders
+#     points <- pointsGrob(name = "points: primitive glyphs without borders",
+#                          x = s_a$x,
+#                          y = s_a$y,
+#                          pch = pch,
+#                          gp = gpar(col = s_a$color,
+#                                    fontsize = as_grid_size(s_a$size,
+#                                                            "points",
+#                                                            pch = pch))
+#     )
+# } else if (!any(is.na(pch)) && all(pch %in% 21:24)) {
+#     # No NAs and ALL points with borders
+#     points <- pointsGrob(name = "points: primitive glyphs with borders",
+#                          x = s_a$x,
+#                          y = s_a$y,
+#                          pch = pch,
+#                          gp = gpar(fill = s_a$color,
+#                                    col = l_getOption("foreground"),
+#                                    fontsize = as_grid_size(s_a$size, "points",
+#                                                            pch = pch))
+#     )
+# } else {...}

@@ -69,15 +69,23 @@ library(loon)
 #               linkingGroup="Bone density",
 #               title = "ID numbers and age")
 
+## ----l_layer_smooth, eval=FALSE-----------------------------------------------
+#  l_layer_smooth(p, method = "lm",
+#                 label = "straight line fit",
+#                 linecolor = "firebrick",
+#                 linedash = c(4,4),
+#                 linewidth = 4)
+
 ## ----smooth, eval=FALSE-------------------------------------------------------
 #  library(splines)
 #  # Fit a smoothing spline
 #  fitsmooth <- smooth.spline(x, y, df=5)
 #  xOrder <- order(x)
 #  smooth <- l_layer_line(p,
-#                         x=x[xOrder],
-#                         y=predict(fitsmooth,x=x[xOrder])$y,
-#                         label="smooth fit", linewidth=4,
+#                         x = x[xOrder],
+#                         y = predict(fitsmooth, x = x[xOrder])$y,
+#                         label = "smooth fit",
+#                         linewidth = 4,
 #                         color = "blue")
 
 ## ----update smooth, eval=FALSE------------------------------------------------

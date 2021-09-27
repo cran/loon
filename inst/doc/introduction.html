@@ -12,7 +12,7 @@
 
 <meta name="author" content="R.W. Oldford" />
 
-<meta name="date" content="2021-05-31" />
+<meta name="date" content="2021-09-23" />
 
 <title>Introduction to loon</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Introduction to loon</h1>
 <h4 class="author">R.W. Oldford</h4>
-<h4 class="date">2021-05-31</h4>
+<h4 class="date">2021-09-23</h4>
 
 
 <div id="TOC">
@@ -714,9 +714,9 @@ Trouble may arise, however, if you want to link two different plots that were cr
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>new_order <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(quakes), <span class="fu">nrow</span>(quakes), <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>some_quakes <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(quakes), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>quakes_linkingKey <span class="ot">&lt;-</span> p[<span class="st">&quot;linkingKey&quot;</span>]</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>p_new <span class="ot">&lt;-</span> <span class="fu">with</span>(quakes[new_order, ], <span class="fu">l_plot</span>(long, lat, <span class="at">title =</span> <span class="st">&quot;quakes reordered&quot;</span>, </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>p_new <span class="ot">&lt;-</span> <span class="fu">with</span>(quakes[new_order, ], <span class="fu">l_plot</span>(long, lat, <span class="at">title =</span> <span class="st">&quot;quakes reordered&quot;</span>,</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">linkingGroup =</span> <span class="st">&quot;quakes&quot;</span>, <span class="at">linkingKey =</span> quakes_linkingKey[new_order]))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>p_subset <span class="ot">&lt;-</span> <span class="fu">with</span>(quakes[some_quakes, ], <span class="fu">l_plot</span>(long, lat, <span class="at">title =</span> <span class="st">&quot;quakes reordered&quot;</span>, </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>p_subset <span class="ot">&lt;-</span> <span class="fu">with</span>(quakes[some_quakes, ], <span class="fu">l_plot</span>(long, lat, <span class="at">title =</span> <span class="st">&quot;quakes reordered&quot;</span>,</span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">linkingGroup =</span> <span class="st">&quot;quakes&quot;</span>, <span class="at">linkingKey =</span> quakes_linkingKey[some_quakes]))</span></code></pre></div>
 <p>The new plots <code>p_new</code> and <code>p_subset</code> will link correctly with all the rest.</p>
 <p>Rather than the default values, the <code>linkingKey</code> can be any vector of unique strings used in any newly created plot as above. Of course, not using the default linking keys from <code>loon</code> may require a little more care in management from the user.</p>
