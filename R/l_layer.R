@@ -169,8 +169,6 @@ l_layer_add <- function(widget, type, ...) {
 #'
 #' @inheritParams l_layer
 #'
-#' @details
-#'
 #' @templateVar page learn_R_layer
 #' @templateVar section add-move-delete-layers
 #' @template see_l_help

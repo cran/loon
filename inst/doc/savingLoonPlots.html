@@ -16,25 +16,38 @@
 
 <title>Saving loon plots</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -52,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -109,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -127,7 +146,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -146,20 +345,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="TOC">
 <ul>
-<li><a href="#interactive-analysis-and-static-plots">Interactive analysis and static plots</a>
+<li><a href="#interactive-analysis-and-static-plots" id="toc-interactive-analysis-and-static-plots">Interactive analysis and
+static plots</a>
 <ul>
-<li><a href="#when-interaction-is-only-programmatic">When interaction is only programmatic</a></li>
-<li><a href="#saving-shapshots-for-later-display.">Saving shapshots for later display.</a>
+<li><a href="#when-interaction-is-only-programmatic" id="toc-when-interaction-is-only-programmatic">When interaction is only
+programmatic</a></li>
+<li><a href="#saving-shapshots-for-later-display." id="toc-saving-shapshots-for-later-display.">Saving shapshots for later
+display.</a>
 <ul>
-<li><a href="#export-from-rstudio">Export from RStudio</a></li>
-<li><a href="#use-l_export">Use <code>l_export()</code></a></li>
-<li><a href="#use-rs-png-device">Use R’s <code>png()</code> device</a></li>
-<li><a href="#including-saved-graphics-in-your-report">Including saved graphics in your report</a></li>
+<li><a href="#export-from-rstudio" id="toc-export-from-rstudio">Export
+from RStudio</a></li>
+<li><a href="#use-l_export" id="toc-use-l_export">Use
+<code>l_export()</code></a></li>
+<li><a href="#use-rs-png-device" id="toc-use-rs-png-device">Use R’s
+<code>png()</code> device</a></li>
+<li><a href="#including-saved-graphics-in-your-report" id="toc-including-saved-graphics-in-your-report">Including saved
+graphics in your report</a></li>
 </ul></li>
-<li><a href="#reconstruct-the-plot-from-saved-states">Reconstruct the plot from saved states</a>
+<li><a href="#reconstruct-the-plot-from-saved-states" id="toc-reconstruct-the-plot-from-saved-states">Reconstruct the plot
+from saved states</a>
 <ul>
-<li><a href="#a-simple-example">A simple example</a></li>
-<li><a href="#a-more-complex-example">A more complex example</a></li>
+<li><a href="#a-simple-example" id="toc-a-simple-example">A simple
+example</a></li>
+<li><a href="#a-more-complex-example" id="toc-a-more-complex-example">A
+more complex example</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -168,115 +377,167 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <div id="interactive-analysis-and-static-plots" class="section level1">
 <h1>Interactive analysis and static plots</h1>
-<p>When carrying out an interactive analysis, you might want to save some pictures to include in any later report. You might also want to save the state of some interactive plot so that you can pause your analysis, quit R, and later return to your analysis where you left off.</p>
-<p>To illustrate how to do this, consider the classic data set <code>iris</code>. Here are three different <strong>linked</strong> plots that might be displayed.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(loon)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First, make sure you always assign a loon plot to a variable</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># at the same time that you create it.  This will give you access</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to it later.  </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (NB: If you haven&#39;t assigned it, you can later using l_getFromPath(). )</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  A histogram, the name for the linkingGroup is arbitrary</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">l_hist</span>(iris<span class="sc">$</span>Sepal.Length, <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">xlabel =</span> <span class="st">&quot;Sepal length&quot;</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># A scatterplot</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">l_plot</span>(iris<span class="sc">$</span>Petal.Width, iris<span class="sc">$</span>Petal.Length,  </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">size =</span> <span class="dv">10</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">xlabel =</span> <span class="st">&quot;Petal Width&quot;</span>, <span class="at">ylabel =</span> <span class="st">&quot;Petal Length&quot;</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># A serial axes plot using the first 4 columns of iris (i.e. no Species info).</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>sa <span class="ot">&lt;-</span> <span class="fu">l_serialaxes</span>(iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],   </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># A static version of the plot can be easily produced.</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(h)</span></code></pre></div>
-<p>That plot will simply just appear (<strong>as it is</strong>) in the processed <code>RMarkdown</code> file.</p>
-<p>If you have the <code>grid</code> and <code>gridExtra</code> packages loaded, you could arrange to see several such plots in one place.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid); <span class="fu">library</span>(gridExtra)</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First get the data stuctures corresponding to the static snapshots</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of the current plots.  Because we want to arrange them, we don&#39;t</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># draw them at first.</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plot_h <span class="ot">&lt;-</span> <span class="fu">plot</span>(h, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plot_p <span class="ot">&lt;-</span> <span class="fu">plot</span>(p, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plot_sa <span class="ot">&lt;-</span> <span class="fu">plot</span>(sa, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we draw them</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_h, plot_p, plot_sa, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>When carrying out an interactive analysis, you might want to save
+some pictures to include in any later report. You might also want to
+save the state of some interactive plot so that you can pause your
+analysis, quit R, and later return to your analysis where you left
+off.</p>
+<p>To illustrate how to do this, consider the classic data set
+<code>iris</code>. Here are three different <strong>linked</strong>
+plots that might be displayed.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(loon)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># First, make sure you always assign a loon plot to a variable</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># at the same time that you create it.  This will give you access</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># to it later.  </span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># (NB: If you haven&#39;t assigned it, you can later using l_getFromPath(). )</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#  A histogram, the name for the linkingGroup is arbitrary</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">l_hist</span>(iris<span class="sc">$</span>Sepal.Length, <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">xlabel =</span> <span class="st">&quot;Sepal length&quot;</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>            <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co"># A scatterplot</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">l_plot</span>(iris<span class="sc">$</span>Petal.Width, iris<span class="sc">$</span>Petal.Length,  </span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>            <span class="at">xlabel =</span> <span class="st">&quot;Petal Width&quot;</span>, <span class="at">ylabel =</span> <span class="st">&quot;Petal Length&quot;</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>            <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co"># A serial axes plot using the first 4 columns of iris (i.e. no Species info).</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>sa <span class="ot">&lt;-</span> <span class="fu">l_serialaxes</span>(iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],   </span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">linkingGroup =</span> <span class="st">&quot;flowers&quot;</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co"># A static version of the plot can be easily produced.</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="fu">plot</span>(h)</span></code></pre></div>
+<p>That plot will simply just appear (<strong>as it is</strong>) in the
+processed <code>RMarkdown</code> file.</p>
+<p>If you have the <code>grid</code> and <code>gridExtra</code> packages
+loaded, you could arrange to see several such plots in one place.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(grid); <span class="fu">library</span>(gridExtra)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># First get the data stuctures corresponding to the static snapshots</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># of the current plots.  Because we want to arrange them, we don&#39;t</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># draw them at first.</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>plot_h <span class="ot">&lt;-</span> <span class="fu">plot</span>(h, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>plot_p <span class="ot">&lt;-</span> <span class="fu">plot</span>(p, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>plot_sa <span class="ot">&lt;-</span> <span class="fu">plot</span>(sa, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># Now we draw them</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_h, plot_p, plot_sa, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
 <div id="when-interaction-is-only-programmatic" class="section level2">
 <h2>When interaction is only programmatic</h2>
-<p>This works fine when what you want to display has been entirely determined by programming done inside the <code>RMarkdown</code> code. For example, if the colours had been changed programmatically, the linked plots would change and plotting them again would reflect that change.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the colour by changing it *programmatically* on the plot</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>h[<span class="st">&quot;color&quot;</span>] <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species  <span class="co"># use species to determine the colours</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plot_h <span class="ot">&lt;-</span> <span class="fu">plot</span>(h, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plot_p <span class="ot">&lt;-</span> <span class="fu">plot</span>(p, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plot_sa <span class="ot">&lt;-</span> <span class="fu">plot</span>(sa, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># And draw them again</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_h, plot_p, plot_sa, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>This works fine when what you want to display has been entirely
+determined by programming done inside the <code>RMarkdown</code> code.
+For example, if the colours had been changed programmatically, the
+linked plots would change and plotting them again would reflect that
+change.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Change the colour by changing it *programmatically* on the plot</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>h[<span class="st">&quot;color&quot;</span>] <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species  <span class="co"># use species to determine the colours</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>plot_h <span class="ot">&lt;-</span> <span class="fu">plot</span>(h, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>plot_p <span class="ot">&lt;-</span> <span class="fu">plot</span>(p, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>plot_sa <span class="ot">&lt;-</span> <span class="fu">plot</span>(sa, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co"># And draw them again</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_h, plot_p, plot_sa, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p>There are a couple of things to note here.</p>
-<p>First, the plots had to be redrawn because they are static snapshots reflecting what the interactive plot looked like <strong>at the time</strong> the snapshot was taken using <code>plot()</code>.</p>
-<p>Second, all linked plots changed when the colour was only directly changed on the histogram.</p>
-<p>Finally, there are numerous <code>states</code> that <strong>can be programmatically accessed and set</strong> on an interactive plot. These states can be found by calling <code>names()</code> on the plot in question.</p>
+<p>First, the plots had to be redrawn because they are static snapshots
+reflecting what the interactive plot looked like <strong>at the
+time</strong> the snapshot was taken using <code>plot()</code>.</p>
+<p>Second, all linked plots changed when the colour was only directly
+changed on the histogram.</p>
+<p>Finally, there are numerous <code>states</code> that <strong>can be
+programmatically accessed and set</strong> on an interactive plot. These
+states can be found by calling <code>names()</code> on the plot in
+question.</p>
 <ul>
-<li>e.g. <code>names(h)</code> returns the state names for the histogram <code>h</code>.</li>
+<li>e.g. <code>names(h)</code> returns the state names for the histogram
+<code>h</code>.</li>
 </ul>
-<p>Knowing the state names provides the user a programmatic means to access and/or to set their values. The values can be queried at any time, whether they were set programmatically or interactively. For example,</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Accessing values</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sa[<span class="st">&quot;color&quot;</span>])  <span class="co"># will show the current colours of sa</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that these colours are expressed as 12 hexadecimal digits </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This is what is used in TCL.  To turn them into R&#39;s 6 digit hexadecimal </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (to use in other R static plots, for example) just use hex12tohex6()</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">hex12tohex6</span>(sa[<span class="st">&quot;color&quot;</span>][<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting values ... make only specied iris versicolor active</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sa[<span class="st">&quot;active&quot;</span>] <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">&quot;versicolor&quot;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sa)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting values ... make everything active</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>sa[<span class="st">&quot;active&quot;</span>] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sa)</span></code></pre></div>
-<p>A problem with doing things interactively is that any direct manipulation of the plots using the inspector or brushing, panning, zooming, etc. <strong>is not being recorded.</strong></p>
-<p>If you want to have the values of states (which were set interactively) to appear later in a report, these values will need to be recorded somewhere first.</p>
-<p>It will be necessary to <strong>save the state somehow, either as a snapshot or as data</strong> in a separate file to be recovered later (saving plot states like colours, selections, etc.).</p>
-<p>In either case, information must be stored so that an <code>RMarkdown</code> file can read it back in and adjust the plots programmatically.</p>
+<p>Knowing the state names provides the user a programmatic means to
+access and/or to set their values. The values can be queried at any
+time, whether they were set programmatically or interactively. For
+example,</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Accessing values</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">head</span>(sa[<span class="st">&quot;color&quot;</span>])  <span class="co"># will show the current colours of sa</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co"># Note that these colours are expressed as 12 hexadecimal digits </span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># This is what is used in TCL.  To turn them into R&#39;s 6 digit hexadecimal </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co"># (to use in other R static plots, for example) just use hex12tohex6()</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">hex12tohex6</span>(sa[<span class="st">&quot;color&quot;</span>][<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># Setting values ... make only specied iris versicolor active</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>sa[<span class="st">&quot;active&quot;</span>] <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">&quot;versicolor&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="fu">plot</span>(sa)</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co"># Setting values ... make everything active</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>sa[<span class="st">&quot;active&quot;</span>] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">plot</span>(sa)</span></code></pre></div>
+<p>A problem with doing things interactively is that any direct
+manipulation of the plots using the inspector or brushing, panning,
+zooming, etc. <strong>is not being recorded.</strong></p>
+<p>If you want to have the values of states (which were set
+interactively) to appear later in a report, these values will need to be
+recorded somewhere first.</p>
+<p>It will be necessary to <strong>save the state somehow, either as a
+snapshot or as data</strong> in a separate file to be recovered later
+(saving plot states like colours, selections, etc.).</p>
+<p>In either case, information must be stored so that an
+<code>RMarkdown</code> file can read it back in and adjust the plots
+programmatically.</p>
 </div>
 <div id="saving-shapshots-for-later-display." class="section level2">
 <h2>Saving shapshots for later display.</h2>
-<p>When you are doing things interactively, you may just want to save a current version of the plot, effectively a snapshot, to a file. Then, <strong>after</strong> you have completed your analysis you can read those back in.</p>
+<p>When you are doing things interactively, you may just want to save a
+current version of the plot, effectively a snapshot, to a file. Then,
+<strong>after</strong> you have completed your analysis you can read
+those back in.</p>
 <p>You would save the current picture in a variety of ways.</p>
 <div id="export-from-rstudio" class="section level3">
 <h3>Export from RStudio</h3>
-<p>Simply <code>plot(p)</code> and select the <code>Export</code> button above the static plot. Choose a file name and location for your plot.</p>
-<p>Because <code>plot()</code> actually turns the loon plot into a <code>grid</code> graphic, the picture saves will be close but not necessarily exactly as it appears on screen. Typical differences include font sizes and names.</p>
+<p>Simply <code>plot(p)</code> and select the <code>Export</code> button
+above the static plot. Choose a file name and location for your
+plot.</p>
+<p>Because <code>plot()</code> actually turns the loon plot into a
+<code>grid</code> graphic, the picture saves will be close but not
+necessarily exactly as it appears on screen. Typical differences include
+font sizes and names.</p>
 </div>
 <div id="use-l_export" class="section level3">
 <h3>Use <code>l_export()</code></h3>
-<p>This is a <code>loon</code> function to export a loon plot to a file. On the plus side, what you see is what you get. The loon plot saved to the file will be the same as it appears on the display.</p>
-<p>Trouble is, depending on your <code>OS</code>, you might not be able to save the picture as any type of image. For example, <code>pdf</code> images will be available to nearly all OSes, <code>png</code> will not. You do need to specify the file suffix:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_export</span>(p, <span class="at">filename =</span> <span class="st">&quot;myplot_via_l_export.pdf&quot;</span>, <span class="at">height =</span> <span class="dv">500</span>, <span class="at">width =</span> <span class="dv">600</span>)</span></code></pre></div>
+<p>This is a <code>loon</code> function to export a loon plot to a file.
+On the plus side, what you see is what you get. The loon plot saved to
+the file will be the same as it appears on the display.</p>
+<p>Trouble is, depending on your <code>OS</code>, you might not be able
+to save the picture as any type of image. For example, <code>pdf</code>
+images will be available to nearly all OSes, <code>png</code> will not.
+You do need to specify the file suffix:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">l_export</span>(p, <span class="at">filename =</span> <span class="st">&quot;myplot_via_l_export.pdf&quot;</span>, <span class="at">height =</span> <span class="dv">500</span>, <span class="at">width =</span> <span class="dv">600</span>)</span></code></pre></div>
 </div>
 <div id="use-rs-png-device" class="section level3">
 <h3>Use R’s <code>png()</code> device</h3>
-<p>In R, there are a variety of graphics “devices”. These identify where R will draw a static plot. The call <code>dev.cur()</code> will tell you what the current device is.</p>
-<p>One such device is <code>png()</code> which allows R plots to be drawn as a <code>png</code> graphic. It would work like this</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># turn the png graphics device on with name of the file</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file =</span> <span class="st">&quot;myplot_via_R.png&quot;</span>, <span class="at">width =</span> <span class="dv">600</span>, <span class="at">height =</span> <span class="dv">500</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the static plot</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn the device off/close the file</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<p>In R, there are a variety of graphics “devices”. These identify where
+R will draw a static plot. The call <code>dev.cur()</code> will tell you
+what the current device is.</p>
+<p>One such device is <code>png()</code> which allows R plots to be
+drawn as a <code>png</code> graphic. It would work like this</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># turn the png graphics device on with name of the file</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file =</span> <span class="st">&quot;myplot_via_R.png&quot;</span>, <span class="at">width =</span> <span class="dv">600</span>, <span class="at">height =</span> <span class="dv">500</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># Draw the static plot</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">plot</span>(p)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># Turn the device off/close the file</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 </div>
 <div id="including-saved-graphics-in-your-report" class="section level3">
 <h3>Including saved graphics in your report</h3>
-<p>Having saved various snapshots to various files, you can now include them in your Rmarkdown file using the <code>include_graphics()</code> function from <code>knitr</code>.</p>
-<p>Of course, this means that the various files mentioned above were previously saved (not created in the markdown file) and so can now be read into your RMarkdown report as follows:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The one exported from RStudio</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_RStudio.png&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Followed by the one saved using l_export </span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (note that background grid is missing)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_l_export.pdf&quot;</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># And finally, the one saved using R&#39;s png device</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_R.png&quot;</span>)</span></code></pre></div>
-<p>Alternatively, you could use <strong>LaTeX</strong> if you want more control. For example, the following <strong>LaTeX</strong> code would centre the three plots in each column of a tabular lay out:</p>
+<p>Having saved various snapshots to various files, you can now include
+them in your Rmarkdown file using the <code>include_graphics()</code>
+function from <code>knitr</code>.</p>
+<p>Of course, this means that the various files mentioned above were
+previously saved (not created in the markdown file) and so can now be
+read into your RMarkdown report as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># The one exported from RStudio</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_RStudio.png&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># Followed by the one saved using l_export </span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># (note that background grid is missing)</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_l_export.pdf&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co"># And finally, the one saved using R&#39;s png device</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;myplot_via_R.png&quot;</span>)</span></code></pre></div>
+<p>Alternatively, you could use <strong>LaTeX</strong> if you want more
+control. For example, the following <strong>LaTeX</strong> code would
+centre the three plots in each column of a tabular lay out:</p>
 <!-- \begin{verbatim} -->
 <pre><code>\begin{center}
   \begin{tabular} {ccc}
@@ -305,61 +566,107 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="reconstruct-the-plot-from-saved-states" class="section level2">
 <h2>Reconstruct the plot from saved states</h2>
-<p><code>loon</code> also provides some functionality to save the <em>current</em> states of a loon plot. As with saving snapshots, this would be done at any time during the interactive analysis. Then later, when it is time to write the report, the saved states of the plot could be read back in and the plot <em>reconstructed programmatically</em> to be displayed in the report using <code>plot()</code> as above.</p>
+<p><code>loon</code> also provides some functionality to save the
+<em>current</em> states of a loon plot. As with saving snapshots, this
+would be done at any time during the interactive analysis. Then later,
+when it is time to write the report, the saved states of the plot could
+be read back in and the plot <em>reconstructed programmatically</em> to
+be displayed in the report using <code>plot()</code> as above.</p>
 <p>The use model is</p>
 <ol style="list-style-type: decimal">
-<li>Use <code>l_saveStates()</code> to save the current states of the loon plot to a file (repeat as often as desirable, saving to a <em>different</em> file each time).</li>
-<li>Later, use <code>l_getStates()</code> to recover the saved states from the named file/</li>
+<li>Use <code>l_saveStates()</code> to save the current states of the
+loon plot to a file (repeat as often as desirable, saving to a
+<em>different</em> file each time).</li>
+<li>Later, use <code>l_getStates()</code> to recover the saved states
+from the named file/</li>
 <li>Construct a new loon plot of the desired type.</li>
-<li>Copy the saved states to the new plot using <code>l_copyStates()</code> (alternatively, assign selected saved states of the new plot using <code>$</code>).</li>
-<li>Produce a static picture of the new loon plot using <code>plot()</code> as above.</li>
+<li>Copy the saved states to the new plot using
+<code>l_copyStates()</code> (alternatively, assign selected saved states
+of the new plot using <code>$</code>).</li>
+<li>Produce a static picture of the new loon plot using
+<code>plot()</code> as above.</li>
 </ol>
-<p>Note that only the first step happens in the interactive part of the analysis. Steps 2 through 5 programmatically recover the plot and its picture for incorporation in a report.</p>
-<p>Of course in place of step 5, one could use steps 2 through 4 to restart an interactive analysis where one left off.</p>
+<p>Note that only the first step happens in the interactive part of the
+analysis. Steps 2 through 5 programmatically recover the plot and its
+picture for incorporation in a report.</p>
+<p>Of course in place of step 5, one could use steps 2 through 4 to
+restart an interactive analysis where one left off.</p>
 <div id="a-simple-example" class="section level3">
 <h3>A simple example</h3>
-<p>A typical use will be simply recording the plot after some interaction with the display, usually involving linking between two displays, say the scatterplot and histogram above.</p>
+<p>A typical use will be simply recording the plot after some
+interaction with the display, usually involving linking between two
+displays, say the scatterplot and histogram above.</p>
 <p>We save the states of the plot <code>p</code> in a file as</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_saveStates</span>(p, <span class="at">file =</span> <span class="st">&quot;p_savedStates&quot;</span>)</span></code></pre></div>
-<p>Later, when we construct a new plot (perhaps for a report), the states are recovered from file</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p_savedStates <span class="ot">&lt;-</span> <span class="fu">l_getSavedStates</span>(<span class="at">file =</span> <span class="st">&quot;p_savedStates&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">l_saveStates</span>(p, <span class="at">file =</span> <span class="st">&quot;p_savedStates&quot;</span>)</span></code></pre></div>
+<p>Later, when we construct a new plot (perhaps for a report), the
+states are recovered from file</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>p_savedStates <span class="ot">&lt;-</span> <span class="fu">l_getSavedStates</span>(<span class="at">file =</span> <span class="st">&quot;p_savedStates&quot;</span>)</span></code></pre></div>
 <p>A new plot is constructed and the saved states transferred to it.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>new_p <span class="ot">&lt;-</span> <span class="fu">l_plot</span>(iris<span class="sc">$</span>Petal.Width, iris<span class="sc">$</span>Petal.Length)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_savedStates, <span class="at">target =</span> new_p)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>new_p <span class="ot">&lt;-</span> <span class="fu">l_plot</span>(iris<span class="sc">$</span>Petal.Width, iris<span class="sc">$</span>Petal.Length)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_savedStates, <span class="at">target =</span> new_p)</span></code></pre></div>
 <p>and can be programmatically incorporated into a report as</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
-<p>Again, alternatively <code>new_p</code> could simply be a reconstruction so as to continue an interactive analysis from that point.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
+<p>Again, alternatively <code>new_p</code> could simply be a
+reconstruction so as to continue an interactive analysis from that
+point.</p>
 </div>
 <div id="a-more-complex-example" class="section level3">
 <h3>A more complex example</h3>
-<p>Again, by default, only the following states related to linking are saved</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(p_savedStates)</span></code></pre></div>
+<p>Again, by default, only the following states related to linking are
+saved</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">names</span>(p_savedStates)</span></code></pre></div>
 <pre><code>## [1] &quot;color&quot;        &quot;active&quot;       &quot;selected&quot;     &quot;linkingKey&quot;   &quot;linkingGroup&quot;</code></pre>
 <p><code>[1] &quot;color&quot;        &quot;active&quot;       &quot;selected&quot;     &quot;linkingKey&quot;   &quot;linkingGroup&quot;</code></p>
-<p>Sometimes, the interactive analysis will have been more involved. It could, for example, have involved panning and zooming, changing of glyphs, particular choices for labels and titles, and so on.</p>
-<p>For example, through direct manipulation of the loon plot and inspector, the scatterplot <code>p</code> might at some point look something like this:</p>
-<p>Here, the analyst zoomed in on the species “versicolor”, jittered the locations of the points, and changed some of the glyphs to be large closed triangles. This involves many more states, all of which must be saved to reproduce the plot.</p>
-<p>The states to be saved can be named explicitly to be most efficient in storage, providing of course one knows which are the states that need to be saved.</p>
-<p>All of the states of a loon plot <code>p</code> are given by <code>names(p)</code>. At the risk of saving more information than necessary, we could choose to save all of the states of <code>p</code>, as in</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_saveStates</span>(p, </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">states =</span> <span class="fu">names</span>(p), </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">file =</span> <span class="st">&quot;p_focusOnVersicolor&quot;</span>)</span></code></pre></div>
-<p>Now all of the states are available when this file is read back in.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p_focusOnVersicolor <span class="ot">&lt;-</span> <span class="fu">l_getSavedStates</span>(<span class="at">file =</span> <span class="st">&quot;p_focusOnVersicolor&quot;</span>)</span></code></pre></div>
-<p>When it comes to transferring the states to a new plot there are many choices. We could go with a large collection of display states (more than the default states but still excluding more “basic” states about panning and zooming for example). To see which states, we add the argument <code>returnNames = TRUE</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_focusOnVersicolor, </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">target =</span> new_p, </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">returnNames =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p>This excluded “basic” states through the argument <code>excludeBasicStates</code> whose default value is <code>TRUE</code>.</p>
-<p>More, or different, states could be excluded by using the argument <code>exclude</code> to list them in a vector. Alternatively, the only states to be transferred could be made explicit by naming them in the value of the argument <code>states</code>.</p>
-<p>Because the “basic” states were excluded by default, the new plot now looks like</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
-<p>As can be seen, the glyph sizes and shapes were transferred but not the zooming or the jittering. To ensure we get an exact copy, we need to include all of the states, that is to exclude none of them.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_focusOnVersicolor, </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">target =</span> new_p, </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">excludeBasicStates =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p>Now the <code>new_p</code> should look much like the original interactive plot did when it was saved.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
+<p>Sometimes, the interactive analysis will have been more involved. It
+could, for example, have involved panning and zooming, changing of
+glyphs, particular choices for labels and titles, and so on.</p>
+<p>For example, through direct manipulation of the loon plot and
+inspector, the scatterplot <code>p</code> might at some point look
+something like this:</p>
+<p>Here, the analyst zoomed in on the species “versicolor”, jittered the
+locations of the points, and changed some of the glyphs to be large
+closed triangles. This involves many more states, all of which must be
+saved to reproduce the plot.</p>
+<p>The states to be saved can be named explicitly to be most efficient
+in storage, providing of course one knows which are the states that need
+to be saved.</p>
+<p>All of the states of a loon plot <code>p</code> are given by
+<code>names(p)</code>. At the risk of saving more information than
+necessary, we could choose to save all of the states of <code>p</code>,
+as in</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">l_saveStates</span>(p, </span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>             <span class="at">states =</span> <span class="fu">names</span>(p), </span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>             <span class="at">file =</span> <span class="st">&quot;p_focusOnVersicolor&quot;</span>)</span></code></pre></div>
+<p>Now all of the states are available when this file is read back
+in.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>p_focusOnVersicolor <span class="ot">&lt;-</span> <span class="fu">l_getSavedStates</span>(<span class="at">file =</span> <span class="st">&quot;p_focusOnVersicolor&quot;</span>)</span></code></pre></div>
+<p>When it comes to transferring the states to a new plot there are many
+choices. We could go with a large collection of display states (more
+than the default states but still excluding more “basic” states about
+panning and zooming for example). To see which states, we add the
+argument <code>returnNames = TRUE</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_focusOnVersicolor, </span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>             <span class="at">target =</span> new_p, </span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>             <span class="at">returnNames =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>This excluded “basic” states through the argument
+<code>excludeBasicStates</code> whose default value is
+<code>TRUE</code>.</p>
+<p>More, or different, states could be excluded by using the argument
+<code>exclude</code> to list them in a vector. Alternatively, the only
+states to be transferred could be made explicit by naming them in the
+value of the argument <code>states</code>.</p>
+<p>Because the “basic” states were excluded by default, the new plot now
+looks like</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
+<p>As can be seen, the glyph sizes and shapes were transferred but not
+the zooming or the jittering. To ensure we get an exact copy, we need to
+include all of the states, that is to exclude none of them.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">l_copyStates</span>(<span class="at">source =</span> p_focusOnVersicolor, </span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>             <span class="at">target =</span> new_p, </span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>             <span class="at">excludeBasicStates =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Now the <code>new_p</code> should look much like the original
+interactive plot did when it was saved.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">plot</span>(new_p)</span></code></pre></div>
 <p>which it does.</p>
 </div>
 </div>

@@ -207,7 +207,7 @@ get_facets.loon <- function(widget, by, on,
 get_facets.l_serialaxes <- function(widget, by, parent = NULL,
                                     layout = "grid", linkingGroup,
                                     inheritLayers = TRUE, separate = FALSE,
-                                    bySubstitute) {
+                                    bySubstitute, ...) {
 
     nDimStates <- setdiff(l_nDimStateNames(widget), "data")
     states <- names(l_info_states(widget))
