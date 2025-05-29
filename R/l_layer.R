@@ -535,7 +535,7 @@ l_layer_rectangles <- function(widget, x, y,
 #'   structure.
 #' @param color color of line
 #' @param dash dash pattern of line, see
-#'   \url{https://www.tcl.tk/man/tcl8.6/TkCmd/canvas.htm#M26}
+#'   \url{https://www.tcl-lang.org/man/tcl8.6/TkCmd/canvas.htm#M26}
 #'
 #' @templateVar page learn_R_layer
 #' @template see_l_help_page

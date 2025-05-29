@@ -7,48 +7,48 @@ library(grid)
 context("test_loonGrob")
 
 test_that("plot layers have correct grid structure", {
-    p <- with(olive,
-              l_plot(x=linoleic, y=oleic,
-                     color=Region, title="Olive Data"))
+    p <- with(iris,
+              l_plot(x=Sepal.Length, y=Petal.Length,
+                     color=Species, title="Iris Data"))
     ## Layer a Group
     l.g <- l_layer_group(p, label="Drawings", parent="root", index="end")
 
     l.pts <- l_layer_points(p,
-                            x=c(200, 450, 1800),
-                            y=c(6000, 8000, 7000),
-                            color=c("green", "orange", "lightblue"),
+                            x=c(4, 6, 6),
+                            y=c(1, 2, 6),
+                            color=c("green", "orange", "black"),
                             parent=l.g)
 
     l_scaleto_layer(p, l.pts)
 
     l_scaleto_world(p)
 
-    l_configure(l.pts, color="thistle", size=30)
+    l_configure(l.pts, color="blue")
 
     l_configure(l.pts,
-                x=seq(from=200,to=1600, length.out=20),
-                y=seq(from=6000,to=8000, length.out=20),
+                x=seq(from=4,to=8, length.out=20),
+                y=seq(from=1,to=7, length.out=20),
                 color="steelblue", size=20:39)
 
     l_layer_relabel(p, l.pts, "Different Sizes")
     l_layer_move(p, l.pts, parent="root")
 
     ## Polygon
-    i <- with(olive, chull(linoleic, oleic))
-    x.hull <- olive$linoleic[i]
-    y.hull <- olive$oleic[i]
+    i <- with(iris, chull(Sepal.Length, Petal.Length))
+    x.hull <- iris$Sepal.Length[i]
+    y.hull <- iris$Petal.Length[i]
     l_layer_polygon(p, x.hull, y.hull, color="thistle",
                     linecolor="black", linewidth=4, parent=l.g)
     ## Rectangle
-    l_layer_rectangle(p, x=c(1100, 1300), y=c(7600, 8300), linewidth=2)
+    l_layer_rectangle(p, x=c(5, 6), y=c(4, 6), linewidth=2)
 
     ## Oval
-    l_layer_oval(p, x=c(1500, 1750), y=c(7900, 8100),
+    l_layer_oval(p, x=c(5, 6), y=c(4, 7),
                  color="", linecolor="orange", linewidth=4)
 
     ## Line
-    x <- with(olive, linoleic[Region=="North"])
-    y <- with(olive, oleic[Region=="North"])
+    x <- with(iris, Sepal.Length[Species=="setosa"])
+    y <- with(iris, Petal.Length[Species=="setosa"])
 
     fit <- lm(y~x)
     ##summary(fit)
@@ -61,7 +61,7 @@ test_that("plot layers have correct grid structure", {
                             y=c(yp[,2],rev(yp[,3])),
                             color="lightgreen",
                             linecolor= "darkgreen", linewidth=2,
-                            label="predition interval west liguria")
+                            label="prediction interval west liguria")
 
     l.fit <- l_layer_line(p, x=xr, y=yp[,1],
                           color="darkgreen", linewidth=8,
@@ -130,13 +130,14 @@ test_that("plots with different glyphs have correct structure", {
     g_text <- l_glyph_add_text(p, text = rep("aA", p['n']), label='text glyphs')
     l_configure(p, glyph=g_text, which=i_text)
 
-
-    ## Images
-    data(faces, package = "loon.data")
-    faces.imgs <- l_image_import_array(faces, 64, 64, img_in_row = FALSE)
-
-    g_image <- l_glyph_add_image(p, image=rep(faces.imgs[1], p['n']), label='frey faces')
-    l_configure(p, glyph=g_image, which=i_image)
+    # CRAN Seems incapable of finding data in loon.data when testing.
+    #
+    # ## Images
+    # data(faces, package = "loon.data")
+    # faces.imgs <- l_image_import_array(faces, 64, 64, img_in_row = FALSE)
+    #
+    # g_image <- l_glyph_add_image(p, image=rep(faces.imgs[1], p['n']), label='frey faces')
+    # l_configure(p, glyph=g_image, which=i_image)
 
 
     ## Stars
@@ -244,7 +245,7 @@ test_that("histograms have correct structure", {
 })
 
 test_that("navgation graphs have correct structure", {
-    ng <- l_navgraph(oliveAcids, separator='-', color=olive$Area)
+    ng <- l_navgraph(iris, separator='-', color=iris$Species)
 
     lgrob <- grid.loon(ng, draw = FALSE)
     expect_equal(class(lgrob), c("gTree", "grob", "gDesc"))
@@ -261,7 +262,7 @@ test_that("l_pairs have correct structure", {
 })
 
 test_that("l_serialaxes have correct structure", {
-    s <- l_serialaxes(data=oliveAcids, color=olive$Area, title="olive data")
+    s <- l_serialaxes(data=iris, color=iris$Species, title="iris data")
     lgrob <- grid.loon(s, draw = FALSE)
     expect_equal(class(lgrob), c("gTree", "grob", "gDesc"))
 

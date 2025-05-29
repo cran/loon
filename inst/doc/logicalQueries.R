@@ -10,7 +10,7 @@ imageDirectory <- "./images/logic"
 dataDirectory <- "data"
 
 ## ----library_loon, eval = FALSE, echo = TRUE, fig.align="center", fig.width = 6, fig.height = 4, out.width = "75%", warning=FALSE, message=FALSE----
-#  library(loon)
+# library(loon)
 
 ## ----new variates-------------------------------------------------------------
 data(mtcars, package = "datasets")
@@ -52,34 +52,34 @@ varTypes <- split(names(mtcars),
                                   } else {"numeric"} } ))
 
 ## ----histograms of categorical variates, eval = FALSE-------------------------
-#  for (varName in varTypes$categorical) {
-#      assign(paste0("h_", varName),
-#             l_hist(mtcars[ , varName], showFactors = TRUE,
-#                    xlabel = varName, title = varName,
-#                    linkingGroup = "Motor Trend"))
-#  }
+# for (varName in varTypes$categorical) {
+#     assign(paste0("h_", varName),
+#            l_hist(mtcars[ , varName], showFactors = TRUE,
+#                   xlabel = varName, title = varName,
+#                   linkingGroup = "Motor Trend"))
+# }
 
-## ---- eval = FALSE------------------------------------------------------------
-#  p <- with(mtcars, l_plot(disp, cyl,
-#                           xlabel = "engine displacement", ylabel = "number of cylinders",
-#                           title = "1974 Motor Trend cars",
-#                           linkingGroup = "Motor Trend",
-#                           size = 10, showScales = TRUE,
-#                           itemLabel = rownames(mtcars), showItemLabels = TRUE
-#                           ))
+## ----eval = FALSE-------------------------------------------------------------
+# p <- with(mtcars, l_plot(disp, cyl,
+#                          xlabel = "engine displacement", ylabel = "number of cylinders",
+#                          title = "1974 Motor Trend cars",
+#                          linkingGroup = "Motor Trend",
+#                          size = 10, showScales = TRUE,
+#                          itemLabel = rownames(mtcars), showItemLabels = TRUE
+#                          ))
 
-## ---- eval = FALSE------------------------------------------------------------
-#  data <- data.frame(A = sample(c(rnorm(10), NA), 10, replace = FALSE),
-#                     B = sample(c(rnorm(10), NA), 10, replace = FALSE),
-#                     C = sample(c("firebrick", "steelblue", NA), 10, replace = TRUE),
-#                     D = sample(c(1:10, NA), 10, replace = FALSE))
-#  p_test <- l_plot(x = data$A, y = data$B, color = data$C, linkingGroup = "test missing")
-#  h_test <- l_hist(x = data$D, color = data$C, linkingGroup = "test missing")
+## ----eval = FALSE-------------------------------------------------------------
+# data <- data.frame(A = sample(c(rnorm(10), NA), 10, replace = FALSE),
+#                    B = sample(c(rnorm(10), NA), 10, replace = FALSE),
+#                    C = sample(c("firebrick", "steelblue", NA), 10, replace = TRUE),
+#                    D = sample(c(1:10, NA), 10, replace = FALSE))
+# p_test <- l_plot(x = data$A, y = data$B, color = data$C, linkingGroup = "test missing")
+# h_test <- l_hist(x = data$D, color = data$C, linkingGroup = "test missing")
 
-## ---- eval = FALSE------------------------------------------------------------
-#  p_test["selected"] <- (data$A > 0)
+## ----eval = FALSE-------------------------------------------------------------
+# p_test["selected"] <- (data$A > 0)
 
-## ---- eval = FALSE------------------------------------------------------------
-#  LogVal <- data$A > data$B
-#  p["selected"] <- logVal[1 + as.numeric(p_test["linkingKey"])]
+## ----eval = FALSE-------------------------------------------------------------
+# LogVal <- data$A > data$B
+# p["selected"] <- logVal[1 + as.numeric(p_test["linkingKey"])]
 
