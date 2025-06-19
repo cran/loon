@@ -1,8 +1,8 @@
 Package: loon
 Type: Package
 Title: Interactive Statistical Data Visualization
-Version: 1.4.2
-Date: 2025-05-26
+Version: 1.4.3
+Date: 2025-06-18
 Authors@R: c(person(given = "Adrian", family = "Waddell", 
                     email = "adrian@waddell.ch", 
                     role = c("aut")),
@@ -19,7 +19,6 @@ Authors@R: c(person(given = "Adrian", family = "Waddell",
 URL: https://great-northern-diver.github.io/loon/
 Description: An extendable toolkit for interactive data visualization and exploration.
 License: GPL-2
-SystemRequirements: Tcl/Tk = 8.6
 Depends: R (>= 3.5.0), methods, tcltk
 Imports: tools, graphics, grDevices, utils, stats, gridExtra
 Suggests: maps, sp, graph, scagnostics, PairViz, RColorBrewer,
@@ -32,11 +31,11 @@ LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2025-05-29 18:59:17 UTC; rwoldford
+Packaged: 2025-06-19 16:50:43 UTC; rwoldford
 Author: Adrian Waddell [aut],
   R. Wayne Oldford [aut, cre, ths],
   Zehao Xu [ctb],
   Martin Gauch [ctb]
 Maintainer: R. Wayne Oldford <rwoldford@uwaterloo.ca>
 Repository: CRAN
-Date/Publication: 2025-05-29 19:40:10 UTC
+Date/Publication: 2025-06-19 18:30:08 UTC
